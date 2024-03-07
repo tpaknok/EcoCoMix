@@ -38,7 +38,7 @@ VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using d
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
 ```
 
-Now we have the community matrix and expected phylogenetic correlation between them. We will simulate a simple relationship between an ecosystem function (y) and species richness. We will use the function sim_CGLS to do so. 
+Now we have the community matrix and expected phylogenetic correlation between them. We will simulate a simple relationship between an ecosystem function (y) and species richness. We will use the function sim_CPR to do so. 
 
 We will start with no relationship between y and species richness (i.e, slope = b1 = 0). We will have three scenarios with different phylogenetic signals (Pagal's λ = 0, 0.5, 1). For GLS and Bayesian GLMM, we will have three models for each: the model assuming phylogenetic signal = 1, the model with true λ, and the model with optimized λ (see likelihood.lambda and likelihood.lambda.INLA). Briefly, the optimized λ is estimated by minimizing AIC of the statistical model.
 
@@ -56,7 +56,7 @@ optim_seq <- sample(c(rep(TRUE, optim_n), rep(FALSE, n-optim_n)), n ,replace = F
 
 f <- y~x+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1))
 
-sim_results_sr_corE0.5 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_corE0.5 <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,
@@ -70,7 +70,7 @@ sim_results_sr_corE0.5 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
            INLA_formula = f))
 sim_results_sr_corE0.5<- data.frame(do.call(rbind,sim_results_sr_corE0.5),data="sr_corE0.5")
 
-sim_results_sr_corE <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_corE <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,
@@ -84,7 +84,7 @@ sim_results_sr_corE <- lapply(optim_seq,function(x) sim_CGLS(KSR,
            INLA_formula = f))
 sim_results_sr_corE <- data.frame(do.call(rbind,sim_results_sr_corE),data="sr_corError")
 
-sim_results_sr_nocorE <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_nocorE <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,
@@ -119,7 +119,7 @@ n <- 500
 optim_n <- 100
 optim_seq <- sample(c(rep(TRUE, optim_n), rep(FALSE, n-optim_n)), n ,replace = F)
 
-sim_results_sr_corE0.5_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_corE0.5_2 <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,
@@ -133,7 +133,7 @@ sim_results_sr_corE0.5_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
            INLA_formula = f))
 sim_results_sr_corE0.5_2<- data.frame(do.call(rbind,sim_results_sr_corE0.5_2),data="sr_corE0.5")
 
-sim_results_sr_corE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_corE_2 <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,
@@ -147,7 +147,7 @@ sim_results_sr_corE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
            INLA_formula = f))
 sim_results_sr_corE_2 <- data.frame(do.call(rbind,sim_results_sr_corE_2),data="sr_corError")
 
-sim_results_sr_nocorE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
+sim_results_sr_nocorE_2 <- lapply(optim_seq,function(x) sim_CPR(KSR,
            VCV_sp,
            0,
            1,

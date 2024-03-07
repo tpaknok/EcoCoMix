@@ -36,4 +36,11 @@ Toby P.N. Tsang
 \examples{
 library(phytools)
 
+data(MLtree)
+data(Planting)
+
+tree <- keep.tip(tree,colnames(Planting))
+V_sp <- vcv(tree)
+
+
 }

@@ -1,4 +1,4 @@
-sim_CGLS <- function(comm,V,ef_mean,sd,
+sim_CPR <- function(comm,V,ef_mean,sd,
                      b1=0,
                      signals_X="sr",
                      signals_intercept=T,signals_slope=T,

@@ -16,5 +16,5 @@ You can install the development version of CPR from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("tpaknok/CPR")
+devtools::install_github("tpaknok/CPR",build_vignettes=TRUE,force=TRUE)
 ```

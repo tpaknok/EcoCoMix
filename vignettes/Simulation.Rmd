@@ -60,11 +60,11 @@ optim_seq <- sample(c(rep(TRUE, optim_n), rep(FALSE, n-optim_n)), n ,replace = F
 
 f <- y~x+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1))
 
-sim_results_sr_corE0.5 <- lapply(optim_seq,function(x) sim_CGLS(comm,V_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=0.5,true_model=T,optim_model=x,INLA_formula = f))
+sim_results_sr_corE0.5 <- lapply(optim_seq,function(x) sim_CGLS(KSR,VCV_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=0.5,true_model=T,optim_model=x,INLA_formula = f))
 sim_results_sr_corE0.5<- data.frame(do.call(rbind,sim_results_sr_corE0.5),data="sr_corE0.5")
-sim_results_sr_corE <- lapply(optim_seq,function(x) sim_CGLS(comm,V_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=1,true_model=T,optim_model=x,INLA_formula = f))
+sim_results_sr_corE <- lapply(optim_seq,function(x) sim_CGLS(KSR,VCV_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=1,true_model=T,optim_model=x,INLA_formula = f))
 sim_results_sr_corE <- data.frame(do.call(rbind,sim_results_sr_corE),data="sr_corError")
-sim_results_sr_nocorE <- lapply(optim_seq,function(x) sim_CGLS(comm,V_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=0,true_model=T,optim_model=x,INLA_formula = f))
+sim_results_sr_nocorE <- lapply(optim_seq,function(x) sim_CGLS(KSR,VCV_sp,0,1,b1=b1,signals_X="sr",signals_intercept=T,signals_slope=F,lambda_true=0,true_model=T,optim_model=x,INLA_formula = f))
 sim_results_sr_nocorE <- data.frame(do.call(rbind,sim_results_sr_nocorE),data="sr_nocorError")
 
 lapply(sim_results_sr_corE, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]

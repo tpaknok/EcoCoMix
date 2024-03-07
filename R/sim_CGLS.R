@@ -86,7 +86,7 @@ sim_CGLS <- function(comm,V,ef_mean,sd,
   logL<--ML.opt$value
   V_GLS <- V*lambda_GLS
   diag(V_GLS) <- diag(V)
-  C.lambda.GLS<- get_comm_pair_r_3(comm,V_GLS)
+  C.lambda.GLS<- get_comm_pair_r(comm,V_GLS)
   end_GLS <- Sys.time()
   time_GLS <- end_GLS-start_GLS
 
@@ -113,7 +113,7 @@ sim_CGLS <- function(comm,V,ef_mean,sd,
   logL2 <--ML.opt2$value
   V_INLA <- V*lambda_INLA
   diag(V_INLA) <- diag(V)
-  C.lambda.INLA<- get_comm_pair_r_3(comm,V_INLA)
+  C.lambda.INLA<- get_comm_pair_r(comm,V_INLA)
   end_INLA <- Sys.time()
   time_INLA <- end_INLA-start_INLA
 

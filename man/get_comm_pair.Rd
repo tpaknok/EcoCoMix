@@ -41,8 +41,8 @@ data(KSR_MLtree)
 data(KSR_EF)
 
 KSF_EF <- KSR_EF %>% arrange(factor(Plot,levels=KSR$PLOT))
-excluded <- anti_join(KSR, data, by = c("PLOT" = "Plot"))
-KSR <- semi_join(KSR, data, by = c("PLOT" = "Plot"))
+excluded <- anti_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
+KSR <- semi_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
 
 KSR_misc <- KSR$PLOT
 KSR <- KSR[,-1]

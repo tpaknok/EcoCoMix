@@ -10,3 +10,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/tpaknok/CPR
 BugReports: https://github.com/tpaknok/CPR/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

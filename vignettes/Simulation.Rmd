@@ -1,8 +1,9 @@
 ---
-title: "Simulation"
+title: "Simulation with CPR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Simulation}
+  %\VignetteIndexEntry{Simulation with CPR}
+  %\VignettePackage{CPR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,11 +14,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-```{r setup}
-library(CPR)
-```
-
 This is an R Markdown document describing the simulation conducted in Tsang et al. (2024). 
 First, you will need to install and load multiple packages and data
 
@@ -50,7 +46,7 @@ In the simulation, we only considered Brownian motion. However, you can also try
 
 For each scenario, we will have run the simulation 500 times. Optimizing the λ takes a long time. Thus, we will only conduct optimization for 100 times.
 
-```{r,message=FALSE}
+```{r,message=FALSE,eval=FALSE}
 set.seed(1000)
 
 b1 <- 0

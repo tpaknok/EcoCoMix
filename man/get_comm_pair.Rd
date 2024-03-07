@@ -17,7 +17,7 @@ get_comm_pair_r(comm,V,force.PD = T)
   \item{force.PD}{find the closest positive definite matrix at community levels.
   Default as TRUE. Note that if matrix is not positive definite subsequent analyses can fail.}
 }
-}
+
 \details{
   The resulting phylogenetic correlation matrix is based on the additive law of covariance.
   Imagine two communities with species (X,Y) and species (X,Z). Covariance at community levels   is Cov(X+Y,X+Z) = Var(X)+Cov(X,Z)+Cov(X,Y)+Cov(Y,Z). All of these can be obtained from the

@@ -1,7 +1,7 @@
 get_comm_pair_r <- function (comm,V,force.PD = T) {
   require(Matrix)
   require(matrixcalc)
-  if (sum(colnames(comm) %in% rownames(V_sp)) != ncol(comm)) {
+  if (sum(colnames(comm) %in% rownames(V)) != ncol(comm)) {
     stop("Inconsistent species name between species covariance matrix and community data matrix")
   }
 

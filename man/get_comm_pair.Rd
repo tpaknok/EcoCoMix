@@ -20,8 +20,7 @@ get_comm_pair_r(comm,V,force.PD = TRUE)
 
 \details{
   The resulting phylogenetic correlation matrix is based on the additive law of covariance.
-  Imagine two communities with species (X,Y) and species (X,Z). Covariance at community levels   is Cov(X+Y,X+Z) = Var(X)+Cov(X,Z)+Cov(X,Y)+Cov(Y,Z). All of these can be obtained from the
-  species level phylogenetic matrix.
+  Imagine two communities with species (X,Y) and species (X,Z). Covariance at community levels   is Cov(X+Y,X+Z) = Var(X)+Cov(X,Z)+Cov(X,Y)+Cov(Y,Z). All of the components can be obtained     from the species level phylogenetic matrix.
 }
 \value{
   a phylogenetic correlation matrix at community levels.
@@ -35,12 +34,22 @@ Toby P.N. Tsang
 
 \examples{
 library(phytools)
+library(tidyverse)
+library(CPR)
+data(KSR)
+data(KSR_MLtree)
+data(KSR_EF)
 
-data(MLtree)
-data(Planting)
+KSF_EF <- KSR_EF %>% arrange(factor(Plot,levels=KSR$PLOT))
+excluded <- anti_join(KSR, data, by = c("PLOT" = "Plot"))
+KSR <- semi_join(KSR, data, by = c("PLOT" = "Plot"))
 
-tree <- keep.tip(tree,colnames(Planting))
-V_sp <- vcv(tree)
+KSR_misc <- KSR$PLOT
+KSR <- KSR[,-1]
+KSR[is.na(KSR)] <- 0
+KSR <- KSR[rowSums(KSR) > 0,]
 
-
+KSR_MLtree <- keep.tip(KSR_MLtree,colnames(KSR))
+VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
+VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
 }

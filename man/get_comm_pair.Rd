@@ -2,7 +2,7 @@
 \alias{get_comm_pair_r}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Getting pairwise phylogenetic correlation between communities
 }
 \description{
 Getting pairwise phylogenetic correlation between communities

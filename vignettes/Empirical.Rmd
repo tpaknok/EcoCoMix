@@ -51,7 +51,7 @@ head(KSR_EF)
 ## Data description
 
 | Variable         | Description                                                      |
-|------------------|------------------------------------------------------------------|
+|-----------------|------------------------------------------------------|
 | Plot             | Plot identity                                                    |
 | Real.rich        | Number of species planted                                        |
 | Legume           | ?                                                                |
@@ -94,7 +94,7 @@ We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlineli
 library(nlme)
 ```
 
-```{r,message=F}
+```{r,message=F,eval=F}
 KSR_EF$log_flwr_total <- log10(KSR_EF$flwr_total+1) #log-transforming floral abundance to facilitate covnergence in INLA
 
 KSR_EF$comm <- 1:nrow(KSR_EF) #need to create an unique identifier for each comm in INLA
@@ -144,7 +144,7 @@ summary(lm_m)
 
 For the optimized lambda model, the 95%CI of the estimates of richness is In my case, I used lapply to do it. So the coding is more complicated.
 
-```{r,message=F}
+```{r,message=F,eval=F}
 library(tidyverse)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]
@@ -255,7 +255,7 @@ predict_df$sig_binary <- ifelse(predict_df$sig < 0.05,"Significant","Insignifica
 
 ```
 
-```{r,fig.width=unit(10,"cm"),fig.height=unit(20,"cm")}
+```{r,fig.width=unit(10,"cm"),fig.height=unit(20,"cm"),eval=F}
 library(ggplot2)
 library(tidyverse)
 plot_data <- KSR_EF %>% 

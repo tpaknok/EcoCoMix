@@ -6,8 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The package CPR address phylogenetic non-independence between species at
-community level analyses.
+The package CPR address phylogenetic non-independence between species in
+community analyses.
 
 ## Installation
 
@@ -19,24 +19,23 @@ You can install the development version of CPR from
 devtools::install_github("tpaknok/CPR",build_vignettes=TRUE,force=TRUE)
 ```
 
+# Background
+
 While species are known to be non-independent due to shared evolutionary
-history, this is rarely considered in community-level analysees.
-Additionally, communities are not statisitcally indepedent if there are
+history, this is rarely considered in community-level analyses.
+Additionally, communities are not statistically indepedent if there are
 species overlap (which is often the case).
 
 The analysis accounts for non-independence between species within
-communities using GLS. The main function would be “get_comm_pair_r”,
-which requries two inputs: a site-species matrix, and a
-variance-covariance matrix based on phylogenetic tree.
+communities using Bayesian GLMM.
 
-Compositional matrices in presence/absence, number of individuals,
-percent cover, biomass etc can be used. Matrices based on scoring
-systems with uneven intervals can also be used (e.g., DAFOR), but this
-can lead to interpretation issues.
+Composition matrices in presence/absence, number of individuals, percent
+cover, biomass etc can be used. Matrices based on scoring systems with
+uneven intervals can also be used (e.g., DAFOR), but this can lead to
+interpretation issues.
 
 Users can calculate the variance-covariance matrix based on any
-phylogenetic model (e.g. vcv in package ape is based on Brownian
-Motion).
+phylogeny model (e.g. Brownian motions).
 
 If the resulting variance-covariance matrix is not positive definite,
 nearPD from the Matrix package will be applied to find the nearest
@@ -61,7 +60,9 @@ producing figures
 Note that we are using Bayesian GLMM rather than Frequentist GLMM to
 improve the speed.
 
-\#Known problems Might need to use inla.rerun to enhance model stability
+# Known problems
+
+Might need to use inla.rerun to enhance model stability
 
 It is possible that communities are indeed independent sample even if
 there are species overlap. In those cases the optimization of lambda

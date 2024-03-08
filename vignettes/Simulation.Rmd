@@ -112,7 +112,7 @@ lapply(sim_results_sr_nocorE, function(x) range(x,na.rm=T))[8:14]
 
 Repeat the same code, but this time we will test type-II error (Power) instead of type-I error. Thus, we set b1 as a positive number (0.25) instead of zero. 
 
-```{r,message=FALSE}
+```{r,message=FALSE,eval=F}
 b1 <- 0.25
 set.seed(1000)
 n <- 500

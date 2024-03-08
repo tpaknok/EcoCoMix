@@ -135,11 +135,9 @@ optim_m <- inla(log_flwr_total~Real.rich+f(comm,
 lm_m <- inla(log_flwr_total~Real.rich,
                 data=KSR_EF)
 
-```
-
-```{r}
 summary(optim_m)
 summary(lm_m)
+
 ```
 
 For the optimized lambda model, the 95%CI of the estimates of richness is In my case, I used lapply to do it. So the coding is more complicated.

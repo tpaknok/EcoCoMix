@@ -45,7 +45,7 @@ In the simulation, we only considered Brownian motion. However, you can also try
 
 For each scenario, we will have run the simulation 500 times. Optimizing the λ takes a long time. Thus, we will only conduct optimization for 100 times. NOTE THAT running this could take several hours!!
 
-```{r,message=FALSE}
+```{r,message=FALSE,eval=F}
 set.seed(1000)
 
 b1 <- 0
@@ -98,7 +98,7 @@ sim_results_sr_nocorE <- lapply(optim_seq,function(x) sim_CGLS(KSR,
 sim_results_sr_nocorE <- data.frame(do.call(rbind,sim_results_sr_nocorE),data="sr_nocorError")
 ```
 
-```{r}
+```{r,eval=F}
 ### type-I error
 lapply(sim_results_sr_corE, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
 lapply(sim_results_sr_corE0.5, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
@@ -161,7 +161,7 @@ sim_results_sr_nocorE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
            INLA_formula = f))
 sim_results_sr_nocorE_2 <- data.frame(do.call(rbind,sim_results_sr_nocorE_2),data="sr_nocorError")
 ```
-```{r}
+```{r,eval=F}
 ###Power
 lapply(sim_results_sr_corE_2, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
 lapply(sim_results_sr_corE0.5_2, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]

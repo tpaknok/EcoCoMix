@@ -163,9 +163,16 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm) {
   param <- c(3*sdres,0.01)
   prior1 <- list(prec=list(prior="pc.prec"),param=param)
   
+  if (ef_properties == "bug.rich" | ef_properties == "bugs" | ef_properties == "poll_total") {
+    family <- "poisson"
+  } else {
+    family <- "gaussian"
+  }
+  
   ML.opt2<-optim(runif(1,0.2,0.8),
                  likelihood.lambda.INLA,
                  inla_formula= f,
+                 family=family,
                  data=df,
                  phyV=VCV_sp,
                  comm=comm,
@@ -183,7 +190,10 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm) {
   newobs <- data.frame(y=NA,x=unique(x),comm=NA)
   INLA_df <- rbind(df,newobs)
   
-  m2_INLA_LM <- inla(y~x,data=INLA_df,control.compute = list(dic=T,waic=T))
+  m2_INLA_LM <- inla(y~x,
+                     data=INLA_df,
+                     family=family,
+                     control.compute = list(dic=T,waic=T))
   m2_INLA_LM <- inla.rerun(m2_INLA_LM)
   wAIC_LM <- m2_INLA_LM$waic$waic
   m2_INLA_LM_r2<- cor(m2_INLA_LM$summary.fitted.values[1:(nrow(df)),"mean"],df$y)^2
@@ -191,6 +201,7 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm) {
   prec.mat.INLA <- solve(C.lambda.INLA)
   m2_INLA_optim <- inla(y~x+f(comm,
                               model="generic0",
+                              family=family,
                               Cmatrix=prec.mat.INLA,
                               prior = "pc.prec",
                               hyper= c(3*sd(residuals(m)),0.01)),

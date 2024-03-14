@@ -1,4 +1,4 @@
-likelihood.lambda.INLA<-function(inla_formula,data,phyV=NULL,comm=NULL,lambda,prior = NULL,...){
+likelihood.lambda.INLA<-function(inla_formula,data,family="gaussian",phyV=NULL,comm=NULL,lambda,prior = NULL,...){
   require(INLA)
   message(lambda, "-INLA")
   V_lambda <- phyV*lambda
@@ -40,6 +40,7 @@ likelihood.lambda.INLA<-function(inla_formula,data,phyV=NULL,comm=NULL,lambda,pr
   inla_formula <- as.formula(Reduce(paste, deparse(inla_formula)))
 
   m_INLA_lambda <- inla(inla_formula,
+                        family=family,
                         data=data,...)
 
   m_INLA_lambda <- inla.rerun(m_INLA_lambda)

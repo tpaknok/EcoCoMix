@@ -98,7 +98,7 @@ library(nlme)
 KSR_EF$log_flwr_total <- log10(KSR_EF$flwr_total+1) #log-transforming floral abundance to facilitate covnergence in INLA
 
 KSR_EF$comm <- 1:nrow(KSR_EF) #need to create an unique identifier for each comm in INLA
-m <- gls(log_flwr_total~Real.rich,data=KSR_EF)
+m <- lm(log_flwr_total~Real.rich,data=KSR_EF)
 
 sdres <- sd(residuals(m))
 param <- c(3*sdres,0.01)
@@ -108,15 +108,18 @@ f <- log_flwr_total~Real.rich+f(comm,model="generic0",Cmatrix=P.lambda,hyper=lis
 #You can also provide multiple prior
 
 ML.opt2<-optim(runif(1,0.2,0.8),
-                 likelihood.lambda.INLA,
-                 inla_formula= f,
-                 data=KSR_EF,
-                 phyV=VCV_sp,
-                 comm=KSR,
-                 prior = list(prior1 = prior1),
-                 control.compute = list(waic=T),
-                 method="L-BFGS-B",
-                 lower=0.0,upper=1.0,control=list(factr=1e9)) #SLOW!
+               likelihood.lambda.INLA,
+               inla_formula= f,
+               family="gaussian",
+               data=KSR_EF,
+               phyV=VCV_sp,
+               comm=KSR,
+               prior = list(prior1 = prior1),
+               control.compute = list(waic=T),
+               method="L-BFGS-B",
+               lower=0.0,
+               upper=1.0,
+               control=list(factr=1e9)) #SLOW
 
 lambda_INLA<-ML.opt2$par
 wAIC <- ML.opt2$value
@@ -140,46 +143,50 @@ summary(lm_m)
 
 ```
 
-For the optimized lambda model, the 95%CI of the estimates of richness is In my case, I used lapply to do it. So the coding is more complicated.
+In my case, I used lapply to do it. So the coding is more complicated.
 
 ```{r,message=F,eval=F}
 library(tidyverse)
+library(nlme)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]
 C <- get_comm_pair_r(KSR,VCV_sp)
 
 f <- y~x+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1))
+family <- ifelse(ef_name == "bug.rich" | ef_name == "bugs" | ef_name == "poll_total",
+                 "poisson",
+                 "gaussian")
 
-ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm) {
+ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   print(ef_properties)
   y <- ef_data
   df <- data.frame(y=y,x=x)
   df$comm <- 1:nrow(df)
-  m <- gls(y~x,data=df)
+  
+  m <- glm(y~x,
+           family = family,
+           data = df)
+  
   summary(m)
-  m_sig <- summary(m)$tTable[2,4]
+  m_sig <- summary(m)$coefficients[2,4]
 
   sdres <- sd(residuals(m))
   param <- c(3*sdres,0.01)
   prior1 <- list(prec=list(prior="pc.prec"),param=param)
   
-  if (ef_properties == "bug.rich" | ef_properties == "bugs" | ef_properties == "poll_total") {
-    family <- "poisson"
-  } else {
-    family <- "gaussian"
-  }
-  
   ML.opt2<-optim(runif(1,0.2,0.8),
                  likelihood.lambda.INLA,
-                 inla_formula= f,
-                 family=family,
-                 data=df,
-                 phyV=VCV_sp,
-                 comm=comm,
+                 inla_formula = f,
+                 family = family,
+                 data = df,
+                 phyV = VCV_sp,
+                 comm = KSR,
                  prior = list(prior1 = prior1),
                  control.compute = list(waic=T),
-                 method="L-BFGS-B",
-                 lower=0.0,upper=1.0,control=list(factr=1e9))
+                 method = "L-BFGS-B",
+                 lower = 0.0,
+                 upper = 1.0,
+                 control = list(factr=1e9))
   
   lambda_INLA<-ML.opt2$par
   wAIC <- ML.opt2$value
@@ -201,15 +208,14 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm) {
   prec.mat.INLA <- solve(C.lambda.INLA)
   m2_INLA_optim <- inla(y~x+f(comm,
                               model="generic0",
-                              family=family,
                               Cmatrix=prec.mat.INLA,
                               prior = "pc.prec",
                               hyper= c(3*sd(residuals(m)),0.01)),
-                              data=INLA_df,
-                              control.predictor=list(compute=TRUE),
-                              control.compute = list(dic=T,waic=T),
-                              safe=T,
-                              control.inla = list(tolerance = 1e-10))
+                        family = family,
+                        data = INLA_df,control.predictor=list(compute=TRUE),
+                        control.compute = list(dic=T,waic=T),
+                        safe=T,
+                        control.inla = list(tolerance = 1e-10))
   m2_INLA_optim <- inla.rerun(m2_INLA_optim) # https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo
   m2_INLA_optim <- inla.rerun(m2_INLA_optim) # https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo
   
@@ -256,13 +262,15 @@ predict_df <- lapply(1:ncol(ef),function(x) ef_empiricial(ef_data=ef[,x],
                                                           x=KSR_EF$Real.rich,
                                                           VCV_sp=VCV_sp,
                                                           ef_properties=ef_name[x],
-                                                          comm=KSR))
+                                                          comm=KSR,
+                                                          family=family[x]))
 
 predict_df <- do.call(rbind,predict_df)
 predict_df$x <- predict_df$x
 predict_df$sig_binary <- ifelse(predict_df$sig < 0.05,"Significant","Insignificant")
 
 ```
+Now let's visualize the findings
 
 ```{r,fig.width=unit(10,"cm"),fig.height=unit(20,"cm"),eval=F}
 library(ggplot2)
@@ -277,7 +285,7 @@ plot_data$ef <- fct_relevel(plot_data$ef,
                             "ave.biomass",
                             "LAI",
                             "poll_total",
-                            "flwr_total",
+                            "log_flwr_total",
                             "Mass.loss.2month",
                             "Damage_effect",
                             "mean.N.change",
@@ -289,12 +297,13 @@ predict_df$ef <- fct_relevel(predict_df$ef,
                              "ave.biomass",
                              "LAI",
                              "poll_total",
-                             "flwr_total",
+                             "log_flwr_total",
                              "Mass.loss.2month",
                              "Damage_effect",
                              "mean.N.change",
                              "bugs",
                              "bug.rich")
+
 predict_df$ratio <- predict_df$hyper_Gaussian/predict_df$hyper_Comm
 predict_df$ratio <- (1/predict_df$hyper_Gaussian)/(1/predict_df$hyper_Comm)
 

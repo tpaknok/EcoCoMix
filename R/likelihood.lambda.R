@@ -1,4 +1,8 @@
-likelihood.lambda<-function(lambda,y,X,V,comm){
+likelihood.lambda<-function(lambda,
+                            y,
+                            X,
+                            V,
+                            comm){
   message(lambda)
   V_lambda <- V*lambda
   diag(V_lambda) <- diag(V)

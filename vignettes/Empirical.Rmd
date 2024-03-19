@@ -23,6 +23,7 @@ This is an R Markdown document describing the empirical analyses conducted in Ts
 library(phytools)
 library(tidyverse)
 library(CPR)
+library(INLA)
 data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")

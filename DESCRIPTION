@@ -16,7 +16,8 @@ Imports:
     tidyverse,
     nlme,
     Matrix,
-    matrixcalc
+    matrixcalc,
+    INLA
 Suggests: 
     knitr,
     rmarkdown

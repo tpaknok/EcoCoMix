@@ -15,5 +15,6 @@ Suggests:
     rmarkdown,
     phytools,
     tidyverse,
-    nlme
+    nlme,
+    CPR
 VignetteBuilder: knitr

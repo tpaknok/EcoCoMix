@@ -19,14 +19,16 @@ knitr::opts_chunk$set(
 
 This is an R Markdown document describing the empirical analyses conducted in Tsang et al. (2024). Again, you will need to install and load multiple packages and data.
 
-```{r,message=FALSE}
+```{r,setup,message=F}
 library(phytools)
 library(tidyverse)
 library(CPR)
 data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
-
+```
+Let's structure the data properly first.
+```{r,message=F}
 excluded <- anti_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
 KSR <- semi_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
 KSR_EF <- KSR_EF %>% arrange(factor(Plot,levels=KSR$PLOT))

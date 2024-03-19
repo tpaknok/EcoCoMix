@@ -60,7 +60,7 @@ head(KSR_EF)
 | bugs             | Total number of arthropods                                       |
 | bug.rich         | Species richness of arthropods                                   |
 
-## Empirical analyses
+## Empirical analyses - Single function
 
 We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example, let's analyze flower abundance.
 
@@ -112,6 +112,8 @@ lm_m <- inla(log_flwr_total~Real.rich,
 summary(optim_m)
 summary(lm_m)
 ```
+
+## Empirical analyses - Multiple functions
 
 In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated. Let's define a function for the analysis first
 
@@ -179,7 +181,13 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   m2_INLA_optim <- inla.rerun(m2_INLA_optim) # https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo
   
   summary(m2_INLA_optim)
-  m2_INLA_optim_predict <- m2_INLA_optim$summary.fitted.values[-1:-(nrow(df)),]
+  
+  if(family == "poisson") {
+      m2_INLA_optim_predict <- exp(m2_INLA_optim$summary.fitted.values[-1:-(nrow(df)),])
+  } else {
+      m2_INLA_optim_predict <- m2_INLA_optim$summary.fitted.values[-1:-(nrow(df)),]
+
+  }
   m2_INLA_optim_predict <- data.frame(newobs$x,m2_INLA_optim_predict[,c("mean","0.025quant","0.975quant")])
   m2_INLA_optim_predict$sig <- ifelse(sign(m2_INLA_optim$summary.fixed)[2,3] ==     sign(m2_INLA_optim$summary.fixed)[2,5],-1,1)
   m2_INLA_optim_r2 <- cor(m2_INLA_optim$summary.fitted.values[1:nrow(df),"mean"],df$y)^2
@@ -191,7 +199,7 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   
   ###summarize the data into a dataframe
   predict_df <- rbind(cbind(m_predict,
-                            model="OLS",
+                            model="LM/GLM",
                             ef=ef_properties,
                             lambda=NA,
                             hyper_Gaussian = NA, 
@@ -218,7 +226,7 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
 ```
 Now let's run it.
 
-```{r,message=F,eval=F}
+```{r,message=F}
 library(nlme)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]
@@ -242,6 +250,9 @@ predict_df$x <- predict_df$x
 predict_df$sig_binary <- ifelse(predict_df$sig < 0.05,"Significant","Insignificant")
 
 ```
+
+## Data visualization
+
 Now let's visualize the findings
 
 ```{r,fig.width=unit(10,"cm"),fig.height=unit(20,"cm")}

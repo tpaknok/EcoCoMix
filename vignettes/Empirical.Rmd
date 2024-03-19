@@ -24,10 +24,9 @@ This is an R Markdown document describing the empirical analyses conducted in Ts
 library(phytools)
 library(tidyverse)
 library(CPR)
-data(KSR)
-data(KSR_MLtree)
-data(KSR_EF)
-sum(KSR)
+data("KSR")
+data("KSR_MLtree")
+data("KSR_EF")
 ```
 Let's get the variane covariance matrix at species and community level.
 ```{r,message=F}

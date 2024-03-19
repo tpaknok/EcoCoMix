@@ -19,14 +19,14 @@ get_comm_pair_r(comm,V,force.PD = TRUE)
 }
 
 \details{
-  The resulting phylogenetic correlation matrix is based on the additive law of covariance.
-  Imagine two communities with species (X,Y) and species (X,Z). Covariance at community levels   is Cov(X+Y,X+Z) = Var(X)+Cov(X,Z)+Cov(X,Y)+Cov(Y,Z). All of the components can be obtained     from the species level phylogenetic matrix.
+The resulting phylogenetic correlation matrix is based on the additive law of covariance.
+Imagine two communities with species (X,Y) and species (X,Z). Covariance at community levels   is Cov(X+Y,X+Z) = Var(X)+Cov(X,Z)+Cov(X,Y)+Cov(Y,Z). All of the components can be obtained     from the species level phylogenetic matrix.
 }
 \value{
-  a phylogenetic correlation matrix at community levels.
+a phylogenetic correlation matrix at community levels.
 }
 \references{
-%% ~put references to the literature/web site here ~
+https://github.com/tpaknok/CPR
 }
 \author{
 Toby P.N. Tsang

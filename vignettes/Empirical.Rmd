@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 This is an R Markdown document describing the empirical analyses conducted in Tsang et al. (2024). Again, you will need to install and load multiple packages and data.
 
-```{r setup}
+```{r setup, message=F}
 library(phytools)
 library(tidyverse)
 library(CPR)
@@ -33,7 +33,7 @@ Let's get the variane covariance matrix at species and community level.
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
-head(VCV_comm)
+VCV_comm[1:5,1:5]
 ```
 
 The KSR_EF data have multiple ecosystem function.
@@ -48,47 +48,24 @@ head(KSR_EF)
 |-----------------|------------------------------------------------------|
 | Plot             | Plot identity                                                    |
 | Real.rich        | Number of species planted                                        |
-| Legume           | ?                                                                |
-| Hed              | ?                                                                |
-| PD               | ?                                                                |
-| MNND             | ?                                                                |
-| MPD              | ?                                                                |
-| H                | ?                                                                |
-| Simp             | ?                                                                |
-| biomass2012      | Biomass measured in 2012                                         |
 | litter2012       | Amount of litter measured in 2012                                |
-| biomass2013      | Biomass measured in 2013                                         |
-| biomass2014      | Biomass measured in 2014                                         |
-| ave.biomass      | Average biomass across years                                     |
-| light.tau        | ?                                                                |
+| ave.biomass      | Average biomass across 2012-2014                                 |
 | LAI              | Leaf area index, a simplified dimension of structural complexity |
-| C.change.deep    | ?                                                                |
-| C.change.surf    | ?                                                                |
-| N.change.deep    | delta 15N change of deep soil                                    |
-| N.change.surf    | delta 15N change of surface soil                                 |
 | mean.N.change    | delta 15N change averaged across surface and deep soil           |
 | poll_total       | Total number of pollinators                                      |
 | flwr_total       | Total number of flowers                                          |
-| Mass.loss.1month | Decomposition after 1 month                                      |
 | Mass.loss.2monh  | Decomposition after 2 months                                     |
-| GRASS            | ?                                                                |
-| SOAL             | ?                                                                |
-| MOFI             | ?                                                                |
-| ASTU             | ?                                                                |
-| DECA             | ?                                                                |
 | Damage_effect    | Damage reduction effect                                          |
 | bugs             | Total number of arthropods                                       |
 | bug.rich         | Species richness of arthropods                                   |
 
 ## Empirical analyses
 
-We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example...
+We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example, let's analyze flower abundance.
 
-```{r,message=F}
-library(nlme)
-```
+INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested. Here, we will use the penalizing complexity prior. The specification is identical with the [Bayesian community PGLMM](https://daijiang.github.io/phyr/index.html) in R.
 
-```{r,message=F,eval=F}
+```{r BEF example,message=F,eval=F}
 KSR_EF$log_flwr_total <- log10(KSR_EF$flwr_total+1) #log-transforming floral abundance to facilitate covnergence in INLA
 
 KSR_EF$comm <- 1:nrow(KSR_EF) #need to create an unique identifier for each comm in INLA
@@ -96,10 +73,9 @@ m <- lm(log_flwr_total~Real.rich,data=KSR_EF)
 
 sdres <- sd(residuals(m))
 param <- c(3*sdres,0.01)
-prior1 <- list(prec=list(prior="pc.prec"),param=param) #you don't need to follow everything here. You can specify your own prior too.
+prior1 <- list(prec=list(prior="pc.prec"),param=param) #You can specify your own prior too. 
 
 f <- log_flwr_total~Real.rich+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1)) #start with the formula. Note that P.lambda is just a placeholder 
-#You can also provide multiple prior
 
 ML.opt2<-optim(runif(1,0.2,0.8),
                likelihood.lambda.INLA,
@@ -113,7 +89,7 @@ ML.opt2<-optim(runif(1,0.2,0.8),
                method="L-BFGS-B",
                lower=0.0,
                upper=1.0,
-               control=list(factr=1e9)) #SLOW
+               control=list(factr=1e9)) #Slow
 
 lambda_INLA<-ML.opt2$par
 wAIC <- ML.opt2$value
@@ -137,9 +113,9 @@ summary(lm_m)
 
 ```
 
-In my case, I used lapply to do it. So the coding is more complicated.
+In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated.
 
-```{r,message=F,eval=F}
+```{r multiple BEF example,message=F,eval=F}
 library(nlme)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]
@@ -215,7 +191,7 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   summary(m2_INLA_optim)
   m2_INLA_optim_predict <- m2_INLA_optim$summary.fitted.values[-1:-(nrow(df)),]
   m2_INLA_optim_predict <- data.frame(newobs$x,m2_INLA_optim_predict[,c("mean","0.025quant","0.975quant")])
-  m2_INLA_optim_predict$sig <- ifelse(sign(m2_INLA_optim$summary.fixed)[2,3] == sign(m2_INLA_optim$summary.fixed)[2,5],-1,1)
+  m2_INLA_optim_predict$sig <- ifelse(sign(m2_INLA_optim$summary.fixed)[2,3] ==     sign(m2_INLA_optim$summary.fixed)[2,5],-1,1)
   m2_INLA_optim_r2 <- cor(m2_INLA_optim$summary.fitted.values[1:nrow(df),"mean"],df$y)^2
   
   library(ggeffects)

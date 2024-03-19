@@ -40,15 +40,6 @@ data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
 
-KSF_EF <- KSR_EF \%>\% arrange(factor(Plot,levels=KSR$PLOT))
-excluded <- anti_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
-KSR <- semi_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
-
-KSR_misc <- KSR$PLOT
-KSR <- KSR[,-1]
-KSR[is.na(KSR)] <- 0
-KSR <- KSR[rowSums(KSR) > 0,]
-
 KSR_MLtree <- keep.tip(KSR_MLtree,colnames(KSR))
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)

@@ -25,9 +25,12 @@ data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
 
-VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 ```
 
+```{r}
+VCV_sp <- vcv(KSR_MLtree) 
+head(VCV_sp)
+```
 Now we have the community matrix and expected phylogenetic correlation between them. We will simulate a simple relationship between an ecosystem function (y) and species richness. We will use the function sim_CGLS to do so. 
 
 We will start with no relationship between y and species richness (i.e, slope = b1 = 0). We will have three scenarios with different phylogenetic signals (Pagal's λ = 0, 0.5, 1). For GLS and Bayesian GLMM, we will have three models for each: the model assuming phylogenetic signal = 1, the model with true λ, and the model with optimized λ (see likelihood.lambda and likelihood.lambda.INLA). Briefly, the optimized λ is estimated by minimizing AIC of the statistical model.

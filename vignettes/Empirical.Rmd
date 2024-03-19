@@ -115,7 +115,7 @@ summary(lm_m)
 
 ## Empirical analyses - Multiple functions
 
-In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated. Let's define a function for the analysis first
+In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated. Let's define a function for the analysis first.
 
 ```{r multiple BEF example}
 ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {

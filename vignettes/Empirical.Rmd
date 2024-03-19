@@ -20,13 +20,14 @@ knitr::opts_chunk$set(
 
 This is an R Markdown document describing the empirical analyses conducted in Tsang et al. (2024). Again, you will need to install and load multiple packages and data.
 
-```{r setup,message=F}
+```{r setup}
 library(phytools)
 library(tidyverse)
 library(CPR)
 data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
+sum(KSR)
 ```
 Let's get the variane covariance matrix at species and community level.
 ```{r,message=F}

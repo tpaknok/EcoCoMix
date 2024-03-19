@@ -28,21 +28,12 @@ data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
 ```
-Let's structure the data properly first.
+Let's get the variane covariance matrix at species and community level.
 ```{r,message=F}
-excluded <- anti_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
-KSR <- semi_join(KSR, KSR_EF, by = c("PLOT" = "Plot"))
-KSR_EF <- KSR_EF %>% arrange(factor(Plot,levels=KSR$PLOT))
-
-KSR_misc <- KSR$PLOT
-KSR <- KSR[,-1]
-KSR[is.na(KSR)] <- 0
-KSR <- KSR[rowSums(KSR) > 0,]
-
-KSR_MLtree <- keep.tip(KSR_MLtree,colnames(KSR))
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
+head(VCV_comm)
 ```
 
 The KSR_EF data have multiple ecosystem function.

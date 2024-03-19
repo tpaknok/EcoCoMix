@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 ```
 
 This is an R Markdown document describing the empirical analyses conducted in Tsang et al. (2024). Again, you will need to install and load multiple packages and data.
-
 ```{r setup, message=F}
 library(phytools)
 library(tidyverse)
@@ -28,6 +27,7 @@ data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")
 ```
+
 Let's get the variane covariance matrix at species and community level.
 ```{r,message=F}
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
@@ -44,6 +44,7 @@ head(KSR_EF)
 
 ## Data description
 
+
 | Variable         | Description                                                      |
 |-----------------|------------------------------------------------------|
 | Plot             | Plot identity                                                    |
@@ -54,7 +55,7 @@ head(KSR_EF)
 | mean.N.change    | delta 15N change averaged across surface and deep soil           |
 | poll_total       | Total number of pollinators                                      |
 | flwr_total       | Total number of flowers                                          |
-| Mass.loss.2monh  | Decomposition after 2 months                                     |
+| Mass.loss.2month  | Decomposition after 2 months                                     |
 | Damage_effect    | Damage reduction effect                                          |
 | bugs             | Total number of arthropods                                       |
 | bug.rich         | Species richness of arthropods                                   |
@@ -63,7 +64,7 @@ head(KSR_EF)
 
 We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example, let's analyze flower abundance.
 
-INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested. Here, we will use the penalizing complexity prior. The specification is identical with the [Bayesian community PGLMM](https://daijiang.github.io/phyr/index.html) in R.
+INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested. Here, we will use the penalizing complexity prior. The specification is identical with the phyr, an R package for [Bayesian community PGLMM](https://daijiang.github.io/phyr/index.html).
 
 ```{r BEF example,message=F,eval=F}
 KSR_EF$log_flwr_total <- log10(KSR_EF$flwr_total+1) #log-transforming floral abundance to facilitate covnergence in INLA
@@ -110,22 +111,11 @@ lm_m <- inla(log_flwr_total~Real.rich,
 
 summary(optim_m)
 summary(lm_m)
-
 ```
 
-In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated.
+In my case, I used lapply to analyze all ecosystem function. So the codes are more complicated. Let's define a function for the analysis first
 
-```{r multiple BEF example,message=F,eval=F}
-library(nlme)
-ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
-ef <- KSR_EF[,ef_name]
-C <- get_comm_pair_r(KSR,VCV_sp)
-
-f <- y~x+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1))
-family <- ifelse(ef_name == "bug.rich" | ef_name == "bugs" | ef_name == "poll_total",
-                 "poisson",
-                 "gaussian")
-
+```{r multiple BEF example}
 ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   print(ef_properties)
   y <- ef_data
@@ -225,6 +215,19 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
   
   return(predict_df)
 }
+```
+Now let's run it.
+
+```{r,message=F,eval=F}
+library(nlme)
+ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
+ef <- KSR_EF[,ef_name]
+C <- get_comm_pair_r(KSR,VCV_sp)
+
+f <- y~x+f(comm,model="generic0",Cmatrix=P.lambda,hyper=list(prec = prior1))
+family <- ifelse(ef_name == "bug.rich" | ef_name == "bugs" | ef_name == "poll_total",
+                 "poisson",
+                 "gaussian")
 
 df <- data.frame(x=KSR_EF$Real.rich) #seems that ggeffect can only extract variables from global environments
 predict_df <- lapply(1:ncol(ef),function(x) ef_empiricial(ef_data=ef[,x],
@@ -246,7 +249,6 @@ library(ggplot2)
 library(tidyverse)
 plot_data <- KSR_EF %>% 
   select(any_of(ef_name)|"Real.rich") %>%
-  #select(contains("2015.2017") | contains("NumSp")) %>%
   pivot_longer(!Real.rich,names_to="ef")
 
 plot_data$ef <- fct_relevel(plot_data$ef,

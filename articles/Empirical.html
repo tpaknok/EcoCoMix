@@ -86,21 +86,7 @@ conducted in Tsang et al. (2024). Again, you will need to install and
 load multiple packages and data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/liamrevell/phytools" class="external-link">phytools</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: ape</span></span>
-<span><span class="co">#&gt; Loading required package: maps</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.5</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 3.5.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.2.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.3     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.2</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">purrr</span>::<span style="color: #00BB00;">map()</span>    masks <span style="color: #0000BB;">maps</span>::map()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">where()</span>  masks <span style="color: #0000BB;">ape</span>::where()</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tpaknok/CPR" class="external-link">CPR</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR_MLtree"</span><span class="op">)</span></span>
@@ -111,105 +97,13 @@ level.</p>
 <code class="sourceCode R"><span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/vcv.phylo.html" class="external-link">vcv</a></span><span class="op">(</span><span class="va">KSR_MLtree</span><span class="op">)</span> <span class="co">#species level phyologenetic covariance matrix using default (Brownian) model</span></span>
 <span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="va">VCV_sp</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">VCV_comm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">VCV_comm</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span></span>
-<span><span class="co">#&gt; [1,] 1.0000000 0.7031681 0.5639611 0.5601336 0.7539047 0.4601492 0.9925155</span></span>
-<span><span class="co">#&gt; [2,] 0.7031681 1.0000000 0.5458038 0.5420995 0.7048548 0.8307885 0.7029687</span></span>
-<span><span class="co">#&gt; [3,] 0.5639611 0.5458038 1.0000000 0.9932127 0.5749535 0.4632934 0.5682136</span></span>
-<span><span class="co">#&gt; [4,] 0.5601336 0.5420995 0.9932127 1.0000000 0.5710514 0.4601492 0.5643572</span></span>
-<span><span class="co">#&gt; [5,] 0.7539047 0.7048548 0.5749535 0.5710514 1.0000000 0.4533837 0.7669912</span></span>
-<span><span class="co">#&gt; [6,] 0.4601492 0.8307885 0.4632934 0.4601492 0.4533837 1.0000000 0.4636189</span></span>
-<span><span class="co">#&gt;           [,8]      [,9]     [,10]     [,11]     [,12]     [,13]     [,14]</span></span>
-<span><span class="co">#&gt; [1,] 0.8712603 0.9701756 0.5601336 0.8663298 0.5420995 0.5153010 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 0.8684921 0.6922472 0.5420995 0.6987812 0.8788514 0.7925793 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 0.5704436 0.5639611 0.9923060 0.8815382 0.7029856 0.7351607 0.5774421</span></span>
-<span><span class="co">#&gt; [4,] 0.5665721 0.5601336 0.9729443 0.8678972 0.7031681 0.7237939 0.5735231</span></span>
-<span><span class="co">#&gt; [5,] 0.8849584 0.7685974 0.5710514 0.7583943 0.7215389 0.7662137 0.5584944</span></span>
-<span><span class="co">#&gt; [6,] 0.6198276 0.4601491 0.4601491 0.5209940 0.8307885 0.6408264 0.4601491</span></span>
-<span><span class="co">#&gt;          [,15]     [,16]     [,17]     [,18]     [,19]     [,20]     [,21]</span></span>
-<span><span class="co">#&gt; [1,] 0.5970448 0.3960743 0.2543210 0.7657384 0.3960743 0.3960743 0.3960743</span></span>
-<span><span class="co">#&gt; [2,] 0.8033808 0.5221971 0.5662499 0.9153189 0.6229403 0.5221971 0.6422480</span></span>
-<span><span class="co">#&gt; [3,] 0.8523121 0.7023074 0.4509546 0.6179478 0.4264597 0.7023074 0.4264597</span></span>
-<span><span class="co">#&gt; [4,] 0.8544437 0.6879755 0.4540360 0.6137539 0.4235654 0.7071064 0.4235654</span></span>
-<span><span class="co">#&gt; [5,] 0.5994746 0.7397579 0.4992199 0.8490617 0.7303207 0.7521494 0.7303207</span></span>
-<span><span class="co">#&gt; [6,] 0.8544437 0.3253746 0.2089244 0.7278418 0.3253746 0.3253746 0.3253746</span></span>
-<span><span class="co">#&gt;          [,22]     [,23]         [,24]     [,25]         [,26]     [,27]</span></span>
-<span><span class="co">#&gt; [1,] 0.7691076 0.5601336 -6.765456e-10 0.8663298  1.703868e-11 0.9701756</span></span>
-<span><span class="co">#&gt; [2,] 0.7883054 0.5420995  1.963987e-01 0.6987812  1.963987e-01 0.6922472</span></span>
-<span><span class="co">#&gt; [3,] 0.6418327 0.9923060  5.999162e-09 0.6461646  6.089212e-09 0.5639611</span></span>
-<span><span class="co">#&gt; [4,] 0.6374767 0.9729443  1.115908e-08 0.6417792 -1.120003e-09 0.5601336</span></span>
-<span><span class="co">#&gt; [5,] 0.8682531 0.5710514  4.926484e-01 0.7512856  4.751242e-01 0.7685974</span></span>
-<span><span class="co">#&gt; [6,] 0.5078889 0.4601491  1.166571e-08 0.5209940 -1.758360e-09 0.4601491</span></span>
-<span><span class="co">#&gt;          [,28]     [,29]     [,30]     [,31]     [,32]        [,33]     [,34]</span></span>
-<span><span class="co">#&gt; [1,] 0.3960743 0.4435877 0.8070638 0.5970448 0.5420995 2.631579e-09 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 0.5221971 0.6943513 0.7322816 0.8033809 0.8788514 3.388711e-01 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 0.7016663 0.3925180 0.7672965 0.6240306 0.7029856 3.359856e-09 0.9932127</span></span>
-<span><span class="co">#&gt; [4,] 0.6879755 0.3898540 0.7571955 0.6197954 0.7031681 4.839762e-09 0.9999995</span></span>
-<span><span class="co">#&gt; [5,] 0.7521494 0.7803836 0.8811774 0.7150738 0.7215389 2.642320e-01 0.5710514</span></span>
-<span><span class="co">#&gt; [6,] 0.3253746 0.4848210 0.4993612 0.7424827 0.8307885 1.996862e-09 0.4601492</span></span>
-<span><span class="co">#&gt;          [,35]        [,36]     [,37]     [,38]     [,39]     [,40]     [,41]</span></span>
-<span><span class="co">#&gt; [1,] 0.9701756 2.631579e-09 0.4955117 0.3253746 0.5601336 0.5601336 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 0.6922472 3.388711e-01 0.5586088 0.7263311 0.5420995 0.5420995 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 0.5639611 3.359857e-09 0.3987807 0.3275979 0.9932127 0.5774421 0.9932127</span></span>
-<span><span class="co">#&gt; [4,] 0.5601336 4.839763e-09 0.3960743 0.3253746 0.9999995 0.5735231 0.9729443</span></span>
-<span><span class="co">#&gt; [5,] 0.7685974 2.642320e-01 0.7752022 0.6689457 0.5710514 0.5584944 0.5710514</span></span>
-<span><span class="co">#&gt; [6,] 0.4601491 1.996862e-09 0.3253746 0.7071064 0.4601492 0.4601491 0.4601491</span></span>
-<span><span class="co">#&gt;             [,42]     [,43]     [,44]         [,45]     [,46]         [,47]</span></span>
-<span><span class="co">#&gt; [1,] 1.672847e-09 0.8369914 0.9999995 -6.765455e-10 0.7007594  1.703856e-11</span></span>
-<span><span class="co">#&gt; [2,] 3.661764e-01 0.8912437 0.7031681  1.963987e-01 0.5935934  1.963987e-01</span></span>
-<span><span class="co">#&gt; [3,] 6.933521e-09 0.6011245 0.5639611  5.999162e-09 0.5639611  6.089211e-09</span></span>
-<span><span class="co">#&gt; [4,] 1.337880e-08 0.5970448 0.5601336  1.115908e-08 0.5601336 -1.120003e-09</span></span>
-<span><span class="co">#&gt; [5,] 2.642320e-01 0.7150738 0.7539047  4.926484e-01 0.6211772  4.751242e-01</span></span>
-<span><span class="co">#&gt; [6,] 1.771247e-09 0.7424827 0.4601492  1.166571e-08 0.4601492 -1.758360e-09</span></span>
-<span><span class="co">#&gt;          [,48]     [,49]     [,50]     [,51]     [,52]     [,53]     [,54]</span></span>
-<span><span class="co">#&gt; [1,] 0.6018607 0.5420995 0.5970448 0.6314951 0.5601336 0.6149358 0.3960743</span></span>
-<span><span class="co">#&gt; [2,] 0.6908618 0.8788514 0.8033808 0.6111635 0.5420995 0.7110985 0.6422480</span></span>
-<span><span class="co">#&gt; [3,] 0.9677978 0.7029856 0.6090133 0.8853788 0.6031051 0.6257310 0.7023074</span></span>
-<span><span class="co">#&gt; [4,] 0.9576792 0.7031681 0.6048800 0.8717444 0.5990119 0.6160484 0.7071064</span></span>
-<span><span class="co">#&gt; [5,] 0.6091678 0.7215389 0.5921266 0.6367255 0.7685974 0.8424643 0.5906346</span></span>
-<span><span class="co">#&gt; [6,] 0.6155167 0.8307885 0.8544437 0.5187726 0.4601492 0.3698105 0.3253746</span></span>
-<span><span class="co">#&gt;          [,55]     [,56]     [,57]     [,58]     [,59]     [,60]     [,61]</span></span>
-<span><span class="co">#&gt; [1,] 0.3960743 0.3253746 0.4601491 0.5601336 0.7539047 0.9925155 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 0.6422480 0.7263311 0.8307885 0.5420995 0.7750436 0.7029687 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 0.4083132 0.3275979 0.4632934 0.5774421 0.5623107 0.5682136 0.9932127</span></span>
-<span><span class="co">#&gt; [4,] 0.4055421 0.3253746 0.4601491 0.5735231 0.5584944 0.5643572 0.9729443</span></span>
-<span><span class="co">#&gt; [5,] 0.5817554 0.6689457 0.4533837 0.5584944 0.7839635 0.7669912 0.5710514</span></span>
-<span><span class="co">#&gt; [6,] 0.3253746 0.5718166 0.8086708 0.4601491 0.4533837 0.4636189 0.4601491</span></span>
-<span><span class="co">#&gt;          [,62]     [,63]        [,64]     [,65]        [,66]     [,67]</span></span>
-<span><span class="co">#&gt; [1,] 0.4601491 0.9999995 1.510981e-09 0.7918954 1.672848e-09 0.7007594</span></span>
-<span><span class="co">#&gt; [2,] 0.8307885 0.7031681 3.053604e-01 0.9225925 3.661764e-01 0.5935934</span></span>
-<span><span class="co">#&gt; [3,] 0.4632934 0.5639611 5.390498e-09 0.5912842 6.933521e-09 0.5639611</span></span>
-<span><span class="co">#&gt; [4,] 0.4601491 0.5601336 2.122046e-09 0.5872712 1.337880e-08 0.5601336</span></span>
-<span><span class="co">#&gt; [5,] 0.4533837 0.7539047 4.217875e-01 0.7830910 2.642320e-01 0.6211772</span></span>
-<span><span class="co">#&gt; [6,] 0.8086708 0.4601492 1.360604e-10 0.7135687 1.771248e-09 0.4601492</span></span>
-<span><span class="co">#&gt;          [,68]         [,69]     [,70]     [,71]     [,72]     [,73]     [,74]</span></span>
-<span><span class="co">#&gt; [1,] 0.6676854 -6.765456e-10 0.5601336 0.9701756 0.4601491 0.9701756 0.9442445</span></span>
-<span><span class="co">#&gt; [2,] 0.7494278  1.963987e-01 0.5420995 0.6922472 0.8307885 0.6922472 0.7230294</span></span>
-<span><span class="co">#&gt; [3,] 0.7920733  5.999162e-09 0.9932127 0.5639611 0.4632934 0.5639611 0.6363970</span></span>
-<span><span class="co">#&gt; [4,] 0.7817377  1.115908e-08 0.9729443 0.5601336 0.4601491 0.5601336 0.6320778</span></span>
-<span><span class="co">#&gt; [5,] 0.8158248  4.926484e-01 0.5710514 0.7685974 0.4533837 0.7685974 0.7765730</span></span>
-<span><span class="co">#&gt; [6,] 0.5061456  1.166571e-08 0.4601491 0.4601491 0.8086708 0.4601491 0.5151466</span></span>
-<span><span class="co">#&gt;             [,75]     [,76]     [,77]     [,78]         [,79]     [,80]</span></span>
-<span><span class="co">#&gt; [1,] 1.672847e-09 0.4601492 0.5601336 0.9040524  1.703854e-11 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 3.661764e-01 0.8307885 0.5420995 0.8368924  1.963987e-01 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 6.933521e-09 0.4632934 0.9923060 0.7813047  6.089212e-09 0.6031051</span></span>
-<span><span class="co">#&gt; [4,] 1.337880e-08 0.4601492 0.9729443 0.7800917 -1.120003e-09 0.5990119</span></span>
-<span><span class="co">#&gt; [5,] 2.642320e-01 0.4533837 0.5710514 0.7699707  4.751242e-01 0.7685974</span></span>
-<span><span class="co">#&gt; [6,] 1.771248e-09 0.9999995 0.4601491 0.7196386 -1.758360e-09 0.4601492</span></span>
-<span><span class="co">#&gt;          [,81]     [,82]     [,83]     [,84]     [,85]     [,86]     [,87]</span></span>
-<span><span class="co">#&gt; [1,] 0.8663298 0.4601492 0.4838757 0.9701756 0.9925155 0.8369914 0.5601336</span></span>
-<span><span class="co">#&gt; [2,] 0.6987812 0.8307885 0.8736263 0.6922472 0.7029687 0.8912437 0.5420995</span></span>
-<span><span class="co">#&gt; [3,] 0.6461646 0.4632934 0.4871821 0.5639611 0.5682136 0.6011245 0.9923060</span></span>
-<span><span class="co">#&gt; [4,] 0.6417792 0.4601492 0.4838757 0.5601336 0.5643572 0.5970448 0.9729443</span></span>
-<span><span class="co">#&gt; [5,] 0.7512856 0.4533837 0.4767614 0.7685974 0.7669912 0.7150738 0.5710514</span></span>
-<span><span class="co">#&gt; [6,] 0.5209940 0.9999995 0.9509651 0.4601491 0.4636189 0.7424827 0.4601491</span></span>
-<span><span class="co">#&gt;          [,88]</span></span>
-<span><span class="co">#&gt; [1,] 0.7918954</span></span>
-<span><span class="co">#&gt; [2,] 0.8595044</span></span>
-<span><span class="co">#&gt; [3,] 0.5912842</span></span>
-<span><span class="co">#&gt; [4,] 0.5872712</span></span>
-<span><span class="co">#&gt; [5,] 0.8679689</span></span>
-<span><span class="co">#&gt; [6,] 0.7135687</span></span></code></pre></div>
+<span><span class="va">VCV_comm</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;           [,1]      [,2]      [,3]      [,4]      [,5]</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 0.7031681 0.5639611 0.5601336 0.7539047</span></span>
+<span><span class="co">#&gt; [2,] 0.7031681 1.0000000 0.5458038 0.5420995 0.7048548</span></span>
+<span><span class="co">#&gt; [3,] 0.5639611 0.5458038 1.0000000 0.9932127 0.5749535</span></span>
+<span><span class="co">#&gt; [4,] 0.5601336 0.5420995 0.9932127 1.0000000 0.5710514</span></span>
+<span><span class="co">#&gt; [5,] 0.7539047 0.7048548 0.5749535 0.5710514 1.0000000</span></span></code></pre></div>
 <p>The KSR_EF data have multiple ecosystem function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span></span>
@@ -271,127 +165,43 @@ level.</p>
 <td>Number of species planted</td>
 </tr>
 <tr class="odd">
-<td>Legume</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>Hed</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>PD</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>MNND</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>MPD</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>H</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>Simp</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>biomass2012</td>
-<td>Biomass measured in 2012</td>
-</tr>
-<tr class="odd">
 <td>litter2012</td>
 <td>Amount of litter measured in 2012</td>
 </tr>
 <tr class="even">
-<td>biomass2013</td>
-<td>Biomass measured in 2013</td>
-</tr>
-<tr class="odd">
-<td>biomass2014</td>
-<td>Biomass measured in 2014</td>
-</tr>
-<tr class="even">
 <td>ave.biomass</td>
-<td>Average biomass across years</td>
+<td>Average biomass across 2012-2014</td>
 </tr>
 <tr class="odd">
-<td>light.tau</td>
-<td>?</td>
-</tr>
-<tr class="even">
 <td>LAI</td>
 <td>Leaf area index, a simplified dimension of structural
 complexity</td>
 </tr>
-<tr class="odd">
-<td>C.change.deep</td>
-<td>?</td>
-</tr>
 <tr class="even">
-<td>C.change.surf</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>N.change.deep</td>
-<td>delta 15N change of deep soil</td>
-</tr>
-<tr class="even">
-<td>N.change.surf</td>
-<td>delta 15N change of surface soil</td>
-</tr>
-<tr class="odd">
 <td>mean.N.change</td>
 <td>delta 15N change averaged across surface and deep soil</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>poll_total</td>
 <td>Total number of pollinators</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>flwr_total</td>
 <td>Total number of flowers</td>
-</tr>
-<tr class="even">
-<td>Mass.loss.1month</td>
-<td>Decomposition after 1 month</td>
 </tr>
 <tr class="odd">
 <td>Mass.loss.2monh</td>
 <td>Decomposition after 2 months</td>
 </tr>
 <tr class="even">
-<td>GRASS</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>SOAL</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>MOFI</td>
-<td>?</td>
-</tr>
-<tr class="odd">
-<td>ASTU</td>
-<td>?</td>
-</tr>
-<tr class="even">
-<td>DECA</td>
-<td>?</td>
-</tr>
-<tr class="odd">
 <td>Damage_effect</td>
 <td>Damage reduction effect</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>bugs</td>
 <td>Total number of arthropods</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>bug.rich</td>
 <td>Species richness of arthropods</td>
 </tr>
@@ -405,10 +215,14 @@ complexity</td>
 et al. (2017)</a>, involving ten ecosystem functions. If only one
 ecosystem function is of interest (or if you don’t mind your code is
 clunky), you can just use INLA and write similar functions ten times.
-For example…</p>
+For example, let’s analyze flower abundance.</p>
+<p>INLA is a very powerful package, but can be a bit complicated to use.
+As it is a Bayesian analysis, we have to specify priors. INLA has
+different default priors and check their <a href="https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html" class="external-link">website</a>
+if you are interested. Here, we will use the penalizing complexity
+prior. The specification is identical with the <a href="https://daijiang.github.io/phyr/index.html" class="external-link">Bayesian community
+PGLMM</a> in R.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">log_flwr_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">flwr_total</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span> <span class="co">#log-transforming floral abundance to facilitate covnergence in INLA</span></span>
 <span></span>
 <span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">comm</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span> <span class="co">#need to create an unique identifier for each comm in INLA</span></span>
@@ -416,10 +230,9 @@ For example…</p>
 <span></span>
 <span><span class="va">sdres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span><span class="op">*</span><span class="va">sdres</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="va">prior1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"pc.prec"</span><span class="op">)</span>,param<span class="op">=</span><span class="va">param</span><span class="op">)</span> <span class="co">#you don't need to follow everything here. You can specify your own prior too.</span></span>
+<span><span class="va">prior1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"pc.prec"</span><span class="op">)</span>,param<span class="op">=</span><span class="va">param</span><span class="op">)</span> <span class="co">#You can specify your own prior too. </span></span>
 <span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">P.lambda</span>,hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span> <span class="co">#start with the formula. Note that P.lambda is just a placeholder </span></span>
-<span><span class="co">#You can also provide multiple prior</span></span>
 <span></span>
 <span><span class="va">ML.opt2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span><span class="op">)</span>,</span>
 <span>               <span class="va">likelihood.lambda.INLA</span>,</span>
@@ -433,7 +246,7 @@ For example…</p>
 <span>               method<span class="op">=</span><span class="st">"L-BFGS-B"</span>,</span>
 <span>               lower<span class="op">=</span><span class="fl">0.0</span>,</span>
 <span>               upper<span class="op">=</span><span class="fl">1.0</span>,</span>
-<span>               control<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>factr<span class="op">=</span><span class="fl">1e9</span><span class="op">)</span><span class="op">)</span> <span class="co">#SLOW</span></span>
+<span>               control<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>factr<span class="op">=</span><span class="fl">1e9</span><span class="op">)</span><span class="op">)</span> <span class="co">#Slow</span></span>
 <span></span>
 <span><span class="va">lambda_INLA</span><span class="op">&lt;-</span><span class="va">ML.opt2</span><span class="op">$</span><span class="va">par</span></span>
 <span><span class="va">wAIC</span> <span class="op">&lt;-</span> <span class="va">ML.opt2</span><span class="op">$</span><span class="va">value</span></span>
@@ -454,9 +267,9 @@ For example…</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">optim_m</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm_m</span><span class="op">)</span></span></code></pre></div>
-<p>In my case, I used lapply to do it. So the coding is more
-complicated.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>In my case, I used lapply to analyze all ecosystem function. So the
+codes are more complicated.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
 <span><span class="va">ef_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"litter2012"</span>,<span class="st">"ave.biomass"</span>,<span class="st">"LAI"</span>,<span class="st">"bug.rich"</span>,<span class="st">"bugs"</span>,<span class="st">"poll_total"</span>,<span class="st">"log_flwr_total"</span>,<span class="st">"Mass.loss.2month"</span>,<span class="st">"Damage_effect"</span>,<span class="st">"mean.N.change"</span><span class="op">)</span> <span class="co">#ecosystem functions analyzed</span></span>
 <span><span class="va">ef</span> <span class="op">&lt;-</span> <span class="va">KSR_EF</span><span class="op">[</span>,<span class="va">ef_name</span><span class="op">]</span></span>
@@ -532,7 +345,7 @@ complicated.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span></span>
 <span>  <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="op">-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></span>
 <span>  <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">newobs</span><span class="op">$</span><span class="va">x</span>,<span class="va">m2_INLA_optim_predict</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>,<span class="st">"0.025quant"</span>,<span class="st">"0.975quant"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="va">m2_INLA_optim_predict</span><span class="op">$</span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">]</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="va">m2_INLA_optim_predict</span><span class="op">$</span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">==</span>     <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">]</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">m2_INLA_optim_r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>,<span class="st">"mean"</span><span class="op">]</span>,<span class="va">df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span>  </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://strengejacke.github.io/ggeffects/" class="external-link">ggeffects</a></span><span class="op">)</span></span>
@@ -579,7 +392,7 @@ complicated.</p>
 <span><span class="va">predict_df</span><span class="op">$</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">predict_df</span><span class="op">$</span><span class="va">x</span></span>
 <span><span class="va">predict_df</span><span class="op">$</span><span class="va">sig_binary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">predict_df</span><span class="op">$</span><span class="va">sig</span> <span class="op">&lt;</span> <span class="fl">0.05</span>,<span class="st">"Significant"</span>,<span class="st">"Insignificant"</span><span class="op">)</span></span></code></pre></div>
 <p>Now let’s visualize the findings</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="va">KSR_EF</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>

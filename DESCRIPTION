@@ -5,12 +5,15 @@ Version: 0.1.0
 Author: Toby Pak Nok Tsang
 Maintainer: Toby Pak Nok Tsang <tpaknok@gmail.com>
 Description: Incorporating phylogenetic information at community level analyses
-License: What license is it under?
+License: NA
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/tpaknok/CPR, https://tpaknok.github.io/CPR/
 BugReports: https://github.com/tpaknok/CPR/issues
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    phytools,
+    tidyverse,
+    nlme
 VignetteBuilder: knitr

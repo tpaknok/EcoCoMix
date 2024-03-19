@@ -146,7 +146,6 @@ summary(lm_m)
 In my case, I used lapply to do it. So the coding is more complicated.
 
 ```{r,message=F,eval=F}
-library(tidyverse)
 library(nlme)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]

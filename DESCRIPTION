@@ -16,9 +16,9 @@ Imports:
     tidyverse,
     nlme,
     Matrix,
-    matrixcalc,
-    INLA
+    matrixcalc
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    INLA
 VignetteBuilder: knitr

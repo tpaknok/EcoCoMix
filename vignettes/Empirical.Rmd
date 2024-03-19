@@ -13,13 +13,14 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = FALSE
 )
 ```
 
 This is an R Markdown document describing the empirical analyses conducted in Tsang et al. (2024). Again, you will need to install and load multiple packages and data.
 
-```{r,setup,message=F}
+```{r setup,message=F}
 library(phytools)
 library(tidyverse)
 library(CPR)

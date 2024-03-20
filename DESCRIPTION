@@ -23,7 +23,5 @@ Suggests:
     INLA,
     ggplot2,
     ggeffects
-VignetteBuilder: 
-    knitr
-Remotes:
-    hrue/r-inla
+VignetteBuilder: knitr
+Additional_repositories: https://inla.r-inla-download.org/R/stable/

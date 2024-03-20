@@ -22,7 +22,7 @@ Suggests:
     rmarkdown,
     ggplot2,
     ggeffects,
-    INLA (>= 23.9.9)
+    INLA
 VignetteBuilder: knitr
-Remotes:  
-    url::https://inla.r-inla-download.org/R/testing
+Remotes:
+  hrue/r-inla/rinla@stable

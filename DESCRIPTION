@@ -16,9 +16,11 @@ Imports:
     tidyverse,
     nlme,
     Matrix,
-    matrixcalc
+    matrixcalc,
 Suggests: 
     knitr,
     rmarkdown,
-    INLA
+    INLA,
+    ggplot2,
+    ggeffects
 VignetteBuilder: knitr

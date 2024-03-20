@@ -228,7 +228,6 @@ ef_empiricial <- function(ef_data,x,VCV_sp,names,ef_properties,comm,family) {
 Now let's run it.
 
 ```{r,message=F}
-library(nlme)
 ef_name <- c("litter2012","ave.biomass","LAI","bug.rich","bugs","poll_total","log_flwr_total","Mass.loss.2month","Damage_effect","mean.N.change") #ecosystem functions analyzed
 ef <- KSR_EF[,ef_name]
 C <- get_comm_pair_r(KSR,VCV_sp)

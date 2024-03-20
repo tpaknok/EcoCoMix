@@ -16,7 +16,8 @@ Imports:
     tidyverse,
     nlme,
     Matrix,
-    matrixcalc,
+    matrixcalc
+    effects
 Suggests: 
     knitr,
     rmarkdown,

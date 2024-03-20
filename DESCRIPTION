@@ -24,3 +24,4 @@ Suggests:
     ggplot2,
     ggeffects
 VignetteBuilder: knitr
+Additional_repositories: https://inla.r-inla-download.org/R/stable

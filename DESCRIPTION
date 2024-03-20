@@ -16,12 +16,13 @@ Imports:
     tidyverse,
     nlme,
     Matrix,
-    matrixcalc
+    matrixcalc,
 Suggests: 
     knitr,
     rmarkdown,
     ggplot2,
     ggeffects,
-    INLA
+    INLA (>= 23.9.9)
 VignetteBuilder: knitr
-Additional_repositories: https://inla.r-inla-download.org/R/stable/
+Remotes:  
+    url::https://inla.r-inla-download.org/R/testing

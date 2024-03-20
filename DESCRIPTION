@@ -20,8 +20,8 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    INLA,
     ggplot2,
-    ggeffects
+    ggeffects,
+    INLA
 VignetteBuilder: knitr
-Additional_repositories: https://inla.r-inla-download.org/R/stable
+Additional_repositories: https://inla.r-inla-download.org/R/stable/

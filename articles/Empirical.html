@@ -88,6 +88,7 @@ load multiple packages and data.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/liamrevell/phytools" class="external-link">phytools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tpaknok/CPR" class="external-link">CPR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">INLA</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR_MLtree"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR_EF"</span><span class="op">)</span></span></code></pre></div>
@@ -107,20 +108,41 @@ level.</p>
 <p>The KSR_EF data have multiple ecosystem function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total</span></span>
-<span><span class="co">#&gt; 1   X2         1      79.05    32.97333 1.67       -0.0015         20</span></span>
-<span><span class="co">#&gt; 2   X3         4      74.23    82.41000 5.53       -0.0275         53</span></span>
-<span><span class="co">#&gt; 3   X4         2      34.50    62.92667 3.04        0.0060        150</span></span>
-<span><span class="co">#&gt; 4   X7         1      36.32    34.38333 3.42       -0.0575          0</span></span>
-<span><span class="co">#&gt; 5   X8         3      21.46   147.05667 7.14       -0.0070          0</span></span>
-<span><span class="co">#&gt; 6   X9         1      37.26    33.80333 1.01        0.0415          0</span></span>
-<span><span class="co">#&gt;   flwr_total Mass.loss.2month Damage_effect bugs bug.rich</span></span>
-<span><span class="co">#&gt; 1 43113.5000            3.362     0.0000000    9        7</span></span>
-<span><span class="co">#&gt; 2  2126.1429            3.718    -0.3001195    7        6</span></span>
-<span><span class="co">#&gt; 3   324.4286            3.521    -0.4195279    4        2</span></span>
-<span><span class="co">#&gt; 4     0.0000            3.328     0.0000000    5        3</span></span>
-<span><span class="co">#&gt; 5     0.0000            3.608    -2.7460093    4        4</span></span>
-<span><span class="co">#&gt; 6     0.0000            3.627     0.0000000   11        7</span></span></code></pre></div>
+<span><span class="co">#&gt;   Plot Real.rich Legume       Hed       PD     MNND      MPD         H</span></span>
+<span><span class="co">#&gt; 1   X2         1      N 0.0000000   0.0000   0.0000   0.0000 0.0000000</span></span>
+<span><span class="co">#&gt; 2   X3         4     LP 1.3772918 456.7786 136.7786 258.9262 1.1761865</span></span>
+<span><span class="co">#&gt; 3   X4         2      N 0.6931472 320.0000 320.0000 320.0000 0.2249718</span></span>
+<span><span class="co">#&gt; 4   X7         1      N 0.0000000   0.0000   0.0000   0.0000 0.0000000</span></span>
+<span><span class="co">#&gt; 5   X8         3     LP 1.0934269 418.9892 238.6522 279.3261 0.7560967</span></span>
+<span><span class="co">#&gt; 6   X9         1      N 0.0000000   0.0000   0.0000   0.0000 0.0000000</span></span>
+<span><span class="co">#&gt;        Simp biomass2012 litter2012 biomass2013 biomass2014 ave.biomass</span></span>
+<span><span class="co">#&gt; 1 0.0000000       47.89      79.05       35.39       15.64    32.97333</span></span>
+<span><span class="co">#&gt; 2 0.6712373      122.24      74.23       74.33       50.66    82.41000</span></span>
+<span><span class="co">#&gt; 3 0.1115254       77.93      34.50       59.62       51.23    62.92667</span></span>
+<span><span class="co">#&gt; 4 0.0000000       44.37      36.32       44.69       14.09    34.38333</span></span>
+<span><span class="co">#&gt; 5 0.5120332      166.82      21.46      148.84      125.51   147.05667</span></span>
+<span><span class="co">#&gt; 6 0.0000000       44.37      37.26       32.12       24.92    33.80333</span></span>
+<span><span class="co">#&gt;   Light.tau  LAI C.change.deep C.change.surf N.change.deep N.change.surf</span></span>
+<span><span class="co">#&gt; 1     0.312 1.67        -0.331        -0.031         0.007        -0.010</span></span>
+<span><span class="co">#&gt; 2     0.031 5.53         1.762         0.111        -0.046        -0.009</span></span>
+<span><span class="co">#&gt; 3     0.100 3.04        -0.518         0.421        -0.012         0.024</span></span>
+<span><span class="co">#&gt; 4     0.083 3.42        -0.156        -0.009        -0.087        -0.028</span></span>
+<span><span class="co">#&gt; 5     0.006 7.14            NA            NA        -0.045         0.031</span></span>
+<span><span class="co">#&gt; 6     0.499 1.01        -1.895        -0.128         0.066         0.017</span></span>
+<span><span class="co">#&gt;   mean.N.change poll_total flwr_total Mass.loss.1month Mass.loss.2month</span></span>
+<span><span class="co">#&gt; 1       -0.0015         20 43113.5000            2.891            3.362</span></span>
+<span><span class="co">#&gt; 2       -0.0275         53  2126.1429            3.147            3.718</span></span>
+<span><span class="co">#&gt; 3        0.0060        150   324.4286            2.972            3.521</span></span>
+<span><span class="co">#&gt; 4       -0.0575          0     0.0000            2.714            3.328</span></span>
+<span><span class="co">#&gt; 5       -0.0070          0     0.0000            3.283            3.608</span></span>
+<span><span class="co">#&gt; 6        0.0415          0     0.0000            3.020            3.627</span></span>
+<span><span class="co">#&gt;         GRASS SOAL       MOFI ASTU       DECA Damage_effect bugs bug.rich</span></span>
+<span><span class="co">#&gt; 1          NA   NA         NA   NA         NA     0.0000000    9        7</span></span>
+<span><span class="co">#&gt; 2 -0.34584386   NA         NA   NA 0.04572438    -0.3001195    7        6</span></span>
+<span><span class="co">#&gt; 3 -0.04241343   NA -0.3771144   NA         NA    -0.4195279    4        2</span></span>
+<span><span class="co">#&gt; 4          NA   NA         NA   NA         NA     0.0000000    5        3</span></span>
+<span><span class="co">#&gt; 5 -2.74600928   NA         NA   NA         NA    -2.7460093    4        4</span></span>
+<span><span class="co">#&gt; 6          NA   NA         NA   NA         NA     0.0000000   11        7</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-description">Data description<a class="anchor" aria-label="anchor" href="#data-description"></a>
@@ -188,7 +210,7 @@ complexity</td>
 </table>
 </div>
 <div class="section level2">
-<h2 id="empirical-analyses">Empirical analyses<a class="anchor" aria-label="anchor" href="#empirical-analyses"></a>
+<h2 id="empirical-analyses---single-function">Empirical analyses - Single function<a class="anchor" aria-label="anchor" href="#empirical-analyses---single-function"></a>
 </h2>
 <p>We repeated the analyses in <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ" class="external-link">Cadotte
 et al. (2017)</a>, involving ten ecosystem functions. If only one
@@ -211,7 +233,7 @@ PGLMM</a>.</p>
 <span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span><span class="op">*</span><span class="va">sdres</span>,<span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="va">prior1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"pc.prec"</span><span class="op">)</span>,param<span class="op">=</span><span class="va">param</span><span class="op">)</span> <span class="co">#You can specify your own prior too. </span></span>
 <span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">P.lambda</span>,hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span> <span class="co">#start with the formula. Note that P.lambda is just a placeholder </span></span>
+<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/pkg/INLA/man/f.html" class="external-link">f</a></span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">P.lambda</span>,hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span> <span class="co">#start with the formula. Note that P.lambda is just a placeholder </span></span>
 <span></span>
 <span><span class="va">ML.opt2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span><span class="op">)</span>,</span>
 <span>               <span class="va">likelihood.lambda.INLA</span>,</span>
@@ -233,22 +255,102 @@ PGLMM</a>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">VCV_sp_INLA</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span></span>
 <span><span class="va">C.lambda.INLA</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp_INLA</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">prec.mat.INLA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">C.lambda.INLA</span><span class="op">)</span> <span class="co">#note that INLA requires a precision matrix, not a VCV</span></span>
+<span><span class="va">prec.mat.INLA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">C.lambda.INLA</span><span class="op">)</span> <span class="co">#note that INLA requires a precision matrix, not a VCV</span></span>
 <span></span>
-<span><span class="va">optim_m</span> <span class="op">&lt;-</span> <span class="fu">inla</span><span class="op">(</span><span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,</span>
+<span><span class="va">optim_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></span><span class="op">(</span><span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/pkg/INLA/man/f.html" class="external-link">f</a></span><span class="op">(</span><span class="va">comm</span>,</span>
 <span>                                           model<span class="op">=</span><span class="st">"generic0"</span>,</span>
 <span>                                           Cmatrix<span class="op">=</span><span class="va">prec.mat.INLA</span>,</span>
 <span>                                           hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                data<span class="op">=</span><span class="va">KSR_EF</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lm_m</span> <span class="op">&lt;-</span> <span class="fu">inla</span><span class="op">(</span><span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span>,</span>
+<span><span class="va">lm_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></span><span class="op">(</span><span class="va">log_flwr_total</span><span class="op">~</span><span class="va">Real.rich</span>,</span>
 <span>                data<span class="op">=</span><span class="va">KSR_EF</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">optim_m</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm_m</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, </span></span>
+<span><span class="co">#&gt;    ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " </span></span>
+<span><span class="co">#&gt;    scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, </span></span>
+<span><span class="co">#&gt;    ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = </span></span>
+<span><span class="co">#&gt;    verbose, ", " lincomb = lincomb, selection = selection, control.compute </span></span>
+<span><span class="co">#&gt;    = control.compute, ", " control.predictor = control.predictor, </span></span>
+<span><span class="co">#&gt;    control.family = control.family, ", " control.inla = control.inla, </span></span>
+<span><span class="co">#&gt;    control.fixed = control.fixed, ", " control.mode = control.mode, </span></span>
+<span><span class="co">#&gt;    control.expert = control.expert, ", " control.hazard = control.hazard, </span></span>
+<span><span class="co">#&gt;    control.lincomb = control.lincomb, ", " control.update = </span></span>
+<span><span class="co">#&gt;    control.update, control.lp.scale = control.lp.scale, ", " </span></span>
+<span><span class="co">#&gt;    control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, </span></span>
+<span><span class="co">#&gt;    ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = </span></span>
+<span><span class="co">#&gt;    num.threads, ", " keep = keep, working.directory = working.directory, </span></span>
+<span><span class="co">#&gt;    silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = </span></span>
+<span><span class="co">#&gt;    debug, .parent.frame = .parent.frame)" ) </span></span>
+<span><span class="co">#&gt; Time used:</span></span>
+<span><span class="co">#&gt;     Pre = 0.223, Running = 0.307, Post = 0.0142, Total = 0.544 </span></span>
+<span><span class="co">#&gt; Fixed effects:</span></span>
+<span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
+<span><span class="co">#&gt; (Intercept) 1.925 0.478      0.987    1.925      2.865 1.925   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.330 0.126      0.083    0.330      0.578 0.330   0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Random effects:</span></span>
+<span><span class="co">#&gt;   Name     Model</span></span>
+<span><span class="co">#&gt;     comm Generic0 model</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model hyperparameters:</span></span>
+<span><span class="co">#&gt;                                          mean    sd 0.025quant 0.5quant</span></span>
+<span><span class="co">#&gt; Precision for the Gaussian observations 2.430 0.401      1.725     2.40</span></span>
+<span><span class="co">#&gt; Precision for comm                      0.511 0.158      0.264     0.49</span></span>
+<span><span class="co">#&gt;                                         0.975quant  mode</span></span>
+<span><span class="co">#&gt; Precision for the Gaussian observations      3.299 2.352</span></span>
+<span><span class="co">#&gt; Precision for comm                           0.881 0.452</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -696.39 </span></span>
+<span><span class="co">#&gt;  is computed </span></span>
+<span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
+<span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm_m</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, </span></span>
+<span><span class="co">#&gt;    ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " </span></span>
+<span><span class="co">#&gt;    scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, </span></span>
+<span><span class="co">#&gt;    ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = </span></span>
+<span><span class="co">#&gt;    verbose, ", " lincomb = lincomb, selection = selection, control.compute </span></span>
+<span><span class="co">#&gt;    = control.compute, ", " control.predictor = control.predictor, </span></span>
+<span><span class="co">#&gt;    control.family = control.family, ", " control.inla = control.inla, </span></span>
+<span><span class="co">#&gt;    control.fixed = control.fixed, ", " control.mode = control.mode, </span></span>
+<span><span class="co">#&gt;    control.expert = control.expert, ", " control.hazard = control.hazard, </span></span>
+<span><span class="co">#&gt;    control.lincomb = control.lincomb, ", " control.update = </span></span>
+<span><span class="co">#&gt;    control.update, control.lp.scale = control.lp.scale, ", " </span></span>
+<span><span class="co">#&gt;    control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, </span></span>
+<span><span class="co">#&gt;    ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = </span></span>
+<span><span class="co">#&gt;    num.threads, ", " keep = keep, working.directory = working.directory, </span></span>
+<span><span class="co">#&gt;    silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = </span></span>
+<span><span class="co">#&gt;    debug, .parent.frame = .parent.frame)" ) </span></span>
+<span><span class="co">#&gt; Time used:</span></span>
+<span><span class="co">#&gt;     Pre = 0.184, Running = 0.261, Post = 0.00939, Total = 0.455 </span></span>
+<span><span class="co">#&gt; Fixed effects:</span></span>
+<span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
+<span><span class="co">#&gt; (Intercept) 2.151 0.378      1.408    2.151      2.893 2.151   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.138 0.171     -0.199    0.138      0.474 0.138   0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model hyperparameters:</span></span>
+<span><span class="co">#&gt;                                          mean    sd 0.025quant 0.5quant</span></span>
+<span><span class="co">#&gt; Precision for the Gaussian observations 0.324 0.049      0.235    0.321</span></span>
+<span><span class="co">#&gt;                                         0.975quant  mode</span></span>
+<span><span class="co">#&gt; Precision for the Gaussian observations      0.426 0.317</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -192.46 </span></span>
+<span><span class="co">#&gt;  is computed </span></span>
+<span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
+<span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="empirical-analyses---multiple-functions">Empirical analyses - Multiple functions<a class="anchor" aria-label="anchor" href="#empirical-analyses---multiple-functions"></a>
+</h2>
 <p>In my case, I used lapply to analyze all ecosystem function. So the
 codes are more complicated. Let’s define a function for the analysis
-first</p>
+first.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ef_empiricial</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ef_data</span>,<span class="va">x</span>,<span class="va">VCV_sp</span>,<span class="va">names</span>,<span class="va">ef_properties</span>,<span class="va">comm</span>,<span class="va">family</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ef_properties</span><span class="op">)</span></span>
@@ -290,16 +392,16 @@ first</p>
 <span>  <span class="va">newobs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y<span class="op">=</span><span class="cn">NA</span>,x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,comm<span class="op">=</span><span class="cn">NA</span><span class="op">)</span></span>
 <span>  <span class="va">INLA_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df</span>,<span class="va">newobs</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">m2_INLA_LM</span> <span class="op">&lt;-</span> <span class="fu">inla</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">x</span>,</span>
+<span>  <span class="va">m2_INLA_LM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">x</span>,</span>
 <span>                     data<span class="op">=</span><span class="va">INLA_df</span>,</span>
 <span>                     family<span class="op">=</span><span class="va">family</span>,</span>
 <span>                     control.compute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dic<span class="op">=</span><span class="cn">T</span>,waic<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">m2_INLA_LM</span> <span class="op">&lt;-</span> <span class="fu">inla.rerun</span><span class="op">(</span><span class="va">m2_INLA_LM</span><span class="op">)</span></span>
+<span>  <span class="va">m2_INLA_LM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/rerun.html" class="external-link">inla.rerun</a></span><span class="op">(</span><span class="va">m2_INLA_LM</span><span class="op">)</span></span>
 <span>  <span class="va">wAIC_LM</span> <span class="op">&lt;-</span> <span class="va">m2_INLA_LM</span><span class="op">$</span><span class="va">waic</span><span class="op">$</span><span class="va">waic</span></span>
 <span>  <span class="va">m2_INLA_LM_r2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">m2_INLA_LM</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>,<span class="st">"mean"</span><span class="op">]</span>,<span class="va">df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span>  </span>
-<span>  <span class="va">prec.mat.INLA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">C.lambda.INLA</span><span class="op">)</span></span>
-<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu">inla</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,</span>
+<span>  <span class="va">prec.mat.INLA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">C.lambda.INLA</span><span class="op">)</span></span>
+<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/pkg/INLA/man/f.html" class="external-link">f</a></span><span class="op">(</span><span class="va">comm</span>,</span>
 <span>                              model<span class="op">=</span><span class="st">"generic0"</span>,</span>
 <span>                              Cmatrix<span class="op">=</span><span class="va">prec.mat.INLA</span>,</span>
 <span>                              prior <span class="op">=</span> <span class="st">"pc.prec"</span>,</span>
@@ -309,23 +411,29 @@ first</p>
 <span>                        control.compute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dic<span class="op">=</span><span class="cn">T</span>,waic<span class="op">=</span><span class="cn">T</span><span class="op">)</span>,</span>
 <span>                        safe<span class="op">=</span><span class="cn">T</span>,</span>
 <span>                        control.inla <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>tolerance <span class="op">=</span> <span class="fl">1e-10</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu">inla.rerun</span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span> <span class="co"># https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo</span></span>
-<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu">inla.rerun</span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span> <span class="co"># https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo</span></span>
+<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/rerun.html" class="external-link">inla.rerun</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span> <span class="co"># https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo</span></span>
+<span>  <span class="va">m2_INLA_optim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/rerun.html" class="external-link">inla.rerun</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span> <span class="co"># https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">)</span></span>
-<span>  <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="op">-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="va">family</span> <span class="op">==</span> <span class="st">"poisson"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="op">-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="op">-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></span>
+<span></span>
+<span>  <span class="op">}</span></span>
 <span>  <span class="va">m2_INLA_optim_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">newobs</span><span class="op">$</span><span class="va">x</span>,<span class="va">m2_INLA_optim_predict</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>,<span class="st">"0.025quant"</span>,<span class="st">"0.975quant"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="va">m2_INLA_optim_predict</span><span class="op">$</span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">==</span>     <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fixed</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">]</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">m2_INLA_optim_r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">m2_INLA_optim</span><span class="op">$</span><span class="va">summary.fitted.values</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>,<span class="st">"mean"</span><span class="op">]</span>,<span class="va">df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span>  </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://strengejacke.github.io/ggeffects/" class="external-link">ggeffects</a></span><span class="op">)</span></span>
-<span>  <span class="va">m_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">ggeffect</span><span class="op">(</span><span class="va">m</span>,terms<span class="op">=</span><span class="st">"x"</span><span class="op">)</span>,sig<span class="op">=</span><span class="va">m_sig</span><span class="op">)</span></span>
+<span>  <span class="va">m_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggeffect</a></span><span class="op">(</span><span class="va">m</span>,terms<span class="op">=</span><span class="st">"x"</span><span class="op">)</span>,sig<span class="op">=</span><span class="va">m_sig</span><span class="op">)</span></span>
 <span>  <span class="va">m_predict</span> <span class="op">&lt;-</span> <span class="va">m_predict</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">7</span><span class="op">)</span><span class="op">]</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m2_INLA_optim_predict</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_predict</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co">###summarize the data into a dataframe</span></span>
 <span>  <span class="va">predict_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">m_predict</span>,</span>
-<span>                            model<span class="op">=</span><span class="st">"OLS"</span>,</span>
+<span>                            model<span class="op">=</span><span class="st">"LM/GLM"</span>,</span>
 <span>                            ef<span class="op">=</span><span class="va">ef_properties</span>,</span>
 <span>                            lambda<span class="op">=</span><span class="cn">NA</span>,</span>
 <span>                            hyper_Gaussian <span class="op">=</span> <span class="cn">NA</span>, </span>
@@ -351,12 +459,11 @@ first</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now let’s run it.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
-<span><span class="va">ef_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"litter2012"</span>,<span class="st">"ave.biomass"</span>,<span class="st">"LAI"</span>,<span class="st">"bug.rich"</span>,<span class="st">"bugs"</span>,<span class="st">"poll_total"</span>,<span class="st">"log_flwr_total"</span>,<span class="st">"Mass.loss.2month"</span>,<span class="st">"Damage_effect"</span>,<span class="st">"mean.N.change"</span><span class="op">)</span> <span class="co">#ecosystem functions analyzed</span></span>
+<code class="sourceCode R"><span><span class="va">ef_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"litter2012"</span>,<span class="st">"ave.biomass"</span>,<span class="st">"LAI"</span>,<span class="st">"bug.rich"</span>,<span class="st">"bugs"</span>,<span class="st">"poll_total"</span>,<span class="st">"log_flwr_total"</span>,<span class="st">"Mass.loss.2month"</span>,<span class="st">"Damage_effect"</span>,<span class="st">"mean.N.change"</span><span class="op">)</span> <span class="co">#ecosystem functions analyzed</span></span>
 <span><span class="va">ef</span> <span class="op">&lt;-</span> <span class="va">KSR_EF</span><span class="op">[</span>,<span class="va">ef_name</span><span class="op">]</span></span>
 <span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">P.lambda</span>,hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/pkg/INLA/man/f.html" class="external-link">f</a></span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">P.lambda</span>,hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec <span class="op">=</span> <span class="va">prior1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">family</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">ef_name</span> <span class="op">==</span> <span class="st">"bug.rich"</span> <span class="op">|</span> <span class="va">ef_name</span> <span class="op">==</span> <span class="st">"bugs"</span> <span class="op">|</span> <span class="va">ef_name</span> <span class="op">==</span> <span class="st">"poll_total"</span>,</span>
 <span>                 <span class="st">"poisson"</span>,</span>
 <span>                 <span class="st">"gaussian"</span><span class="op">)</span></span>
@@ -368,10 +475,24 @@ first</p>
 <span>                                                          ef_properties<span class="op">=</span><span class="va">ef_name</span><span class="op">[</span><span class="va">x</span><span class="op">]</span>,</span>
 <span>                                                          comm<span class="op">=</span><span class="va">KSR</span>,</span>
 <span>                                                          family<span class="op">=</span><span class="va">family</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "litter2012"</span></span>
+<span><span class="co">#&gt; [1] "ave.biomass"</span></span>
+<span><span class="co">#&gt; [1] "LAI"</span></span>
+<span><span class="co">#&gt; [1] "bug.rich"</span></span>
+<span><span class="co">#&gt; [1] "bugs"</span></span>
+<span><span class="co">#&gt; [1] "poll_total"</span></span>
+<span><span class="co">#&gt; [1] "log_flwr_total"</span></span>
+<span><span class="co">#&gt; [1] "Mass.loss.2month"</span></span>
+<span><span class="co">#&gt; [1] "Damage_effect"</span></span>
+<span><span class="co">#&gt; [1] "mean.N.change"</span></span>
 <span></span>
 <span><span class="va">predict_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>,<span class="va">predict_df</span><span class="op">)</span></span>
 <span><span class="va">predict_df</span><span class="op">$</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">predict_df</span><span class="op">$</span><span class="va">x</span></span>
 <span><span class="va">predict_df</span><span class="op">$</span><span class="va">sig_binary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">predict_df</span><span class="op">$</span><span class="va">sig</span> <span class="op">&lt;</span> <span class="fl">0.05</span>,<span class="st">"Significant"</span>,<span class="st">"Insignificant"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="data-visualization">Data visualization<a class="anchor" aria-label="anchor" href="#data-visualization"></a>
+</h2>
 <p>Now let’s visualize the findings</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -420,6 +541,7 @@ first</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"bottom"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Empirical_files/figure-html/unnamed-chunk-5-1.png" width="960cm"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

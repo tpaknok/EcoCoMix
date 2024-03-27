@@ -3,25 +3,27 @@ likelihood.lambda.INLA<-function(inla_formula,
                                  family="gaussian",
                                  phyV=NULL,
                                  comm=NULL,
-                                 lambda,prior = NULL,...){
+                                 lambda,
+                                 priors = NULL,
+                                 ...){
   require(INLA)
   message(lambda, "-INLA")
   V_lambda <- phyV*lambda
   diag(V_lambda) <- diag(phyV)
   C.lambda<- get_comm_pair_r(comm,V_lambda)
 
-  P.lambda <- solve(C.lambda)
-
-  unlist(unname(prior[1]),recursive=F)
+  Phylo <- solve(C.lambda)
 
   # create prior list in local environment
-  for (i in 1:length(prior)) {
-    if (lengths(prior[i]) > 1) {
-    assign(names(prior[i]),unlist(unname(prior[i]),recursive=F))
-    }
+  if (!is.null(priors)) {
+    for (i in 1:length(priors)) {
+      if (lengths(priors[i]) > 1) {
+      assign(names(priors[i]),unlist(unname(priors[i]),recursive=F))
+      }
 
-    if (length(prior[i]) == 1) {
-      assign(names(prior[i]),unname(prior[i])[[1]])
+    if (length(priors[i]) == 1) {
+      assign(names(priors[i]),unname(priors[i])[[1]])
+      }
     }
   }
   #res_f <- gsub("\\bf\\([^)]*\\)", "",Reduce(paste, deparse(formula)))

@@ -17,7 +17,9 @@ Imports:
     nlme,
     Matrix,
     matrixcalc,
-    effects
+    effects,
+    VGAM,
+    mgcv
 Suggests: 
     knitr,
     rmarkdown,

@@ -138,6 +138,7 @@ all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quan
 Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced!
 
 ```{r ggplot2,fig.width=8,fig.height=8}
+library(ggplot2)
 p <- ggplot(data=all_predictions)+
   geom_jitter(data=plot_data,aes(y=value,x=Real.rich),width=0)+
   geom_line(aes(y=`0.5quant`,x=Real.rich,colour=model,linetype=Sig))+
@@ -151,11 +152,4 @@ p <- ggplot(data=all_predictions)+
   theme(legend.position="bottom")
 
 plot(p)
-
-library(DHARMa)
-sres <- INLA_simulate(BEF_KSR[[10]]$best_model)
-DHARMa_res <- createDHARMa(sres,
-                           KSR_EF_list[[10]][,y[[10]]],
-                           BEF_KSR[[10]]$predicttedfittedresponse)
-plot(DHARMa_res,quantreg=F)
 ```

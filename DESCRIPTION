@@ -28,7 +28,6 @@ Suggests:
     ggplot2,
     ggeffects,
     INLA,
-    MatrixModels,
     sn
 VignetteBuilder: knitr
 Remotes:

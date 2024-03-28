@@ -38,7 +38,7 @@ jobs:
           dependencies: '"all"'
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(examples=FALSE,new_process = TRUE, install = TRUE)
+        run: pkgdown::build_site_github_pages(examples=FALSE,new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀

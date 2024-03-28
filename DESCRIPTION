@@ -20,7 +20,8 @@ Imports:
     effects,
     VGAM,
     mgcv,
-    DHARMa
+    DHARMa,
+    sn
 Suggests: 
     knitr,
     rmarkdown,

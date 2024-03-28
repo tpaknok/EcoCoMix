@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 This is an R Markdown document describing how to use CPR to conduct BEF regression, or any community-level analyses. You will need to install and load multiple packages and data.
-```{r setup, message=F}
+```{r setup, message=F, warning=F}
 library(phytools)
 library(tidyverse)
 library(CPR)
@@ -29,7 +29,7 @@ data("KSR_EF")
 ```
 
 Let's get the variane covariance matrix at species and community level.
-```{r,message=F}
+```{r,message=F, warning=F}
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
@@ -80,7 +80,7 @@ INLA sometimes might fail to run, and they will rerun automatically. You don't n
 
 If you choose to optimize the phylogenetic signal, this might take a while to run! So be patient!
 
-```{r BEF example,message=F}
+```{r BEF example,message=F, warning=F}
 inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,

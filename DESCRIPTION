@@ -27,7 +27,8 @@ Suggests:
     rmarkdown,
     ggplot2,
     ggeffects,
-    INLA
+    INLA,
+    sn
 VignetteBuilder: knitr
 Remotes:
   hrue/r-inla/rinla@stable

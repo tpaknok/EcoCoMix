@@ -135,7 +135,7 @@ plot_data$value[plot_data$response == "flwr_total"] <- log(plot_data$value[plot_
 all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quant","0.975quant")] <- log(all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quant","0.975quant")]+1)
 ```
 
-Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced!
+Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced.
 
 ```{r ggplot2,fig.width=8,fig.height=8}
 library(ggplot2)

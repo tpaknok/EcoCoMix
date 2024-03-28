@@ -27,6 +27,8 @@ library(tidyverse)
 library(CPR)
 library(INLA)
 detach(package:sn)
+detach(package:MatrixModels)
+
 data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")

@@ -64,13 +64,13 @@ head(KSR_EF)
 
 We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example, let's analyze flower abundance.
 
-INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested. 
+INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested.
 
-For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N~(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset. 
+For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N~(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
 
 Generally, you should think carefully about prior constructions. [Default priors are not always uninformative] (https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985), and they can have a huge influence on the data!
 
-The syntax of INLA is very different with other packages like lme4 and glmmTMB. For random effect, you need to use f() and provide all the necessary argument. If you have manually computed a covariance matrix, you need to first convert it to a precision matrix, and throw it to the Cmatrix argument. Also, you need to set model as "generic0". 
+The syntax of INLA is very different with other packages like lme4 and glmmTMB. For random effect, you need to use f() and provide all the necessary argument. If you have manually computed a covariance matrix, you need to first convert it to a precision matrix, and throw it to the Cmatrix argument. Also, you need to set model as "generic0".
 
 If you use CPR, you only need to supply the species-level covariance matrix to VCV_sp, and then add "Phylo" in the Cmatrix argument. Phylo is just a placeholder and the internal calculation of CPR will automatically convert the covariance matrix to a precision matrix (or even optimize the covariance matrix if you wish to do so).
 
@@ -107,7 +107,7 @@ plot(DHARMa_res,quantreg=F)
 
 You can see that our data doesn't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
-Now let's try to run the analyses with poisson distribution and see what happens. For the hyperparameter of gaussian distribution we will use default settings in INLA. 
+Now let's try to run the analyses with poisson distribution and see what happens. For the hyperparameter of gaussian distribution we will use default settings in INLA.
 
 ## A bad example
 
@@ -119,7 +119,7 @@ inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               comm=KSR,
               family="poisson")
 
-summary(inla_m2)
+summary(inla_m2$best_m)
 
 sres2 <- INLA_simulate(inla_m2$best_model)
 DHARMa_res2 <- createDHARMa(sres2,
@@ -129,7 +129,7 @@ DHARMa_res2 <- createDHARMa(sres2,
 plot(DHARMa_res2,quantreg=F)
 ```
 
-Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly. 
+Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly.
 
 There are other functions in DHARMa, so check out the package to build robust models!
 

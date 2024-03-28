@@ -29,35 +29,31 @@ VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
 ```
 
-## Empirical analyses - Multiple functions
+## Data Explorations
 
-We will use lapply to do it. We have ten ecosystem functions, and they have very different statistical properties. For examples, arthropod abundance must be integer, while damage reduction effects are continuous. If you visualize the distributions of different ecosystem functions, you can see that some of them have a spike in zero! 
+We will use lapply to do it. We have ten ecosystem functions, and they have very different statistical properties. For examples, arthropod abundance must be integer, while damage reduction effects are continuous. If you visualize the distributions of different ecosystem functions, you can see that some of them have a spike in zero!
 
 
 ```r
 plot(hist(KSR_EF$LAI))
 ```
 
-![plot of chunk distribution](figure/distribution-1.png)
+![Histograms of LAI](figure/LAI-1.png)
+
 
 ```r
 plot(hist(KSR_EF$flwr_total))
 ```
 
-![plot of chunk distribution](figure/distribution-2.png)
+![Histograms of floral abundance](figure/flwr total-1.png)
 
-```r
-plot(hist(KSR_EF$poll_total))
-```
-
-![plot of chunk distribution](figure/distribution-3.png)
-
-Thus, we will use different distributions for different ecosystem functions. For example, we will use negative binomial for integer data, and zeroinflated negative binomial for integer data that have many zeros. For continuous data, we can use normal distribution, or tweedie distribution if we have too many zeroes. 
+Thus, we will use different distributions for different ecosystem functions. For example, we will use negative binomial for integer data, and zeroinflated negative binomial for integer data that have many zeros. For continuous data, we can use normal distribution, or tweedie distribution if we have too many zeroes.
 
 We need to create lists to store different formulas, the name of distribution, and the priors for different models. Let's do it here.
 
-inla.set.contro.family.default indicates we will use the default priors for the hyperparameters. However, for tweedie distribution, we specified our own non-informative prior. 
+inla.set.contro.family.default indicates we will use the default priors for the hyperparameters. However, for tweedie distribution, we specified our own non-informative prior.
 
+## Model Setups
 
 ```r
 y <- c("poll_total",
@@ -111,6 +107,8 @@ comm_list[[10]] <- KSR[rowSums(KSR) >1,] #for damage effect, we exclude monocult
 
 Then we can simply use lapply to do loop through everything. This will take some time to run!!!
 
+## Empirical Analyses - Multiple Functions
+
 
 ```r
 BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
@@ -128,6 +126,10 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
 #> [1] "litter2012"
 #> [1] "ave.biomass"
 #> [1] "flwr_total"
+#> 
+#>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
+#> 
+#>  *** inla.core.safe:  rerun with improved initial values 
 #> [1] "Mass.loss.2month"
 #> [1] "LAI"
 #> [1] "mean.N.change"
@@ -136,7 +138,7 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
 
 ## Visualizations
 
-To visualize the expected effect of species richness on different ecosystem functions, we need to extract the predictions from each model. 
+To visualize the expected effect of species richness on different ecosystem functions, we need to extract the predictions from each model.
 
 
 ```r

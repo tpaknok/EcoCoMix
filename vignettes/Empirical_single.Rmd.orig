@@ -42,7 +42,7 @@ The KSR_EF data have multiple ecosystem function.
 head(KSR_EF)
 ```
 
-## Data description
+## Data Description
 
 
 | Variable         | Description                                                      |
@@ -60,7 +60,7 @@ head(KSR_EF)
 | bugs             | Total number of arthropods                                       |
 | bug.rich         | Species richness of arthropods                                   |
 
-## Empirical analyses - Single function
+## Empirical Analyses - Single Function
 
 We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions. If only one ecosystem function is of interest (or if you don't mind your code is clunky), you can just use INLA and write similar functions ten times. For example, let's analyze flower abundance.
 
@@ -68,7 +68,7 @@ INLA is a very powerful package, but can be a bit complicated to use. As it is a
 
 For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N~(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
 
-Generally, you should think carefully about prior constructions. [Default priors are not always uninformative] (https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985), and they can have a huge influence on the data!
+Generally, you should think carefully about prior constructions. [Default priors are not always uninformative](https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985), and they can have a huge influence on the data!
 
 The syntax of INLA is very different with other packages like lme4 and glmmTMB. For random effect, you need to use f() and provide all the necessary argument. If you have manually computed a covariance matrix, you need to first convert it to a precision matrix, and throw it to the Cmatrix argument. Also, you need to set model as "generic0".
 
@@ -91,10 +91,10 @@ inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
 
 summary(inla_m$best_model)
 ```
-## Residual checking
+## Residual Checking
 Let's do some model diagnostics to make sure our model makes sense. First, we will use the function INLA_simulate to obtain simulated response from our model. Then we will put it in DHARMa and conduct different diagnostics.
 
-```{r Diagnostic}
+```{r Diagnostic, fig.cap = "Outputs from DHARMa for the negative binomial model"}
 library(DHARMa)
 sres <- INLA_simulate(inla_m$best_model)
 DHARMa_res <- createDHARMa(sres,
@@ -105,13 +105,13 @@ plot(DHARMa_res,quantreg=F)
 
 ```
 
-You can see that our data doesn't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
+You can see that our data don't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
 Now let's try to run the analyses with poisson distribution and see what happens. For the hyperparameter of gaussian distribution we will use default settings in INLA.
 
 ## A bad example
 
-```{r gaussian,message=F}
+```{r gaussian,message=F, fig.cap = "Outputs from DHARMa for the poisson model"}
 inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,
@@ -134,9 +134,11 @@ Clearly a worse fit than negative binomial! We knew that poisson distributions o
 There are other functions in DHARMa, so check out the package to build robust models!
 
 ## Making figures
-Let's say we want to visualize the predicted relationships between arthropod abundance and species richness. Note that predict functions doesn't work in INLA, and many packages don't support INLA too. If you use CPR, the result will automatically provide predicted relationships and you can pass it to ggplot to make pretty figures. For each variable, CPR will create a list. Thus for example we can extract the predicted relationship from inla_m$prediction$Real.rich if we want to visualize the expected effect of species richness.
+Let's say we want to visualize the predicted relationships between arthropod abundance and species richness. Note that predict functions doesn't work in INLA, and many packages don't support INLA too. If you use CPR, the result will automatically provide predicted relationships and you can pass it to ggplot to make pretty figures. For each variable, CPR will create a list. Thus for example we can extract the predicted relationship from inla_m\$prediction\$Real.rich if we want to visualize the expected effect of species richness.
 
-```{r,fig.width=6,fig.height=6}
+Of course you can just visualize the effect with/without phylogeny, depending on which one fits better. Anyway, based on our models, we can conclude
+
+```{r,fig.width=12,fig.height=12, fig.cap="Predicted effects of species richness on arthropod abundance"}
 library(ggplot2)
 
 p <- ggplot()+

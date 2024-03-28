@@ -108,23 +108,16 @@ level.</p>
 <p>The KSR_EF data have multiple ecosystem function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month</span></span>
-<span><span class="co">#&gt; 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362</span></span>
-<span><span class="co">#&gt; 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718</span></span>
-<span><span class="co">#&gt; 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521</span></span>
-<span><span class="co">#&gt; 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328</span></span>
-<span><span class="co">#&gt; 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608</span></span>
-<span><span class="co">#&gt; 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627</span></span>
-<span><span class="co">#&gt;   Damage_effect bugs bug.rich</span></span>
-<span><span class="co">#&gt; 1     0.0000000    9        7</span></span>
-<span><span class="co">#&gt; 2     0.3001195    7        6</span></span>
-<span><span class="co">#&gt; 3     0.4195279    4        2</span></span>
-<span><span class="co">#&gt; 4     0.0000000    5        3</span></span>
-<span><span class="co">#&gt; 5     2.7460093    4        4</span></span>
-<span><span class="co">#&gt; 6     0.0000000   11        7</span></span></code></pre></div>
+<span><span class="co">#&gt;   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect bugs bug.rich</span></span>
+<span><span class="co">#&gt; 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000    9        7</span></span>
+<span><span class="co">#&gt; 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195    7        6</span></span>
+<span><span class="co">#&gt; 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279    4        2</span></span>
+<span><span class="co">#&gt; 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000    5        3</span></span>
+<span><span class="co">#&gt; 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093    4        4</span></span>
+<span><span class="co">#&gt; 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000   11        7</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="data-description">Data description<a class="anchor" aria-label="anchor" href="#data-description"></a>
+<h2 id="data-description">Data Description<a class="anchor" aria-label="anchor" href="#data-description"></a>
 </h2>
 <table class="table">
 <colgroup>
@@ -189,7 +182,7 @@ complexity</td>
 </table>
 </div>
 <div class="section level2">
-<h2 id="empirical-analyses---single-function">Empirical analyses - Single function<a class="anchor" aria-label="anchor" href="#empirical-analyses---single-function"></a>
+<h2 id="empirical-analyses---single-function">Empirical Analyses - Single Function<a class="anchor" aria-label="anchor" href="#empirical-analyses---single-function"></a>
 </h2>
 <p>We repeated the analyses in <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ" class="external-link">Cadotte
 et al. (2017)</a>, involving ten ecosystem functions. If only one
@@ -207,9 +200,9 @@ distribution N~(0,2). Note that the prior is in log-scale in the <a href="https:
 calculation of INLA</a>. That’s because the default setting loggamma
 (100,100) seems to have a very narrow range, thus becoming very
 informative, at least for our dataset.</p>
-<p>Generally, you should think carefully about prior constructions.
-[Default priors are not always uninformative] (<a href="https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985" class="external-link uri">https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985</a>),
-and they can have a huge influence on the data!</p>
+<p>Generally, you should think carefully about prior constructions. <a href="https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985" class="external-link">Default
+priors are not always uninformative</a>, and they can have a huge
+influence on the data!</p>
 <p>The syntax of INLA is very different with other packages like lme4
 and glmmTMB. For random effect, you need to use f() and provide all the
 necessary argument. If you have manually computed a covariance matrix,
@@ -239,48 +232,42 @@ while to run! So be patient!</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, </span></span>
-<span><span class="co">#&gt;    quantiles = quantiles, E = E, offset = offset, ", " scale = scale, weights = weights, </span></span>
-<span><span class="co">#&gt;    Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = </span></span>
-<span><span class="co">#&gt;    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, </span></span>
-<span><span class="co">#&gt;    control.compute = control.compute, ", " control.predictor = control.predictor, </span></span>
-<span><span class="co">#&gt;    control.family = control.family, ", " control.inla = control.inla, control.fixed = </span></span>
-<span><span class="co">#&gt;    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " </span></span>
-<span><span class="co">#&gt;    control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = </span></span>
-<span><span class="co">#&gt;    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = </span></span>
-<span><span class="co">#&gt;    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg </span></span>
-<span><span class="co">#&gt;    = inla.arg, num.threads = num.threads, ", " keep = keep, working.directory = </span></span>
-<span><span class="co">#&gt;    working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = </span></span>
-<span><span class="co">#&gt;    debug, .parent.frame = .parent.frame)" ) </span></span>
+<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, </span></span>
+<span><span class="co">#&gt;    E = E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale </span></span>
+<span><span class="co">#&gt;    = lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, </span></span>
+<span><span class="co">#&gt;    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, </span></span>
+<span><span class="co">#&gt;    ", " control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, </span></span>
+<span><span class="co">#&gt;    control.expert = control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " </span></span>
+<span><span class="co">#&gt;    control.update = control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, </span></span>
+<span><span class="co">#&gt;    only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, </span></span>
+<span><span class="co">#&gt;    ", " keep = keep, working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = </span></span>
+<span><span class="co">#&gt;    FALSE, debug = debug, .parent.frame = .parent.frame)" ) </span></span>
 <span><span class="co">#&gt; Time used:</span></span>
-<span><span class="co">#&gt;     Pre = 0.361, Running = 0.261, Post = 0.206, Total = 0.828 </span></span>
+<span><span class="co">#&gt;     Pre = 0.201, Running = 0.253, Post = 0.182, Total = 0.636 </span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
-<span><span class="co">#&gt; (Intercept) 2.126 0.346      1.412    2.137      2.776 2.137   0</span></span>
-<span><span class="co">#&gt; Real.rich   0.075 0.097     -0.117    0.075      0.267 0.075   0</span></span>
+<span><span class="co">#&gt; (Intercept) 2.117 0.355      1.382    2.129      2.784 2.129   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.073 0.098     -0.119    0.074      0.266 0.073   0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;   Name     Model</span></span>
 <span><span class="co">#&gt;     comm Generic0 model</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model hyperparameters:</span></span>
-<span><span class="co">#&gt;                                                        mean    sd 0.025quant 0.5quant 0.975quant</span></span>
-<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.53 0.514       1.67     2.48       3.69</span></span>
-<span><span class="co">#&gt; Precision for comm                                     2.46 1.346       0.80     2.16       5.92</span></span>
-<span><span class="co">#&gt;                                                        mode</span></span>
-<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.38</span></span>
-<span><span class="co">#&gt; Precision for comm                                     1.66</span></span>
+<span><span class="co">#&gt;                                                        mean    sd 0.025quant 0.5quant 0.975quant mode</span></span>
+<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.53 0.514      1.672     2.48       3.68 2.38</span></span>
+<span><span class="co">#&gt; Precision for comm                                     2.37 1.318      0.758     2.07       5.76 1.58</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 617.33</span></span>
-<span><span class="co">#&gt; Effective number of parameters .................: 11.79</span></span>
+<span><span class="co">#&gt; Effective number of parameters .................: 11.73</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Marginal log-Likelihood:  -866.26 </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -865.84 </span></span>
 <span><span class="co">#&gt;  is computed </span></span>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="residual-checking">Residual checking<a class="anchor" aria-label="anchor" href="#residual-checking"></a>
+<h2 id="residual-checking">Residual Checking<a class="anchor" aria-label="anchor" href="#residual-checking"></a>
 </h2>
 <p>Let’s do some model diagnostics to make sure our model makes sense.
 First, we will use the function INLA_simulate to obtain simulated
@@ -288,7 +275,6 @@ response from our model. Then we will put it in DHARMa and conduct
 different diagnostics.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/" class="external-link">DHARMa</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</span></span>
 <span><span class="va">sres</span> <span class="op">&lt;-</span> <span class="fu">INLA_simulate</span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres</span>,</span>
 <span>                           <span class="va">KSR_EF</span><span class="op">$</span><span class="va">bugs</span>,</span>
@@ -296,11 +282,12 @@ different diagnostics.</p>
 <span>                           integerResponse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">DHARMa_res</span>,quantreg<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/Diagnostic-1.png" alt="plot of chunk Diagnostic"><div class="figcaption">plot of chunk Diagnostic</div>
+<img src="figure/Diagnostic-1.png" alt="Outputs from DHARMa for the negative binomial model"><div class="figcaption">Outputs from DHARMa for the negative binomial
+model</div>
 </div>
-<p>You can see that our data doesn’t deviate a lot from the expected
-line in the QQ plot, which is a good thing. Also, there is no obvious
-pattern in the residual graph….so our model should be ok.</p>
+<p>You can see that our data don’t deviate a lot from the expected line
+in the QQ plot, which is a good thing. Also, there is no obvious pattern
+in the residual graph….so our model should be ok.</p>
 <p>Now let’s try to run the analyses with poisson distribution and see
 what happens. For the hyperparameter of gaussian distribution we will
 use default settings in INLA.</p>
@@ -317,20 +304,9 @@ use default settings in INLA.</p>
 <span>              family<span class="op">=</span><span class="st">"poisson"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "bugs"</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m2</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                         Length Class      Mode     </span></span>
-<span><span class="co">#&gt; best_model                52   inla       list     </span></span>
-<span><span class="co">#&gt; predictedfittedresponse   88   -none-     numeric  </span></span>
-<span><span class="co">#&gt; best_model_name            1   -none-     character</span></span>
-<span><span class="co">#&gt; wAIC_diff                  3   -none-     numeric  </span></span>
-<span><span class="co">#&gt; R2                         3   -none-     numeric  </span></span>
-<span><span class="co">#&gt; optimized_lambda           1   -none-     numeric  </span></span>
-<span><span class="co">#&gt; initial_formula            3   formula    call     </span></span>
-<span><span class="co">#&gt; fixed_model                7   data.frame list     </span></span>
-<span><span class="co">#&gt; optimized_model            7   data.frame list     </span></span>
-<span><span class="co">#&gt; original_VCV_model         7   data.frame list     </span></span>
-<span><span class="co">#&gt; Cmatrix                 7744   -none-     numeric  </span></span>
-<span><span class="co">#&gt; prediction                 1   -none-     list</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_m</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Length  Class   Mode </span></span>
+<span><span class="co">#&gt;      0   NULL   NULL</span></span>
 <span></span>
 <span><span class="va">sres2</span> <span class="op">&lt;-</span> <span class="fu">INLA_simulate</span><span class="op">(</span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres2</span>,</span>
@@ -339,7 +315,7 @@ use default settings in INLA.</p>
 <span>                           integerResponse<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">DHARMa_res2</span>,quantreg<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/gaussian-1.png" alt="plot of chunk gaussian"><div class="figcaption">plot of chunk gaussian</div>
+<img src="figure/gaussian-1.png" alt="Outputs from DHARMa for the poisson model"><div class="figcaption">Outputs from DHARMa for the poisson model</div>
 </div>
 <p>Clearly a worse fit than negative binomial! We knew that poisson
 distributions often fail to describe ecological data properly.</p>
@@ -355,8 +331,11 @@ doesn’t work in INLA, and many packages don’t support INLA too. If you
 use CPR, the result will automatically provide predicted relationships
 and you can pass it to ggplot to make pretty figures. For each variable,
 CPR will create a list. Thus for example we can extract the predicted
-relationship from inla_m<span class="math inline">\(prediction\)</span>Real.rich if we want to
-visualize the expected effect of species richness.</p>
+relationship from inla_m$prediction$Real.rich if we want to visualize
+the expected effect of species richness.</p>
+<p>Of course you can just visualize the effect with/without phylogeny,
+depending on which one fits better. Anyway, based on our models, we can
+conclude</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
@@ -378,7 +357,8 @@ visualize the expected effect of species richness.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4"><div class="figcaption">plot of chunk unnamed-chunk-4</div>
+<img src="figure/unnamed-chunk-4-1.png" alt="Predicted effects of species richness on arthropod abundance"><div class="figcaption">Predicted effects of species richness on
+arthropod abundance</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

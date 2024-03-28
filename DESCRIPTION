@@ -19,7 +19,8 @@ Imports:
     matrixcalc,
     effects,
     VGAM,
-    mgcv
+    mgcv,
+    DHARMa
 Suggests: 
     knitr,
     rmarkdown,

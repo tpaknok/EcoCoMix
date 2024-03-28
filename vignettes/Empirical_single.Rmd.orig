@@ -10,11 +10,16 @@ vignette: >
 
 ## Setup
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = FALSE
+)
+```
 
 This is an R Markdown document describing how to use CPR to conduct BEF regression, or any community-level analyses. You will need to install and load multiple packages and data.
-
-```r
+```{r setup, message=F, warning=F}
 library(phytools)
 library(tidyverse)
 library(CPR)
@@ -24,39 +29,17 @@ data("KSR_EF")
 ```
 
 Let's get the variane covariance matrix at species and community level.
-
-```r
+```{r,message=F, warning=F}
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
 VCV_comm[1:5,1:5]
-#>           [,1]      [,2]      [,3]      [,4]      [,5]
-#> [1,] 1.0000000 0.7031681 0.5639611 0.5601336 0.7539047
-#> [2,] 0.7031681 1.0000000 0.5458038 0.5420995 0.7048548
-#> [3,] 0.5639611 0.5458038 1.0000000 0.9932127 0.5749535
-#> [4,] 0.5601336 0.5420995 0.9932127 1.0000000 0.5710514
-#> [5,] 0.7539047 0.7048548 0.5749535 0.5710514 1.0000000
 ```
 
 The KSR_EF data have multiple ecosystem function.
 
-
-```r
+```{r}
 head(KSR_EF)
-#>   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month
-#> 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362
-#> 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718
-#> 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521
-#> 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328
-#> 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608
-#> 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627
-#>   Damage_effect bugs bug.rich
-#> 1     0.0000000    9        7
-#> 2     0.3001195    7        6
-#> 3     0.4195279    4        2
-#> 4     0.0000000    5        3
-#> 5     2.7460093    4        4
-#> 6     0.0000000   11        7
 ```
 
 ## Data description
@@ -97,8 +80,7 @@ INLA sometimes might fail to run, and they will rerun automatically. You don't n
 
 If you choose to optimize the phylogenetic signal, this might take a while to run! So be patient!
 
-
-```r
+```{r BEF example,message=F, warning=F}
 inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,
@@ -106,67 +88,22 @@ inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               comm=KSR,
               family="nbinomial",
               optim.lambda = T)
-#> [1] "bugs"
 
 summary(inla_m$best_model)
-#> 
-#> Call:
-#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, 
-#>    quantiles = quantiles, E = E, offset = offset, ", " scale = scale, weights = weights, 
-#>    Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = 
-#>    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
-#>    control.compute = control.compute, ", " control.predictor = control.predictor, 
-#>    control.family = control.family, ", " control.inla = control.inla, control.fixed = 
-#>    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " 
-#>    control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
-#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = 
-#>    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg 
-#>    = inla.arg, num.threads = num.threads, ", " keep = keep, working.directory = 
-#>    working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = 
-#>    debug, .parent.frame = .parent.frame)" ) 
-#> Time used:
-#>     Pre = 0.361, Running = 0.261, Post = 0.206, Total = 0.828 
-#> Fixed effects:
-#>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.126 0.346      1.412    2.137      2.776 2.137   0
-#> Real.rich   0.075 0.097     -0.117    0.075      0.267 0.075   0
-#> 
-#> Random effects:
-#>   Name	  Model
-#>     comm Generic0 model
-#> 
-#> Model hyperparameters:
-#>                                                        mean    sd 0.025quant 0.5quant 0.975quant
-#> size for the nbinomial observations (1/overdispersion) 2.53 0.514       1.67     2.48       3.69
-#> Precision for comm                                     2.46 1.346       0.80     2.16       5.92
-#>                                                        mode
-#> size for the nbinomial observations (1/overdispersion) 2.38
-#> Precision for comm                                     1.66
-#> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 617.33
-#> Effective number of parameters .................: 11.79
-#> 
-#> Marginal log-Likelihood:  -866.26 
-#>  is computed 
-#> Posterior summaries for the linear predictor and the fitted values are computed
-#> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
 ```
 ## Residual checking
 Let's do some model diagnostics to make sure our model makes sense. First, we will use the function INLA_simulate to obtain simulated response from our model. Then we will put it in DHARMa and conduct different diagnostics.
 
-
-```r
+```{r Diagnostic}
 library(DHARMa)
-#> This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')
 sres <- INLA_simulate(inla_m$best_model)
 DHARMa_res <- createDHARMa(sres,
                            KSR_EF$bugs,
                            fittedPredictedResponse=inla_m$predictedfittedresponse,
                            integerResponse = T)
 plot(DHARMa_res,quantreg=F)
-```
 
-![plot of chunk Diagnostic](figure/Diagnostic-1.png)
+```
 
 You can see that our data doesn't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
@@ -174,30 +111,15 @@ Now let's try to run the analyses with poisson distribution and see what happens
 
 ## A bad example
 
-
-```r
+```{r gaussian,message=F}
 inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,
               VCV_sp = VCV_sp,
               comm=KSR,
               family="poisson")
-#> [1] "bugs"
 
 summary(inla_m2)
-#>                         Length Class      Mode     
-#> best_model                52   inla       list     
-#> predictedfittedresponse   88   -none-     numeric  
-#> best_model_name            1   -none-     character
-#> wAIC_diff                  3   -none-     numeric  
-#> R2                         3   -none-     numeric  
-#> optimized_lambda           1   -none-     numeric  
-#> initial_formula            3   formula    call     
-#> fixed_model                7   data.frame list     
-#> optimized_model            7   data.frame list     
-#> original_VCV_model         7   data.frame list     
-#> Cmatrix                 7744   -none-     numeric  
-#> prediction                 1   -none-     list
 
 sres2 <- INLA_simulate(inla_m2$best_model)
 DHARMa_res2 <- createDHARMa(sres2,
@@ -207,8 +129,6 @@ DHARMa_res2 <- createDHARMa(sres2,
 plot(DHARMa_res2,quantreg=F)
 ```
 
-![plot of chunk gaussian](figure/gaussian-1.png)
-
 Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly. 
 
 There are other functions in DHARMa, so check out the package to build robust models!
@@ -216,8 +136,7 @@ There are other functions in DHARMa, so check out the package to build robust mo
 ## Making figures
 Let's say we want to visualize the predicted relationships between arthropod abundance and species richness. Note that predict functions doesn't work in INLA, and many packages don't support INLA too. If you use CPR, the result will automatically provide predicted relationships and you can pass it to ggplot to make pretty figures. For each variable, CPR will create a list. Thus for example we can extract the predicted relationship from inla_m$prediction$Real.rich if we want to visualize the expected effect of species richness.
 
-
-```r
+```{r,fig.width=6,fig.height=6}
 library(ggplot2)
 
 p <- ggplot()+
@@ -238,6 +157,4 @@ p <- ggplot()+
 
 plot(p)
 ```
-
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
 

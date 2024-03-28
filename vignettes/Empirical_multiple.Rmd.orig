@@ -10,13 +10,18 @@ vignette: >
 
 ## Setup
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = FALSE
+)
+```
 
 Assuming that you have multiple ecosystem functions to analyse, you can repeat the code for single ecosystem function analyses multiple times. This is a bit annoying though, especially if you have a lot of data! Here, I will provide an example on how to use a loop to do it.
 
 First, load the data again.
-
-```r
+```{r setup, message=F, warning=F}
 library(phytools)
 library(tidyverse)
 library(CPR)
@@ -31,35 +36,21 @@ VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
 
 ## Empirical analyses - Multiple functions
 
-We will use lapply to do it. We have ten ecosystem functions, and they have very different statistical properties. For examples, arthropod abundance must be integer, while damage reduction effects are continuous. If you visualize the distributions of different ecosystem functions, you can see that some of them have a spike in zero! 
+We will use lapply to do it. We have ten ecosystem functions, and they have very different statistical properties. For examples, arthropod abundance must be integer, while damage reduction effects are continuous. If you visualize the distributions of different ecosystem functions, you can see that some of them have a spike in zero!
 
-
-```r
+```{r distribution}
 plot(hist(KSR_EF$LAI))
-```
-
-![plot of chunk distribution](figure/distribution-1.png)
-
-```r
 plot(hist(KSR_EF$flwr_total))
-```
-
-![plot of chunk distribution](figure/distribution-2.png)
-
-```r
 plot(hist(KSR_EF$poll_total))
 ```
 
-![plot of chunk distribution](figure/distribution-3.png)
-
-Thus, we will use different distributions for different ecosystem functions. For example, we will use negative binomial for integer data, and zeroinflated negative binomial for integer data that have many zeros. For continuous data, we can use normal distribution, or tweedie distribution if we have too many zeroes. 
+Thus, we will use different distributions for different ecosystem functions. For example, we will use negative binomial for integer data, and zeroinflated negative binomial for integer data that have many zeros. For continuous data, we can use normal distribution, or tweedie distribution if we have too many zeroes.
 
 We need to create lists to store different formulas, the name of distribution, and the priors for different models. Let's do it here.
 
-inla.set.contro.family.default indicates we will use the default priors for the hyperparameters. However, for tweedie distribution, we specified our own non-informative prior. 
+inla.set.contro.family.default indicates we will use the default priors for the hyperparameters. However, for tweedie distribution, we specified our own non-informative prior.
 
-
-```r
+```{r Model setup}
 y <- c("poll_total",
        "bugs",
        "bug.rich",
@@ -107,12 +98,12 @@ comm_list <- lapply(1:10, function(x) KSR) #ten sets of comm data
 
 KSR_EF_list[[10]] <- subset(KSR_EF_list[[10]], Real.rich > 1) #for damage effect, we exclude monoculture communities
 comm_list[[10]] <- KSR[rowSums(KSR) >1,] #for damage effect, we exclude monoculture communities
+
 ```
 
 Then we can simply use lapply to do loop through everything. This will take some time to run!!!
 
-
-```r
+```{r loop, message=FALSE}
 BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     priors=NULL,
                                                     df = KSR_EF_list[[x]],
@@ -122,31 +113,20 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     control.family=control.family[[x]],
                                                     inla.rerun=3,
                                                     optim.lambda = T))
-#> [1] "poll_total"
-#> [1] "bugs"
-#> [1] "bug.rich"
-#> [1] "litter2012"
-#> [1] "ave.biomass"
-#> [1] "flwr_total"
-#> [1] "Mass.loss.2month"
-#> [1] "LAI"
-#> [1] "mean.N.change"
-#> [1] "Damage_effect"
+
 ```
 
 ## Visualizations
 
-To visualize the expected effect of species richness on different ecosystem functions, we need to extract the predictions from each model. 
+To visualize the expected effect of species richness on different ecosystem functions, we need to extract the predictions from each model.
 
-
-```r
+```{r extract predictions}
 all_predictions <- do.call(rbind,sapply(1:10, function(x) BEF_KSR[[x]]$prediction))
 ```
 
 To make a figure, I also need to restructure KSR_EF from a wide format to long format. Also, flower abundance ranged from 0-60000, so I presented the findings in log-scale (although in the analyses we did not log transform it, as tweedie use log link).
 
-
-```r
+```{r restructuring KSR_EF}
 plot_data <- KSR_EF %>%
   select(any_of(y)|"Real.rich") %>%
   pivot_longer(!Real.rich,names_to="response")
@@ -157,8 +137,7 @@ all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quan
 
 Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced.
 
-
-```r
+```{r ggplot2,fig.width=8,fig.height=8}
 library(ggplot2)
 p <- ggplot(data=all_predictions)+
   geom_jitter(data=plot_data,aes(y=value,x=Real.rich),width=0)+
@@ -174,5 +153,3 @@ p <- ggplot(data=all_predictions)+
 
 plot(p)
 ```
-
-![plot of chunk ggplot2](figure/ggplot2-1.png)

@@ -21,6 +21,7 @@ Imports:
     VGAM,
     mgcv,
     DHARMa,
+    MatrixModels,
     sn
 Suggests: 
     knitr,

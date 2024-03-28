@@ -112,7 +112,7 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     family=family[[x]],
                                                     control.family=control.family[[x]],
                                                     inla.rerun=3,
-                                                    optim.lambda = T)
+                                                    optim.lambda = T))
 
 ```
 

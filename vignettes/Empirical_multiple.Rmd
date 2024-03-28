@@ -26,8 +26,6 @@ library(phytools)
 library(tidyverse)
 library(CPR)
 library(INLA)
-library(MatrixModels)
-library(Matrix)
 data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")
@@ -105,7 +103,7 @@ comm_list[[10]] <- KSR[rowSums(KSR) >1,] #for damage effect, we exclude monocult
 
 Then we can simply use lapply to do loop through everything. This will take some time to run!!!
 
-```{r loop, message=F}
+```{r loop, message=FALSE}
 BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     priors=NULL,
                                                     df = KSR_EF_list[[x]],
@@ -114,8 +112,7 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     family=family[[x]],
                                                     control.family=control.family[[x]],
                                                     inla.rerun=3,
-                                                    optim.lambda = T,
-                                                    optim.control = list(factr=1e11)))
+                                                    optim.lambda = T)
 
 ```
 

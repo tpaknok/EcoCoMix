@@ -10,6 +10,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/tpaknok/CPR, https://tpaknok.github.io/CPR/
 BugReports: https://github.com/tpaknok/CPR/issues
+Depends: Matrix (>= 1.6-5)
 Imports:
     ape,
     phytools,

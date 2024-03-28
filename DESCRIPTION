@@ -21,14 +21,15 @@ Imports:
     effects,
     VGAM,
     mgcv,
-    DHARMa,
-    MatrixModels
+    DHARMa
 Suggests: 
     knitr,
     rmarkdown,
     ggplot2,
     ggeffects,
-    INLA
+    INLA,
+    MatrixModels,
+    sn
 VignetteBuilder: knitr
 Remotes:
   hrue/r-inla/rinla@stable

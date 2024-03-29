@@ -40,8 +40,8 @@ In the simulation, we only considered Brownian motion. However, you can also try
 For each scenario, we will have run the simulation 500 times. Optimizing the λ takes a long time. Thus, we will only conduct optimization for 100 times. NOTE THAT running this could take several hours!!
 
 ```{r,message=FALSE,eval=F}
-sim <- 500
-optim_sim <- 100
+sim <- 30
+optim_sim <- 15
 optim_seq <- sample(c(rep(TRUE, optim_sim), rep(FALSE, sim-optim_sim)), sim ,replace = F)
 INLA_formula <-  y~x+f(comm,model="generic0",Cmatrix=Phylo)
 GLS_formula <- y~x
@@ -78,7 +78,7 @@ INLA_eval_lambda_1 <- BEF_simulate_eval(INLA_lambda_1,type="INLA")
 
 ```
 
-```{r}
+```{r,eval=F}
 sim_data_lambda_0 <- BEF_simulate(comm = KSR,
                          V = VCV_sp,
                          ef_mean = 0,

@@ -1,17 +1,20 @@
 likelihood.lambda<-function(lambda,
-                            y,
-                            X,
-                            V,
+                            formula,
+                            df,
+                            VCV_sp,
                             comm){
-  message(lambda)
-  V_lambda <- V*lambda
-  diag(V_lambda) <- diag(V)
+
+  formula <- as.formula(formula)
+  V_lambda <- VCV_sp*lambda
+  diag(V_lambda) <- diag(VCV_sp)
 
   C.lambda<- get_comm_pair_r(comm,V_lambda)
   n <- ncol(C.lambda)
 
-  sim_data <- data.frame(y=y,X=X)
-  gls_m <- gls(y~X,data=sim_data,correlation=corSymm(C.lambda[lower.tri(C.lambda)], fixed = T))
+  gls_m <- gls(formula,
+               data=df,
+               correlation=corSymm(C.lambda[lower.tri(C.lambda)], fixed = T))
+
   AIC <- AIC(gls_m)
   logL <- logLik(gls_m)
   #beta<-solve(t(X)%*%solve(C.lambda)%*%X)%*%(t(X)%*%solve(C.lambda)%*%y)

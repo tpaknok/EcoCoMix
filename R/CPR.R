@@ -33,7 +33,7 @@ CPR <- function(formula,
   wAIC_GLM <- wAIC_optim <- wAIC_original <- NA
   m1_INLA_GLM_r2 <- m1_INLA_optim_r2 <- m1_INLA_original_r2 <- NA
   lambda_INLA <- NA
-  m1_INLA_GLM <- m1_INLA_optim <- m1_INLA_original <- NULL
+  m_optim_result <- m_original_result <- NA
   prec.mat.INLA <- NA
   prediction <- NA
   prediction_phylo <- NA
@@ -114,7 +114,7 @@ CPR <- function(formula,
 
     wAIC_original <- m1_INLA_original$waic$waic
     m1_INLA_original_r2<- cor(m1_INLA_original$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
-
+    m_original_result <- m1_INLA_original$summary.fixed
   }
 
   # if (priors == "pc.prec") {
@@ -164,6 +164,8 @@ CPR <- function(formula,
 
   wAIC_optim <- m1_INLA_optim$waic$waic
   m1_INLA_optim_r2 <- cor(m1_INLA_optim$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
+
+  m_optim_result <- m1_INLA_optim$summary.fixed
 
   if (wAIC_optim - wAIC_GLM < -2) {
     best_m <- m1_INLA_optim
@@ -223,13 +225,13 @@ CPR <- function(formula,
   output <- list(best_model = best_m,
                  predictedfittedresponse = pfr,
                  best_model_name = best_model,
-                 wAIC_diff = c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original),
+                 wAIC = c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original),
                  R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),
-                 optimized_lambda = lambda_INLA,
+                 optim_lambda = lambda_INLA,
                  initial_formula = formula,
-                 fixed_model = m1_INLA_GLM$summary.fixed,
-                 optimized_model = m1_INLA_optim$summary.fixed,
-                 original_VCV_model = m1_INLA_original$summary.fixed,
+                 without_phylo_model = m1_INLA_GLM$summary.fixed,
+                 optimized_model = m_optim_result,
+                 original_VCV_model = m_original_result,
                  Cmatrix = prec.mat.INLA,
                  prediction = prediction
                  )

@@ -130,6 +130,10 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
 #>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
 #> 
 #>  *** inla.core.safe:  rerun with improved initial values 
+#> 
+#>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
+#> 
+#>  *** inla.core.safe:  rerun with improved initial values 
 #> [1] "Mass.loss.2month"
 #> [1] "LAI"
 #> [1] "mean.N.change"
@@ -177,4 +181,4 @@ p <- ggplot(data=all_predictions)+
 plot(p)
 ```
 
-![plot of chunk ggplot2](figure/ggplot2-1.png)
+![Predicted effects of species richness on the ten selected ecosystem functions](figure/ggplot2-1.png)

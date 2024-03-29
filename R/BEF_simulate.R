@@ -7,8 +7,10 @@ BEF_simulate <- function(comm,
                          signals_intercept=T,
                          signals_slope=T,
                          lambda_true=1,
-                         sim=500) {
+                         sim=500,
+                         seed=1000) {
 
+  sed.seed(seed)
   C <- get_comm_pair_r(comm,V)
 
   V_true <- V*lambda_true

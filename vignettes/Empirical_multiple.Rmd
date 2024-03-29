@@ -181,4 +181,4 @@ p <- ggplot(data=all_predictions)+
 plot(p)
 ```
 
-![Predicted effects of species richness on the ten selected ecosystem functions](figure/ggplot2-1.png)
+![plot of chunk ggplot2](figure/ggplot2-1.png){width=100%}

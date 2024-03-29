@@ -142,7 +142,7 @@ all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quan
 
 Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced.
 
-```{r ggplot2, fig.caps="Predicted effects of species richness on the ten selected ecosystem functions"}
+```{r ggplot2, fig.caps="Predicted effects of species richness on the ten selected ecosystem functions",dpi=600}
 library(ggplot2)
 p <- ggplot(data=all_predictions)+
   geom_jitter(data=plot_data,aes(y=value,x=Real.rich),width=0)+

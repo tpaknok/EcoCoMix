@@ -94,7 +94,7 @@ summary(inla_m$best_model)
 ## Residual Checking
 Let's do some model diagnostics to make sure our model makes sense. First, we will use the function INLA_simulate to obtain simulated response from our model. Then we will put it in DHARMa and conduct different diagnostics.
 
-```{r Diagnostic, fig.cap = "Outputs from DHARMa for the negative binomial model"}
+```{r Diagnostic, dpi=600, fig.cap = "Outputs from DHARMa for the negative binomial model"}
 library(DHARMa)
 sres <- INLA_simulate(inla_m$best_model)
 DHARMa_res <- createDHARMa(sres,
@@ -111,7 +111,7 @@ Now let's try to run the analyses with poisson distribution and see what happens
 
 ## A bad example
 
-```{r gaussian,message=F, fig.cap = "Outputs from DHARMa for the poisson model"}
+```{r gaussian,message=F, dpi=600, fig.cap = "Outputs from DHARMa for the poisson model"}
 inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,
@@ -119,7 +119,7 @@ inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               comm=KSR,
               family="poisson")
 
-summary(inla_m2$best_m)
+summary(inla_m2$best_model)
 
 sres2 <- INLA_simulate(inla_m2$best_model)
 DHARMa_res2 <- createDHARMa(sres2,
@@ -138,14 +138,15 @@ Let's say we want to visualize the predicted relationships between arthropod abu
 
 Of course you can just visualize the effect with/without phylogeny, depending on which one fits better. Anyway, based on our models, we can conclude
 
-```{r,fig.width=12,fig.height=12, fig.cap="Predicted effects of species richness on arthropod abundance"}
+```{r bugs,dpi=300,fig.cap="Predicted effects of species richness on arthropod abundance"}
 library(ggplot2)
 
 p <- ggplot()+
   geom_point(data=KSR_EF,aes(x=Real.rich,y=bugs))+
   geom_line(data=inla_m$prediction$Real.rich,aes(x=Real.rich,
                                                  y=`0.5quant`,
-                                                 colour=model))+
+                                                 colour=model,
+                                                 ),linetype=2)+
   geom_ribbon(data=inla_m$prediction$Real.rich,aes(x=Real.rich,
                                                    y=`0.5quant`,
                                                    ymin=`0.025quant`,
@@ -154,9 +155,14 @@ p <- ggplot()+
                                                    ),alpha=0.3)+
   scale_colour_manual(values=c("#000000","#E69F00"))+
   scale_fill_manual(values=c("#000000","#E69F00"))+
-  labs(x="Species Richness",y = "Arthropod Abundance")+
-  theme_classic()
+  labs(x="Species richness",y = "Arthropod abundance",fill="Model",colour="Model")+
+  theme_classic()+
+  theme(legend.position="bottom")
 
 plot(p)
 ```
 
+```{r, include=F, eval=F}
+ggsave("C:/Users/pakno/OneDrive - University of Toronto/CPR/CPR/vignettes/figure/bugs.png",height=5,width=5,dpi=600)
+ggsave("C:/Users/pakno/OneDrive - University of Toronto/CPR/CPR/vignettes/figure/bugs.tiff",height=5,width=5,dpi=600,compression="lzw")
+```

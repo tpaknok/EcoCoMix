@@ -107,9 +107,9 @@ plot(DHARMa_res,quantreg=F)
 
 You can see that our data don't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
-Now let's try to run the analyses with poisson distribution and see what happens. For the hyperparameter of gaussian distribution we will use default settings in INLA.
 
-## A bad example
+## A Bad Example
+Now let's try to run the analyses with poisson distribution and see what happens. For the hyperparameter of poisson distribution we will use default settings in INLA.
 
 ```{r gaussian,message=F, dpi=600, fig.cap = "Outputs from DHARMa for the poisson model"}
 inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
@@ -136,9 +136,9 @@ There are other functions in DHARMa, so check out the package to build robust mo
 ## Making figures
 Let's say we want to visualize the predicted relationships between arthropod abundance and species richness. Note that predict functions doesn't work in INLA, and many packages don't support INLA too. If you use CPR, the result will automatically provide predicted relationships and you can pass it to ggplot to make pretty figures. For each variable, CPR will create a list. Thus for example we can extract the predicted relationship from inla_m\$prediction\$Real.rich if we want to visualize the expected effect of species richness.
 
-Of course you can just visualize the effect with/without phylogeny, depending on which one fits better. Anyway, based on our models, we can conclude
+Of course you can just visualize the effect with/without phylogeny, depending on which one fits better. Anyway, based on our models, we found no evidence that arthropod abundance varied across different treatments.
 
-```{r bugs,dpi=300,fig.cap="Predicted effects of species richness on arthropod abundance"}
+```{r bugs,dpi = 300,fig.cap = "Predicted effects of species richness on arthropod abundance"}
 library(ggplot2)
 
 p <- ggplot()+

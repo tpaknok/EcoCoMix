@@ -134,10 +134,14 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
 #>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
 #> 
 #>  *** inla.core.safe:  rerun with improved initial values 
-#> [1] "Mass.loss.2month"
-#> [1] "LAI"
-#> [1] "mean.N.change"
-#> [1] "Damage_effect"
+#> 
+#>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
+#> 
+#>  *** inla.core.safe:  rerun with improved initial values 
+#> 
+#>  *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1
+#> Error in inla.core.safe(formula = formula, family = family, contrasts = contrasts, : The inla program call crashed.
+#> The inla program failed and the maximum number of tries has been reached.
 ```
 
 ## Visualizations
@@ -147,6 +151,7 @@ To visualize the expected effect of species richness on different ecosystem func
 
 ```r
 all_predictions <- do.call(rbind,sapply(1:10, function(x) BEF_KSR[[x]]$prediction))
+#> Error in FUN(X[[i]], ...): object 'BEF_KSR' not found
 ```
 
 To make a figure, I also need to restructure KSR_EF from a wide format to long format. Also, flower abundance ranged from 0-60000, so I presented the findings in log-scale (although in the analyses we did not log transform it, as tweedie use log link).
@@ -159,6 +164,7 @@ plot_data <- KSR_EF %>%
 
 plot_data$value[plot_data$response == "flwr_total"] <- log(plot_data$value[plot_data$response == "flwr_total"]+1)
 all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quant","0.975quant")] <- log(all_predictions[all_predictions$response == "flwr_total",c("0.5quant","0.025quant","0.975quant")]+1)
+#> Error in eval(expr, envir, enclos): object 'all_predictions' not found
 ```
 
 Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) was produced.
@@ -177,8 +183,8 @@ p <- ggplot(data=all_predictions)+
   scale_colour_manual(values=c("#000000","#E69F00"))+
   scale_fill_manual(values=c("#000000","#E69F00"))+
   theme(legend.position="bottom")
+#> Error in eval(expr, envir, enclos): object 'all_predictions' not found
 
 plot(p)
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'plot': object 'p' not found
 ```
-
-![plot of chunk ggplot2](figure/ggplot2-1.png){width=100%}

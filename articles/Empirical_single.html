@@ -253,11 +253,11 @@ while to run! So be patient!</p>
 <span><span class="co">#&gt;    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = </span></span>
 <span><span class="co">#&gt;    .parent.frame)" ) </span></span>
 <span><span class="co">#&gt; Time used:</span></span>
-<span><span class="co">#&gt;     Pre = 0.335, Running = 0.266, Post = 0.175, Total = 0.777 </span></span>
+<span><span class="co">#&gt;     Pre = 0.276, Running = 0.306, Post = 0.202, Total = 0.784 </span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
-<span><span class="co">#&gt; (Intercept) 2.155 0.314       1.51    2.164      2.748 2.163   0</span></span>
-<span><span class="co">#&gt; Real.rich   0.080 0.096      -0.11    0.080      0.270 0.080   0</span></span>
+<span><span class="co">#&gt; (Intercept) 2.223 0.221      1.780    2.225      2.650 2.225   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.091 0.092     -0.088    0.090      0.273 0.090   0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;   Name     Model</span></span>
@@ -265,13 +265,13 @@ while to run! So be patient!</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model hyperparameters:</span></span>
 <span><span class="co">#&gt;                                                        mean    sd 0.025quant 0.5quant 0.975quant mode</span></span>
-<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.677     2.49       3.69 2.39</span></span>
-<span><span class="co">#&gt; Precision for comm                                     2.81 1.485      0.939     2.49       6.61 1.94</span></span>
+<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.51 0.504       1.66     2.46       3.64 2.36</span></span>
+<span><span class="co">#&gt; Precision for comm                                     4.20 2.144       1.46     3.74       9.65 2.96</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 617.42</span></span>
-<span><span class="co">#&gt; Effective number of parameters .................: 11.92</span></span>
+<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 618.55</span></span>
+<span><span class="co">#&gt; Effective number of parameters .................: 12.05</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Marginal log-Likelihood:  -868.30 </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -884.01 </span></span>
 <span><span class="co">#&gt;  is computed </span></span>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span></code></pre></div>
@@ -285,6 +285,7 @@ response from our model. Then we will put it in DHARMa and conduct
 different diagnostics.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/" class="external-link">DHARMa</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</span></span>
 <span><span class="va">sres</span> <span class="op">&lt;-</span> <span class="fu">INLA_simulate</span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres</span>,</span>
 <span>                           <span class="va">KSR_EF</span><span class="op">$</span><span class="va">bugs</span>,</span>
@@ -292,19 +293,19 @@ different diagnostics.</p>
 <span>                           integerResponse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">DHARMa_res</span>,quantreg<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/Diagnostic-1.png" style="width:100.0%" alt="Outputs from DHARMa for the negative binomial model"><div class="figcaption">Outputs from DHARMa for the negative binomial
+<img src="figure/Diagnostic-1.png" alt="Outputs from DHARMa for the negative binomial model"><div class="figcaption">Outputs from DHARMa for the negative binomial
 model</div>
 </div>
 <p>You can see that our data don’t deviate a lot from the expected line
 in the QQ plot, which is a good thing. Also, there is no obvious pattern
 in the residual graph….so our model should be ok.</p>
-<p>Now let’s try to run the analyses with poisson distribution and see
-what happens. For the hyperparameter of gaussian distribution we will
-use default settings in INLA.</p>
 </div>
 <div class="section level2">
-<h2 id="a-bad-example">A bad example<a class="anchor" aria-label="anchor" href="#a-bad-example"></a>
+<h2 id="a-bad-example">A Bad Example<a class="anchor" aria-label="anchor" href="#a-bad-example"></a>
 </h2>
+<p>Now let’s try to run the analyses with poisson distribution and see
+what happens. For the hyperparameter of poisson distribution we will use
+default settings in INLA.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inla_m2</span> <span class="op">&lt;-</span> <span class="fu">CPR</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">bugs</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/pkg/INLA/man/f.html" class="external-link">f</a></span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">Phylo</span><span class="op">)</span>,</span>
 <span>              priors<span class="op">=</span><span class="cn">NULL</span>,</span>
@@ -331,11 +332,11 @@ use default settings in INLA.</p>
 <span><span class="co">#&gt;    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = </span></span>
 <span><span class="co">#&gt;    .parent.frame)" ) </span></span>
 <span><span class="co">#&gt; Time used:</span></span>
-<span><span class="co">#&gt;     Pre = 0.198, Running = 0.199, Post = 0.0523, Total = 0.449 </span></span>
+<span><span class="co">#&gt;     Pre = 0.262, Running = 0.215, Post = 0.0831, Total = 0.56 </span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
-<span><span class="co">#&gt; (Intercept) 2.043 0.242      1.555    2.047      2.508 2.047   0</span></span>
-<span><span class="co">#&gt; Real.rich   0.024 0.063     -0.102    0.025      0.147 0.025   0</span></span>
+<span><span class="co">#&gt; (Intercept) 2.024 0.247      1.528    2.027      2.501 2.027   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.024 0.062     -0.099    0.024      0.145 0.024   0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;   Name     Model</span></span>
@@ -343,12 +344,12 @@ use default settings in INLA.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model hyperparameters:</span></span>
 <span><span class="co">#&gt;                    mean    sd 0.025quant 0.5quant 0.975quant mode</span></span>
-<span><span class="co">#&gt; Precision for comm 1.78 0.678       0.73     1.68       3.36 1.50</span></span>
+<span><span class="co">#&gt; Precision for comm 1.64 0.624      0.673     1.55       3.09 1.38</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 872.72</span></span>
-<span><span class="co">#&gt; Effective number of parameters .................: 69.21</span></span>
+<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 872.66</span></span>
+<span><span class="co">#&gt; Effective number of parameters .................: 69.32</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Marginal log-Likelihood:  -973.65 </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -972.61 </span></span>
 <span><span class="co">#&gt;  is computed </span></span>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span>
@@ -360,7 +361,7 @@ use default settings in INLA.</p>
 <span>                           integerResponse<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">DHARMa_res2</span>,quantreg<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/gaussian-1.png" style="width:100.0%" alt="Outputs from DHARMa for the poisson model"><div class="figcaption">Outputs from DHARMa for the poisson model</div>
+<img src="figure/gaussian-1.png" alt="Outputs from DHARMa for the poisson model"><div class="figcaption">Outputs from DHARMa for the poisson model</div>
 </div>
 <p>Clearly a worse fit than negative binomial! We knew that poisson
 distributions often fail to describe ecological data properly.</p>
@@ -379,8 +380,9 @@ CPR will create a list. Thus for example we can extract the predicted
 relationship from inla_m$prediction$Real.rich if we want to visualize
 the expected effect of species richness.</p>
 <p>Of course you can just visualize the effect with/without phylogeny,
-depending on which one fits better. Anyway, based on our models, we can
-conclude</p>
+depending on which one fits better. Anyway, based on our models, we
+found no evidence that arthropod abundance varied across different
+treatments.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
@@ -404,7 +406,7 @@ conclude</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="figure/bugs-1.png" style="width:100.0%" alt="Predicted effects of species richness on arthropod abundance"><div class="figcaption">Predicted effects of species richness on
+<img src="figure/bugs-1.png" alt="Predicted effects of species richness on arthropod abundance"><div class="figcaption">Predicted effects of species richness on
 arthropod abundance</div>
 </div>
 </div>

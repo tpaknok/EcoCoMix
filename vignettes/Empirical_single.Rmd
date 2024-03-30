@@ -125,11 +125,11 @@ summary(inla_m$best_model)
 #>    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = 
 #>    .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.276, Running = 0.306, Post = 0.202, Total = 0.784 
+#>     Pre = 0.227, Running = 0.248, Post = 0.163, Total = 0.638 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.223 0.221      1.780    2.225      2.650 2.225   0
-#> Real.rich   0.091 0.092     -0.088    0.090      0.273 0.090   0
+#> (Intercept) 2.129 0.344      1.419    2.140      2.775 2.140   0
+#> Real.rich   0.076 0.097     -0.116    0.076      0.267 0.076   0
 #> 
 #> Random effects:
 #>   Name	  Model
@@ -137,13 +137,13 @@ summary(inla_m$best_model)
 #> 
 #> Model hyperparameters:
 #>                                                        mean    sd 0.025quant 0.5quant 0.975quant mode
-#> size for the nbinomial observations (1/overdispersion) 2.51 0.504       1.66     2.46       3.64 2.36
-#> Precision for comm                                     4.20 2.144       1.46     3.74       9.65 2.96
+#> size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.675     2.48       3.69 2.38
+#> Precision for comm                                     2.48 1.356      0.808     2.18       5.97 1.68
 #> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 618.55
-#> Effective number of parameters .................: 12.05
+#> Watanabe-Akaike information criterion (WAIC) ...: 617.33
+#> Effective number of parameters .................: 11.80
 #> 
-#> Marginal log-Likelihood:  -884.01 
+#> Marginal log-Likelihood:  -866.36 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
@@ -163,7 +163,7 @@ DHARMa_res <- createDHARMa(sres,
 plot(DHARMa_res,quantreg=F)
 ```
 
-![Outputs from DHARMa for the negative binomial model](figure/Diagnostic-1.png)
+![Outputs from DHARMa for the negative binomial model](figure/Diagnostic-1.png){width=100%}
 
 You can see that our data don't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
@@ -198,11 +198,11 @@ summary(inla_m2$best_model)
 #>    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = 
 #>    .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.262, Running = 0.215, Post = 0.0831, Total = 0.56 
+#>     Pre = 0.219, Running = 0.199, Post = 0.0739, Total = 0.492 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.024 0.247      1.528    2.027      2.501 2.027   0
-#> Real.rich   0.024 0.062     -0.099    0.024      0.145 0.024   0
+#> (Intercept) 2.013 0.250      1.513    2.016      2.496 2.016   0
+#> Real.rich   0.024 0.061     -0.098    0.024      0.143 0.024   0
 #> 
 #> Random effects:
 #>   Name	  Model
@@ -210,12 +210,12 @@ summary(inla_m2$best_model)
 #> 
 #> Model hyperparameters:
 #>                    mean    sd 0.025quant 0.5quant 0.975quant mode
-#> Precision for comm 1.64 0.624      0.673     1.55       3.09 1.38
+#> Precision for comm 1.55 0.592      0.638     1.47       2.93 1.31
 #> 
 #> Watanabe-Akaike information criterion (WAIC) ...: 872.66
-#> Effective number of parameters .................: 69.32
+#> Effective number of parameters .................: 69.38
 #> 
-#> Marginal log-Likelihood:  -972.61 
+#> Marginal log-Likelihood:  -972.14 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
@@ -228,7 +228,7 @@ DHARMa_res2 <- createDHARMa(sres2,
 plot(DHARMa_res2,quantreg=F)
 ```
 
-![Outputs from DHARMa for the poisson model](figure/gaussian-1.png)
+![Outputs from DHARMa for the poisson model](figure/gaussian-1.png){width=100%}
 
 Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly.
 
@@ -264,6 +264,6 @@ p <- ggplot()+
 plot(p)
 ```
 
-![Predicted effects of species richness on arthropod abundance](figure/bugs-1.png)
+![Predicted effects of species richness on arthropod abundance](figure/bugs-1.png){width=100%}
 
 

@@ -5,17 +5,13 @@ BEF_simulate <- function(comm,
                          b1=0,
                          signals_X="sr",
                          signals_intercept=T,
-                         signals_slope=T,
+                         signals_slope=F,
                          lambda_true=1,
                          sim=500,
                          seed=1000) {
 
   sed.seed(seed)
   C <- get_comm_pair_r(comm,V)
-
-  V_true <- V*lambda_true
-  diag(V_true) <- diag(V)
-  C_true <- get_comm_pair_r(comm,V_true)
 
   if (signals_X == "sr") {
     x <- replicate(rowSums(comm),n=sim) #species richness
@@ -29,6 +25,10 @@ BEF_simulate <- function(comm,
     x <- replicate(rnorm(nrow(comm),0,1),n=sim) #no signals in X
   }
 
+  V_true <- V*lambda_true
+  diag(V_true) <- diag(V)
+  C_true <- get_comm_pair_r(comm,V_true)
+
   if (signals_intercept == T & signals_slope==T) {
     library(MASS)
     RE <- replicate(mvrnorm(length(x),
@@ -38,12 +38,12 @@ BEF_simulate <- function(comm,
     comm_beta <- t(chol(C_true))%*%RE[,2]
     sr_E_cor <- cor(x,comm_beta*x+comm_int)
     slope_int_cor <- cor(comm_beta,comm_int)
-    y <- b1*x+comm_beta*x+comm_int #signals in intercept and slope
+    y <- b1*x+comm_beta*x+comm_int#signals in intercept and slope
   }
 
   if (signals_intercept == T & signals_slope == F) {
     comm_int <- t(chol(C_true)) %*% replicate(rnorm(n=nrow(comm),mean=ef_mean,sd=sd),n=sim)
-    y <- b1*x+comm_int #signals in intercept but not slope
+    y <- b1*x+comm_int#signals in intercept but not slope
     sr_E_cor <- NA
     slope_int_cor <- NA
   }

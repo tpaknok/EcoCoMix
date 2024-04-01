@@ -4,7 +4,6 @@ CPR_GLS <- function(formula,
                     comm,
                     optim.lambda=T,
                     original.VCV=T,
-                    optim.control=NULL,
                     ...) {
 
   require(nlme)
@@ -30,7 +29,8 @@ CPR_GLS <- function(formula,
                   comm=comm,
                   method="L-BFGS-B",
                   lower=0.0,
-                  upper=1)
+                  upper=1,
+                  ...)
 
     lambda_GLS<-ML.opt$par
     logL<--ML.opt$value

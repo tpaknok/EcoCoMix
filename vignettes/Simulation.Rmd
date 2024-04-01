@@ -39,7 +39,7 @@ In the simulation, we only considered Brownian motion. However, you can also try
 
 For each scenario, we will have run the simulation 500 times. Optimizing the λ takes a long time. Thus, we will only conduct optimization for 100 times. NOTE THAT running this could take several hours!!
 
-```{r,message=FALSE,eval=F}
+```{r lambda 1,message=FALSE,eval=F}
 sim <- 500
 optim_sim <- 100
 optim_seq <- sample(c(rep(TRUE, optim_sim), rep(FALSE, sim-optim_sim)), sim ,replace = F)
@@ -78,7 +78,7 @@ INLA_eval_lambda_1 <- BEF_simulate_eval(INLA_lambda_1,type="INLA")
 
 ```
 
-```{r,eval=F}
+```{r lambda 0,message=FALSE,eval=F}
 sim_data_lambda_0 <- BEF_simulate(comm = KSR,
                          V = VCV_sp,
                          ef_mean = 0,
@@ -91,94 +91,91 @@ sim_data_lambda_0 <- BEF_simulate(comm = KSR,
                          sim = sim)
 
 
+VCV_sp_lambda0 <- VCV_sp*0
+diag(VCV_sp_lambda0) <- diag(VCV_sp)
+
 GLS_lambda_0 <- lapply(1:sim, function(x) CPR_GLS(formula = y~x,
-                                                  df = sim_data_lambda_1$sim_dat[[x]],
-                                                  VCV_sp = VCV_sp,
+                                                  df = sim_data_lambda_0$sim_dat[[x]],
+                                                  VCV_sp = VCV_sp_lambda0,
                                                   optim.lambda = optim_seq[[x]],
                                                   comm = KSR))
 
 INLA_formula <-  y~x+f(comm,model="generic0",Cmatrix=Phylo)
 INLA_lambda_0 <- lapply(1:sim, function(x) CPR(formula = INLA_formula,
                                              priors=NULL,
-                                             df = sim_data_lambda_1$sim_dat[[x]],
+                                             df = sim_data_lambda_0$sim_dat[[x]],
+                                             VCV_sp = VCV_sp_lambda0,
+                                            comm=KSR,
+                                            family= "gaussian",
+                                            inla.rerun=3,
+                                            optim.lambda = optim_seq[[x]]))
+
+GLS_eval_lambda_0 <- BEF_simulate_eval(GLS_lambda_0,type="GLS")
+INLA_eval_lambda_0 <- BEF_simulate_eval(INLA_lambda_0,type="INLA")
+
+```
+
+``````{r lambda 0.5,message=FALSE,eval=F}
+sim_data_lambda_0.5 <- BEF_simulate(comm = KSR,
+                         V = VCV_sp,
+                         ef_mean = 0,
+                         sd = 1,
+                         b1 = 0,
+                         signals_X = "sr",
+                         signals_intercept = T,
+                         signals_slope = F,
+                         lambda_true = 0.5,
+                         sim = sim)
+
+
+VCV_sp_lambda0.5 <- VCV_sp*0.5
+diag(VCV_sp_lambda0) <- diag(VCV_sp)
+
+GLS_lambda_0.5 <- lapply(1:sim, function(x) CPR_GLS(formula = y~x,
+                                                  df = sim_data_lambda_0$sim_dat[[x]],
+                                                  VCV_sp = VCV_sp_lambda0.5,
+                                                  optim.lambda = optim_seq[[x]],
+                                                  comm = KSR))
+
+INLA_formula <-  y~x+f(comm,model="generic0",Cmatrix=Phylo)
+INLA_lambda_0.5 <- lapply(1:sim, function(x) CPR(formula = INLA_formula,
+                                             priors=NULL,
+                                             df = sim_data_lambda_0$sim_dat[[x]],
+                                             VCV_sp = VCV_sp_lambda0.5,
+                                            comm=KSR,
+                                            family= "gaussian",
+                                            inla.rerun=3,
+                                            optim.lambda = optim_seq[[x]]))
+
+```
+
+``````{r no lambda,message=FALSE,eval=F}
+sim_data_no_lambda <- BEF_simulate(comm = KSR,
+                         V = VCV_sp,
+                         ef_mean = 0,
+                         sd = 1,
+                         b1 = 0,
+                         signals_X = "sr",
+                         signals_intercept = T,
+                         signals_slope = F,
+                         lambda_true = 0.5,
+                         sim = sim)
+
+
+GLS_lambda_no_lambda <- lapply(1:sim, function(x) CPR_GLS(formula = y~x,
+                                                  df = sim_data_no_lambda$sim_dat[[x]],
+                                                  VCV_sp = VCV_sp,
+                                                  optim.lambda = optim_seq[[x]],
+                                                  comm = KSR))
+
+INLA_formula <-  y~x+f(comm,model="generic0",Cmatrix=Phylo)
+INLA_lambda_no_lambda <- lapply(1:sim, function(x) CPR(formula = INLA_formula,
+                                             priors=NULL,
+                                             df = sim_data_no_lambda$sim_dat[[x]],
                                              VCV_sp = VCV_sp,
                                             comm=KSR,
                                             family= "gaussian",
                                             inla.rerun=3,
                                             optim.lambda = optim_seq[[x]]))
-```
 
-```{r,eval=F}
-### type-I error
-lapply(sim_results_sr_corE, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-lapply(sim_results_sr_corE0.5, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-lapply(sim_results_sr_nocorE, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-
-### range of estimates
-lapply(sim_results_sr_corE, function(x) range(x,na.rm=T))[8:14]
-lapply(sim_results_sr_corE0.5, function(x) range(x,na.rm=T))[8:14]
-lapply(sim_results_sr_nocorE, function(x) range(x,na.rm=T))[8:14]
-```
-
-Repeat the same code, but this time we will test type-II error (Power) instead of type-I error. Thus, we set b1 as a positive number (0.25) instead of zero. 
-
-```{r,message=FALSE,eval=F}
-b1 <- 0.25
-set.seed(1000)
-n <- 500
-optim_n <- 100
-optim_seq <- sample(c(rep(TRUE, optim_n), rep(FALSE, n-optim_n)), n ,replace = F)
-
-sim_results_sr_corE0.5_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
-           VCV_sp,
-           0,
-           1,
-           b1=b1,
-           signals_X="sr",
-           signals_intercept=T,
-           signals_slope=F,
-           lambda_true=0.5,
-           true_model=T,
-           optim_model=x,
-           INLA_formula = f))
-sim_results_sr_corE0.5_2<- data.frame(do.call(rbind,sim_results_sr_corE0.5_2),data="sr_corE0.5")
-
-sim_results_sr_corE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
-           VCV_sp,
-           0,
-           1,
-           b1=b1,
-           signals_X="sr",
-           signals_intercept=T,
-           signals_slope=F,
-           lambda_true=1,
-           true_model=T,
-           optim_model=x,
-           INLA_formula = f))
-sim_results_sr_corE_2 <- data.frame(do.call(rbind,sim_results_sr_corE_2),data="sr_corError")
-
-sim_results_sr_nocorE_2 <- lapply(optim_seq,function(x) sim_CGLS(KSR,
-           VCV_sp,
-           0,
-           1,
-           b1=b1,
-           signals_X="sr",
-           signals_intercept=T,
-           signals_slope=F,
-           lambda_true=0,
-           true_model=T,
-           optim_model=x,
-           INLA_formula = f))
-sim_results_sr_nocorE_2 <- data.frame(do.call(rbind,sim_results_sr_nocorE_2),data="sr_nocorError")
-```
-```{r,eval=F}
-###Power
-lapply(sim_results_sr_corE_2, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-lapply(sim_results_sr_corE0.5_2, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-lapply(sim_results_sr_nocorE_2, function(x) sum(x<0.05,na.rm=T)/length(x[!is.na(x)]))[1:7]
-
-###Range of estimate
-lapply(sim_results_sr_corE_2, function(x) range(x,na.rm=T))[8:14]
-lapply(sim_results_sr_corE0.5_2, function(x) range(x,na.rm=T))[8:14]
-lapply(sim_results_sr_nocorE_2, function(x) range(x,na.rm=T))[8:14]
 ```

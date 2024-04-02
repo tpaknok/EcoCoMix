@@ -167,13 +167,12 @@ CPR <- function(formula,
 
   m_optim_result <- m1_INLA_optim$summary.fixed
 
-  if (wAIC_optim - wAIC_GLM < -2) {
-    best_m <- m1_INLA_optim
-    best_model <- "With phylogeny"
-  } else {
-    best_m <- m1_INLA_GLM
-    best_model <- "Without phylogeny"
-  }
+  wAIC_all <- c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original)
+  min_wAIC_m <- names(which.min(wAIC_all))
+  best_m <- switch(min_wAIC_m,
+                   wAIC_optim = m1_INLA_optim,
+                   wAIC_no_phylo = m1_INLA_glm,
+                   wAIC_original_VCV = m1_INLA_original)
 
   prediction_phylo <- cbind(df,
                             f(m1_INLA_optim$summary.fitted.values, inverse=T),
@@ -224,8 +223,7 @@ CPR <- function(formula,
 
   output <- list(best_model = best_m,
                  predictedfittedresponse = pfr,
-                 best_model_name = best_model,
-                 wAIC = c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original),
+                 wAIC = wAIC_all,
                  R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),
                  optim_lambda = lambda_INLA,
                  initial_formula = formula,

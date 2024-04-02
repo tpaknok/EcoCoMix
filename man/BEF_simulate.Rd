@@ -52,6 +52,9 @@ A list of data frames with the length equals the number of simulation. The data 
 \author{
 Toby P.N. Tsang
 }
+\seealso{
+\code{\link[CPR]{BEF_simulate_eval}}
+}
 \examples{
 library(phytools)
 library(tidyverse)

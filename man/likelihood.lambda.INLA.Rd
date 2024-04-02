@@ -14,7 +14,8 @@ likelihood.lambda.INLA(inla_formula,
                        phyV = NULL,
                        comm = NULL,
                        lambda,
-                       priors = NULL, ...)
+                       priors = NULL,
+                       ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -66,7 +67,7 @@ The initial value is randomized between 0.2 and 0.8, but the results are capped 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[CPR]{likelihood.lambda.INLA}}, \code{\link[CPR]{get_comm_pair_r}, \code{\link[INLA]{inla}}
 }
 \examples{
 }

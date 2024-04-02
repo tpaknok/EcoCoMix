@@ -1,7 +1,5 @@
 INLA_simulate <- function(object,
                            nsim = 250,
-                           re.form = NULL,
-                           ntry = 5,
                            Ntrails=NULL) {
 
   if(object$.args$family == "binomial") {
@@ -13,7 +11,6 @@ INLA_simulate <- function(object,
   f <- get(paste0("inla.link.",object$misc$linkfunctions$names)) #link function!!
   fam <- object$.args$family
 
-  if(is.null(re.form)){
       samples <- inla.posterior.sample(nsim, object)
 
       mu_sim <- lapply(samples, function(x) f(x$latent[1:length(na.omit(object$waic$local.waic))],
@@ -74,34 +71,6 @@ INLA_simulate <- function(object,
                             )
 
       sim <- do.call(cbind, sim)
-    }
-
-  if(deparse(re.form) == "~0" | deparse(re.form) == "NA"){
-
-    message("unavailable. Only support re.form = NULL")
-      # condition on none of the random effects
-      # beta_names <- rownames(object$summary.fixed)
-      # selection <- as.list(rep(0, length(beta_names)))
-      # names(selection) <- beta_names
-      # beta_sim <- INLA::inla.posterior.sample(nsim, object,
-      #                                         selection = selection)
-      #
-      # beta_sim <- sapply(beta_sim, function(x) x$latent)
-      #
-      # mu_sim <- (as.matrix(object$model.matrix) %*% beta_sim) %>%
-      # as.data.frame()
-      #
-      # mu_sim <- lapply(mu_sim, function(x) f(x,inverse=T))
-      #
-      # sim <- switch(fam,
-      #               binomial = lapply(mu_sim, function(x) rbinom(length(x), Ntrials, x)),
-      #               poisson = lapply(mu_sim, function(x) rpois(length(x), x)),
-      #               mu_sim
-      #   )
-      #
-      # sim <- do.call(cbind, sim)
-
-    }
 
   return(sim)
 }

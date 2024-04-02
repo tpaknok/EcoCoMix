@@ -65,7 +65,7 @@ the optimized \eqn{\lambda} (i.e., the \eqn{\lambda} leading to lowest AIC).
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Toby P. N. Tsang
 }
 \note{
 %%  ~~further notes~~
@@ -75,6 +75,7 @@ the optimized \eqn{\lambda} (i.e., the \eqn{\lambda} leading to lowest AIC).
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[CPR]{CPR}}, \code{\link[CPR]{get_comm_pair_r}, \code{\link[nlme]{gls}}
 }
 \examples{
 library(phytools)

@@ -55,7 +55,7 @@ Toby P.N. Tsang
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[CPR]{BEF_simulate}}
 }
 \examples{
 library(phytools)

@@ -56,7 +56,7 @@ Toby P. N. Tsang
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[CPR]{likelihood.lambda}},  \code{\link[CPR]{get_comm_pair_r}, \code{\link[nlme]{gls}}
 }
 \examples{
 }

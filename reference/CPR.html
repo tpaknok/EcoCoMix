@@ -120,18 +120,21 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When specifying the random effect, use <code>Cmatrix = Phylo</code> to indicate the phylogenetic covariance between communities, and <code>comm</code> as the identity of each community. See examples. You don't need to create them in the data frame. CPR will automatically create these for you in the internal environment.</p>
 <p>The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\(\lambda\)). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized \(\lambda\) (i.e., \(wAIC_{optimized} - wAIC_{without\_phylogeny} &gt; -2\)</p>
-<p>Note that even if optimized (\(\lambda\)) = 0, the model is not equivalent to a linear regression, as the model still consider species overlap between communities.</p>
+<p>Note that even if optimized (\(\lambda\)) = 0, the model is not equivalent to a linear regression, as the covariance matrices will still consider species overlap between communities. Therefore, the off-diagnoals in glmm are still not zeroes.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <dl><dt>best_model</dt>
 <dd><p>INLA output for the best model</p></dd>
 
+  <dt>best_model_name</dt>
+<dd><p>The model identified as the "best".</p></dd>
+
   <dt>predictedfittedresponse</dt>
 <dd><p>median posterior predictions</p></dd>
 
   <dt>wAIC</dt>
-<dd><p>wAIC of models (without phylogeny, with the user supplied phylogenetic covariance matrix, and with the optimized phylogeny). The model with the lowest wAIC will be selected as the best_model</p></dd>
+<dd><p>wAIC of models (without phylogeny, with the user supplied phylogenetic covariance matrix, and with the optimized phylogeny).</p></dd>
 
   <dt>R2</dt>
 <dd><p>R-squared calculated as correlations between the observed responses and the mean posterior predictions</p></dd>

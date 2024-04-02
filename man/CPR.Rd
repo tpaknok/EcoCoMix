@@ -70,7 +70,7 @@ additional arguments passing to \code{\link[INLA]{inla}}
 \details{
 When specifying the random effect, use \code{Cmatrix = Phylo} to indicate the phylogenetic covariance between communities, and \code{comm} as the identity of each community. See examples. You don't need to create them in the data frame. CPR will automatically create these for you in the internal environment.
 
-The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\eqn{\lambda}). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized \eqn{\lambda} (i.e., \eqn{wAIC_{optimized} - wAIC_{without\_phylogeny} > -2}
+The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\eqn{\lambda}). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized/original \eqn{\lambda}, which means \deqn{wAIC_{optimized/original} - wAIC_{without\_phylogeny} > -2}
 
 Note that even if optimized (\eqn{\lambda}) = 0, the model is not equivalent to a linear regression, as the covariance matrices will still consider species overlap between communities. Therefore, the off-diagnoals in glmm are still not zeroes.
 }

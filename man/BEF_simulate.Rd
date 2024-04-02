@@ -8,16 +8,16 @@ Simulating a BEF relationship with/without phylogenetic signals. Broadly, this c
 }
 \usage{
 BEF_simulate(comm,
-V,
-ef_mean,
-sd,
-b1 = 0,
-signals_X = "sr",
-signals_intercept = TRUE,
-signals_slope = FALSE,
-lambda_true = 1,
-sim = 500,
-seed=1000)
+             V,
+             ef_mean,
+             sd,
+             b1 = 0,
+             signals_X = "sr",
+             signals_intercept = TRUE,
+             signals_slope = FALSE,
+             lambda_true = 1,
+             sim = 500,
+             seed=1000)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,11 +34,11 @@ seed=1000)
   \item{seed}{The seed used to simulate the data. The default is 1000.}
 }
 \details{
-The simulated relationship is \eqn{Y = (b_{0}+Z_{1,comm})+(b_{1}+Z_{0,comm})X},
+The simulated relationship is \deqn{Y = (b_{0}+Z_{1,comm})+(b_{1}+Z_{0,comm})X}
 
-where \eqn{b_{0}} is the population-level intercept, \eqn{b_{1}} is the poluation-level effect of \eqn{X}, \eqn{Z_{0,comm}} is the random intercept for each community, \eqn{Z_{1,comm}} is the random slope for each community. If signals_intercept and signals_slope are FALSE, both random effects will be zero.
+where \eqn{b_{0}} is the population-level intercept, \eqn{b_{1}} is the poluation-level effect of \eqn{X}, \eqn{Z_{0,comm}} is the random intercept for each community, \eqn{Z_{1,comm}} is the random slope for each community. If signals_intercept and signals_slope are FALSE, the random effects will be zero.
 
-If signals_X = "phy_cor", X will be \eqn{chol({C_{comm})U}}, where \eqn{U} is a data vector randomly sampled from a Normal distirbution \eqn{N(ef\_ mean,sd)}, and \eqn{chol({C_{comm})}} is the upper triangular of the Cholesky decomposition of the phylogenetic covariance matrix at community levels. This is also the same way how random intercepts and slopes are generated
+If signals_X = "phy_cor", X will be \deqn{chol({C_{comm})U}} \deqn{U ~ Gaussian(ef\_ mean,sd)} where \eqn{U} is a data vector randomly sampled from a Normal distirbution, and \eqn{chol({C_{comm})}} is the upper triangular of the Cholesky decomposition of the phylogenetic covariance matrix at community levels. This is also the same way how random intercepts and slopes are generated
 }
 \value{
 A list of data frames with the length equals the number of simulation. The data frames contained two columns X and Y.

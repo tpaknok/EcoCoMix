@@ -21,7 +21,7 @@ INLA or CPR output (e.g. m$best_model)
 Number of simulations
 }
   \item{Ntrails}{
-The number of trials for the binomial likelihood. see \code{\link[INLA]{inla}}. Defaulted as 1.
+The number of trials for the binomial likelihood. This should match the input to \code{Ntrials} in \code{\link[INLA]{inla}}. Defaulted as 1.
 }
 }
 \details{

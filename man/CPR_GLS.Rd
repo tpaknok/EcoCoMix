@@ -62,7 +62,7 @@ the optimized \eqn{\lambda} (i.e., the \eqn{\lambda} leading to lowest AIC).
 }
 }
 \author{
-Toby P. N. Tsang
+Toby P.N. Tsang
 }
 
 \seealso{

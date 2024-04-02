@@ -11,7 +11,7 @@ Optimizing phylogenetic signals (\eqn{\lambda}) at community levels for INLA mod
 likelihood.lambda.INLA(inla_formula,
                        data,
                        family = "gaussian",
-                       phyV = NULL,
+                       VCV_sp = NULL,
                        comm = NULL,
                        lambda,
                        priors = NULL,
@@ -28,7 +28,7 @@ likelihood.lambda.INLA(inla_formula,
   \item{family}{
   error distribution (e.g., "gaussian","poisson"). See INLA package for the distribution available.
 }
-  \item{phyV}{
+  \item{VCV_sp}{
   a phylogenetic covariance matrix at species levels.
 }
   \item{comm}{

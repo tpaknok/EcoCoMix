@@ -1,15 +1,15 @@
 likelihood.lambda.INLA<-function(inla_formula,
                                  data,
                                  family="gaussian",
-                                 phyV=NULL,
+                                 VCV_sp=NULL,
                                  comm=NULL,
                                  lambda,
                                  priors = NULL,
                                  ...){
   require(INLA)
   message(lambda, "-INLA")
-  V_lambda <- phyV*lambda
-  diag(V_lambda) <- diag(phyV)
+  V_lambda <- VCV_sp*lambda
+  diag(V_lambda) <- diag(VCV_sp)
   C.lambda<- get_comm_pair_r(comm,V_lambda)
 
   Phylo <- solve(C.lambda)
@@ -58,7 +58,7 @@ likelihood.lambda.INLA<-function(inla_formula,
 }
 
 #Example
-#optim(runif(1),likelihood.lambda.INLA,inla_formula=f,data=data1,phyV=V_sp,
+#optim(runif(1),likelihood.lambda.INLA,inla_formula=f,data=data1,VCV_sp=V_sp,
 #comm=comm, prior=list(prior1=prior1),
 #control.compute = list(waic=T),
 #lower=0,upper=1)

@@ -59,7 +59,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">likelihood.lambda.INLA</span><span class="op">(</span><span class="va">inla_formula</span>,</span>
 <span>                       <span class="va">data</span>,</span>
 <span>                       family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
-<span>                       phyV <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                       VCV_sp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                       comm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                       <span class="va">lambda</span>,</span>
 <span>                       priors <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -77,7 +77,7 @@
   <dt>family</dt>
 <dd><p>error distribution (e.g., "gaussian","poisson"). See INLA package for the distribution available.</p></dd>
 
-  <dt>phyV</dt>
+  <dt>VCV_sp</dt>
 <dd><p>a phylogenetic covariance matrix at species levels.</p></dd>
 
   <dt>comm</dt>

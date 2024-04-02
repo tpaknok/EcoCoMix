@@ -122,7 +122,7 @@ the optimized \(\lambda\) (i.e., the \(\lambda\) leading to lowest AIC).</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p><!-- %%  ~~who you are~~ --></p>
+    <p>Toby P. N. Tsang</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
@@ -130,34 +130,35 @@ the optimized \(\lambda\) (i.e., the \(\lambda\) leading to lowest AIC).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class="dont-index"><p><!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ -->
+<code>CPR</code>, <code><a href="get_comm_pair.html">get_comm_pair_r</a>, <code><a href="https://rdrr.io/pkg/nlme/man/gls.html" class="external-link">gls</a></code>
+</code>
+
+library(phytools)
+library(tidyverse)
+library(CPR)
+data(KSR)
+data(KSR_MLtree)
+data(KSR_EF)VCV_sp &lt;- vcv(KSR_MLtree)GLS_lambda_1 &lt;- CPR_GLS(formula = LAI~Real.rich,
+                        df = KSR_EF,
+                        VCV_sp = VCV_sp,
+                        optim.lambda = TRUE,
+                        comm = KSR)GLS_lambda_1$without_phylo_model #models without considering phylogeny
+GLS_lambda_1$optimized_model #models without considering phylogeny
+GLS_lambda_1$original_VCV_model #models without considering phylogeny
+GLS_lambda_1$AIC #AIC of different models
+GLS_lambda_1$optim_lambda #optimized lambda if available
+<!-- % Add one or more standard keywords, see file 'KEYWORDS' in the -->
+<!-- % R documentation directory (show via RShowDoc("KEYWORDS")): -->
+<!-- % \keyword{ ~kwd1 } -->
+<!-- % \keyword{ ~kwd2 } -->
+<!-- % Use only one keyword per line. -->
+<!-- % For non-standard keywords, use \concept instead of \keyword: -->
+<!-- % \concept{ ~cpt1 } -->
+<!-- % \concept{ ~cpt2 } -->
+<!-- % Use only one concept per line. --></p></div>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/liamrevell/phytools" class="external-link">phytools</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tpaknok/CPR" class="external-link">CPR</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">KSR</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">KSR_MLtree</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/vcv.phylo.html" class="external-link">vcv</a></span><span class="op">(</span><span class="va">KSR_MLtree</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="va">GLS_lambda_1</span> <span class="op">&lt;-</span> <span class="fu">CPR_GLS</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span>,</span>
-<span>                        df <span class="op">=</span> <span class="va">KSR_EF</span>,</span>
-<span>                        VCV_sp <span class="op">=</span> <span class="va">VCV_sp</span>,</span>
-<span>                        optim.lambda <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        comm <span class="op">=</span> <span class="va">KSR</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">GLS_lambda_1</span><span class="op">$</span><span class="va">without_phylo_model</span> <span class="co">#models without considering phylogeny</span></span>
-<span><span class="va">GLS_lambda_1</span><span class="op">$</span><span class="va">optimized_model</span> <span class="co">#models without considering phylogeny</span></span>
-<span><span class="va">GLS_lambda_1</span><span class="op">$</span><span class="va">original_VCV_model</span> <span class="co">#models without considering phylogeny</span></span>
-<span><span class="va">GLS_lambda_1</span><span class="op">$</span><span class="va">AIC</span> <span class="co">#AIC of different models</span></span>
-<span><span class="va">GLS_lambda_1</span><span class="op">$</span><span class="va">optim_lambda</span> <span class="co">#optimized lambda if available</span></span>
-<span></span></code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

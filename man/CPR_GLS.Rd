@@ -7,7 +7,7 @@ Generalized least squares regression for community data.
 \description{
 This function conducts GLS for community-level data. This is not recommended because pglmm can better control type-I error, power, and slope estimates. However, for some analyses (e.g., piecewiseSEMs), INLA is not supported yet, so a compromise is to use GLS.
 }
-}
+
 \usage{
 CPR_GLS(formula,
         df,

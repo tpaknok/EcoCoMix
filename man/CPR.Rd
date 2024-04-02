@@ -43,16 +43,16 @@ a species site matrix
 error distribution in the glmm. Defaulted as "gaussian". Use \code{inla.list.models("likelihood")} to see all distribution available.
 }
   \item{optim.lambda}{
-TRUE/FALSE. If TRUE, the function will optimize the (\eqn{\lambda})
+TRUE/FALSE. If TRUE, the function will optimize the (\eqn{\lambda}).
 }
   \item{original.VCV}{
 TRUE/FALSE. If TRUE, the function will build a model based on the phylogenetic covariance matrix supplied by the user.
 }
   \item{optim.control}{
-additional arguments passing to \code{\link[stats]{optim}}
+additional arguments passing to \code{\link[stats]{optim}}.
 }
   \item{control.compute}{
-arguments for control.compute in the \code{\link[INLA{inla}]} function
+arguments for control.compute in the \code{\link[INLA]{inla}} function.
 }
   \item{prediction.df}{
 model predictions. If "auto", the model will provide predictions of a focal relatonship (e.g. ecosystem function and biodiversity) by holding other covariates at their mean (continuous) or mode (nominal) values. Users can also provide a data frame and ask INLA to make model predictions. The data frame must have the same structure as the analyzed datset, and users can define the conditions of different X while setting the response as NA.

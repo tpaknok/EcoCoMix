@@ -6,6 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+<img src="man/figures/CPR.png" align="right" height="138" />
+
 The package CPR address phylogenetic non-independence between species in
 community analyses.
 

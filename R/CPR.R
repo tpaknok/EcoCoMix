@@ -171,8 +171,17 @@ CPR <- function(formula,
   min_wAIC_m <- names(which.min(wAIC_all))
   best_m <- switch(min_wAIC_m,
                    wAIC_optim = m1_INLA_optim,
-                   wAIC_no_phylo = m1_INLA_glm,
+                   wAIC_no_phylo = m1_INLA_GLM,
                    wAIC_original_VCV = m1_INLA_original)
+
+  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= -2) {
+    best_m <- m1_INLA_GLM
+    best_model_name <- "Without phylogeny"
+  } else if (wAIC_optim < wAIC_original) {
+    best_model_name <- "Optimized phylogeny"
+  } else {
+    best_model_name <- "Phylogeny without optimization"
+  }
 
   prediction_phylo <- cbind(df,
                             f(m1_INLA_optim$summary.fitted.values, inverse=T),
@@ -222,6 +231,7 @@ CPR <- function(formula,
   pfr <- unlist(pfr)
 
   output <- list(best_model = best_m,
+                 best_model_name = best_model_name,
                  predictedfittedresponse = pfr,
                  wAIC = wAIC_all,
                  R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),

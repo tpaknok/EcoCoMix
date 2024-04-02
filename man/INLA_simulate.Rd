@@ -53,6 +53,9 @@ data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")
 
+VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
+VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
+
 inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               priors=NULL,
               df = KSR_EF,

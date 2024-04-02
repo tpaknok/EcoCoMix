@@ -72,17 +72,20 @@ When specifying the random effect, use \code{Cmatrix = Phylo} to indicate the ph
 
 The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\eqn{\lambda}). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized \eqn{\lambda} (i.e., \eqn{wAIC_{optimized} - wAIC_{without\_phylogeny} > -2}
 
-Note that even if optimized (\eqn{\lambda}) = 0, the model is not equivalent to a linear regression, as the model still consider species overlap between communities.
+Note that even if optimized (\eqn{\lambda}) = 0, the model is not equivalent to a linear regression, as the covariance matrices will still consider species overlap between communities. Therefore, the off-diagnoals in glmm are still not zeroes.
 }
 \value{
   \item{best_model}{
   INLA output for the best model
   }
+  \item{best_model_name}{
+  The model identified as the "best".
+  }
   \item{predictedfittedresponse}{
   median posterior predictions
   }
   \item{wAIC}{
-  wAIC of models (without phylogeny, with the user supplied phylogenetic covariance matrix, and with the optimized phylogeny). The model with the lowest wAIC will be selected as the best_model
+  wAIC of models (without phylogeny, with the user supplied phylogenetic covariance matrix, and with the optimized phylogeny).
   }
   \item{R2}{
   R-squared calculated as correlations between the observed responses and the mean posterior predictions

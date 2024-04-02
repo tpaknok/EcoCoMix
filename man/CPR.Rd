@@ -112,21 +112,15 @@ Note that even if optimized (\eqn{\lambda}) = 0, the model is not equivalent to 
   predictted values for new data.
   }
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 Toby P.N. Tsang
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link[CPR]{CPR_GLS}}, \code{\link[CPR]{get_comm_pair_r}}, \code{\link[INLA]{inla}}
 }
+
 \examples{
 library(phytools)
 library(tidyverse)

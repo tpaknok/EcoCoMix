@@ -30,18 +30,9 @@ The simulated response can be passed to \code{\link[DHARMa]{createDHARMa}}, crea
 \value{
 A data frame containing simulated responses, with each column representing each simulation run.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Toby P.N. Tsang
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[DHARMa]{createDHARMa}}
 }

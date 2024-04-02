@@ -42,17 +42,10 @@ The function always evaluate the proportion of simulate runs producing a statist
   INLA/GLS
   }
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 Toby P.N. Tsang
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link[CPR]{BEF_simulate}}

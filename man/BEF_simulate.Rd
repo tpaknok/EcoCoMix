@@ -43,12 +43,6 @@ If signals_X = "phy_cor", X will be \eqn{chol({C_{comm})U}}, where \eqn{U} is a 
 \value{
 A list of data frames with the length equals the number of simulation. The data frames contained two columns X and Y.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
-\notes{
-%% ~put notes here
-}
 \author{
 Toby P.N. Tsang
 }

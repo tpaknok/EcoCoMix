@@ -45,37 +45,28 @@ arguments passing to optim.
 The function calls gls from nlme to conduct the gls, but will automatically calculate the covariance matrix between communities using get_comm_pair_r.
 }
 \value{
-\item {without_phylo_model}{
+\item{without_phylo_model}{
 The model without considering phylogeny (i.e., equivalent to an OLS regression).
 }
-\item {optimized_model}{
+\item{optimized_model}{
 The model with optimized \eqn{\lambda}.
 }
-\item {original_VCV_model}{
+\item{original_VCV_model}{
 The model based on the phylogenetic covariance matrix provided by users (i.e., without optimization).
-\item {AIC}{
+}
+\item{AIC}{
 AIC of each model.
 }
-\item {optim_lambda}{
+\item{optim_lambda}{
 the optimized \eqn{\lambda} (i.e., the \eqn{\lambda} leading to lowest AIC).
 }
-}
-}
-\references{
-%% ~put references to the literature/web site here ~
 }
 \author{
 Toby P. N. Tsang
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link[CPR]{CPR}}, \code{\link[CPR]{get_comm_pair_r}, \code{\link[nlme]{gls}}
+\code{\link[CPR]{CPR}}, \code{\link[CPR]{get_comm_pair_r}}, \code{\link[nlme]{gls}}
 }
 \examples{
 library(phytools)
@@ -99,14 +90,5 @@ GLS_lambda_1$optimized_model #models without considering phylogeny
 GLS_lambda_1$original_VCV_model #models without considering phylogeny
 GLS_lambda_1$AIC #AIC of different models
 GLS_lambda_1$optim_lambda #optimized lambda if available
-
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+

@@ -43,29 +43,9 @@ The initial value is randomized between 0.2 and 0.8, but the results are capped 
 \value{
 returning the (\eqn{\lambda}) leading to lowest AIC
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Toby P. N. Tsang
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[CPR]{likelihood.lambda}},  \code{\link[CPR]{get_comm_pair_r}, \code{\link[nlme]{gls}}
 }
-\examples{
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

@@ -25,9 +25,6 @@ Imagine two communities with species (X,Y) and species (X,Z). Covariance at comm
 \value{
 a phylogenetic correlation matrix at community levels.
 }
-\references{
-https://github.com/tpaknok/CPR
-}
 \author{
 Toby P.N. Tsang
 }

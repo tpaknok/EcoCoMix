@@ -47,5 +47,5 @@ returning the (\eqn{\lambda}) leading to lowest AIC
 Toby P. N. Tsang
 }
 \seealso{
-\code{\link[CPR]{likelihood.lambda}},  \code{\link[CPR]{get_comm_pair_r}, \code{\link[nlme]{gls}}
+\code{\link[CPR]{likelihood.lambda}},  \code{\link[CPR]{get_comm_pair_r}}, \code{\link[nlme]{gls}}
 }

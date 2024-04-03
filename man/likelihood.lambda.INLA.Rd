@@ -61,6 +61,5 @@ The initial value is randomized between 0.2 and 0.8, but the results are capped 
 %%  ~~who you are~~
 }
 \seealso{
-\code{\link[CPR]{likelihood.lambda.INLA}}, \code{\link[CPR]{get_comm_pair_r}, \code{\link[INLA]{inla}}
+\code{\link[CPR]{likelihood.lambda.INLA}}, \code{\link[CPR]{get_comm_pair_r}}, \code{\link[INLA]{inla}}
 }
-

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# CPR (UNDER DEVELOPMENT) <img src="man/figures/logo.png" style="float:right; height:150px;">
+# CPR (UNDER DEVELOPMENT) <img src="man/figures/logo.png" align="right"/>
 
 <!-- badges: start -->
 <!-- badges: end -->

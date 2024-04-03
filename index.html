@@ -80,18 +80,17 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <p>The package CPR address phylogenetic non-independence between species in community analyses.</p>
-</div>
-<div class="section level1">
-<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h1>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>You can install the development version of CPR from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"tpaknok/CPR"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
-</h1>
+<div class="section level2">
+<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h2>
 <p>While species are known to be non-independent due to shared evolutionary history, this is rarely considered in community-level analyses. Additionally, communities are not statistically indepedent if there are species overlap (which is often the case).</p>
 <p>The analysis accounts for non-independence between species within communities using Bayesian GLMM.</p>
 <p>Composition matrices in presence/absence, number of individuals, percent cover, biomass etc can be used. Matrices based on scoring systems with uneven intervals can also be used (e.g., DAFOR), but this can lead to interpretation issues.</p>
@@ -103,14 +102,14 @@
 <p>Other functions are used for the simulations / empirical analyses and producing figures</p>
 <p>Note that we are using Bayesian GLMM rather than Frequentist GLMM to improve the speed.</p>
 </div>
-<div class="section level1">
-<h1 id="known-problems">Known problems<a class="anchor" aria-label="anchor" href="#known-problems"></a>
-</h1>
+<div class="section level2">
+<h2 id="known-problems">Known problems<a class="anchor" aria-label="anchor" href="#known-problems"></a>
+</h2>
 <p>Might need to use inla.rerun to enhance model stability</p>
 <p>It is possible that communities are indeed independent sample even if there are species overlap. In those cases the optimization of lambda will produce unstable results. A fix is to 1) re-run optimization several times to see if results are largely stable and 2) compare wAIC between models with optimized lambda and with independence assumption. If the model with optimized lambda doesn’t perform better, users can use the model assuming communities are independent.</p>
 <p>Note that even with the same phylogenetic matrix, INLA will give different results across runs. So re-running the model will give different slightly different results (if phylogeny is important). If phylogeny is unimportant, INLA will give very unstable results, as the wAIC of all lambda values are driven by random fluctutation across runs.</p>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

@@ -7,7 +7,7 @@ nwk <- system.file("extdata", "sample.nwk", package="treeio")
 tree <- read.tree(nwk)
 
 
-p <- ggtree(tree, color="black",layout='circular',size=1.5)+
+p <- ggtree(tree, color="#00AFAF",layout='circular',size=1.5)+
     theme(
     panel.border = element_rect(colour='transparent',fill=NA),
     panel.background = element_rect(colour='transparent',fill="transparent"),
@@ -20,18 +20,22 @@ p <- ggtree(tree, color="black",layout='circular',size=1.5)+
 
 plot(p)
 
-ggsave("phylo.png")
-image <- c("C:/Users/pakno/OneDrive/Desktop/Test/Picture1.png")
+ggsave("man/figures/phylo.png")
+image <- c("man/figures/CPR.png")
 
-sticker(image, package="CPR",
-        p_size=30,
+p <- sticker(image, package="CPR",
+        p_size=20,
         p_x = 1,
         p_y = 1.5,
         p_color="#00AFAF",
         h_color="#00AFAF",
         h_fill="black",
-        s_x=1.02,
+        s_x=1.0,
         s_y=.7,
         s_width=0.8,
-        s_height=0.8)
+        s_height=0.8,
+        h_size=1.2,
+        filename="man/figures/logo.png")
 
+plot(p)
+ggsave("logo.png",width=4.1,height=4.1,dpi=300,units="cm")

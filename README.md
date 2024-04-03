@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pkgdown <img src="man/figures/logo.png" align="left" height="150" />
+# CPR <img src="man/figures/logo.png" align="right" height="200" />
 
 <!-- badges: start -->
 <!-- badges: end -->

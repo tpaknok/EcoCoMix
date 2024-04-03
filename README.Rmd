@@ -16,12 +16,12 @@ knitr::opts_chunk$set(
 # CPR (UNDER DEVELOPMENT)
 
 <!-- badges: start -->
-<!-- badges: end -->
 <img src="man/figures/CPR.png" align="right" height="138" />
+<!-- badges: end -->
 
 The package CPR address phylogenetic non-independence between species in community analyses.
 
-## Installation
+# Installation
 
 You can install the development version of CPR from [GitHub](https://github.com/) with:
 

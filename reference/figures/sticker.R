@@ -3,12 +3,11 @@ library(ggplot2)
 library(icons)
 
 library("ggtree")
-library(extr)
 nwk <- system.file("extdata", "sample.nwk", package="treeio")
 tree <- read.tree(nwk)
 
 
-p <- ggtree(tree, color="#00AFAF",layout='circular',size=1.5)+
+p <- ggtree(tree, color="black",layout='circular',size=1.5)+
     theme(
     panel.border = element_rect(colour='transparent',fill=NA),
     panel.background = element_rect(colour='transparent',fill="transparent"),

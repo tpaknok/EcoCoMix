@@ -31,3 +31,4 @@ Suggests:
 VignetteBuilder: knitr
 Remotes:
   hrue/r-inla/rinla@stable
+Config/Needs/website: tidyverse/tidytemplate

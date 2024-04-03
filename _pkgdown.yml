@@ -1,3 +1,11 @@
 url: https://tpaknok.github.io/CPR/
 template:
+  package: tidytemplate
   bootstrap: 5
+
+  includes:
+    in_header: |
+      <script defer data-domain="tpaknok.github.io/CPR,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+
+development:
+  mode: auto

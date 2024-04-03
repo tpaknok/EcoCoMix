@@ -47,18 +47,8 @@ likelihood.lambda.INLA(inla_formula,
 \details{
 The initial value is randomized between 0.2 and 0.8, but the results are capped between 0 and 1. The function does not start at the extremes to avoid L-BFGS-B terminating prematurely.
 }
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
-%%  ~~who you are~~
+Toby P.N. Tsang
 }
 \seealso{
 \code{\link[CPR]{likelihood.lambda.INLA}}, \code{\link[CPR]{get_comm_pair_r}}, \code{\link[INLA]{inla}}

@@ -1,10 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# CPR (UNDER DEVELOPMENT) <img src="man/figures/logo.png" align="right" height="150">
+# CPR (UNDER DEVELOPMENT)
 
-<!-- badges: start -->
-<!-- badges: end -->
+<img src="man/figures/logo.png" align="right" height="150">
+<!-- badges: start --> <!-- badges: end -->
 
 The package CPR address phylogenetic non-independence between species in
 community analyses.

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# CPR <img src="man/figures/logo.png" align="right" height="200" />
+# CPR <img src="man/figures/logo.png" align="right" height="150" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -9,7 +9,7 @@
 The package CPR address phylogenetic non-independence between species in
 community analyses.
 
-# Installation
+## Installation
 
 You can install the development version of CPR from
 [GitHub](https://github.com/) with:
@@ -19,7 +19,7 @@ You can install the development version of CPR from
 devtools::install_github("tpaknok/CPR")
 ```
 
-# Background
+## Background
 
 While species are known to be non-independent due to shared evolutionary
 history, this is rarely considered in community-level analyses.
@@ -60,7 +60,7 @@ producing figures
 Note that we are using Bayesian GLMM rather than Frequentist GLMM to
 improve the speed.
 
-# Known problems
+## Known problems
 
 Might need to use inla.rerun to enhance model stability
 

@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Advanced_uses.html">Complex models and manual priors</a>
     <a class="dropdown-item" href="../articles/Empirical_multiple.html">Empirical Analyses with CPR - Multiple Functions</a>
     <a class="dropdown-item" href="../articles/Empirical_single.html">Empirical Analyses with CPR - Single Function</a>
     <a class="dropdown-item" href="../articles/Simulation.html">Simulation with CPR</a>
@@ -68,7 +69,9 @@
 <span>    control.compute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>waic <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    prediction.df <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>    predictedfittedresponse <span class="op">=</span> <span class="st">"best_m"</span>,</span>
-<span>    inla.rerun <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>    inla.rerun <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    wAIC_threshold <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>,</span>
+<span>    <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,7 +80,7 @@
 <dd><p>an INLA formula.</p></dd>
 
   <dt>priors</dt>
-<dd><p>prior specifications. If NULL default priors will be used. Use <code>inla.list.models("prior")</code> to see all prior available.</p></dd>
+<dd><p>A list containing priors for the random effect hyperparameters. If NULL default priors will be used. See examples. For fixed effect and likelihood family, use the control.fixed and control.family argument (see the <code><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></code> documentation).</p></dd>
 
   <dt>df</dt>
 <dd><p>a data frame with the response and predictors</p></dd>
@@ -112,6 +115,9 @@
   <dt>inla.rerun</dt>
 <dd><p>number of times to rerun INLA models to ensure stable results. Defaulted as 1.</p></dd>
 
+  <dt>wAIC_threshold</dt>
+<dd><p>Selecting the non-phylogenetic model if including phylogeny does not improve wAIC more than the threshold (i.e, \(wAIC_{optimized/original} - wAIC_{without\_phylogeny} &gt; threshold\)). Defaulted as -2.</p></dd>
+
   <dt>...</dt>
 <dd><p>additional arguments passing to <code><a href="https://rdrr.io/pkg/INLA/man/inla.html" class="external-link">inla</a></code></p></dd>
 
@@ -119,8 +125,9 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When specifying the random effect, use <code>Cmatrix = Phylo</code> to indicate the phylogenetic covariance between communities, and <code>comm</code> as the identity of each community. See examples. You don't need to create them in the data frame. CPR will automatically create these for you in the internal environment.</p>
-<p>The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\(\lambda\)). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized/original \(\lambda\), which means $$wAIC_{optimized/original} - wAIC_{without\_phylogeny} &gt; -2$$</p>
+<p>The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\(\lambda\)). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 (this threshold can be changed in the wAIC_threshold argument) after including the optimized/original \(\lambda\), which means $$wAIC_{optimized/original} - wAIC_{without\_phylogeny} &gt; -2$$</p>
 <p>Note that even if optimized (\(\lambda\)) = 0, the model is not equivalent to a linear regression, as the covariance matrices will still consider species overlap between communities. Therefore, the off-diagnoals in glmm are still not zeroes.</p>
+<p>Use <code>inla.list.models("prior")</code> to see all priors available. Note that the name of the prior shouldn't contain "Phylo".</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -192,7 +199,27 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">inla_m</span><span class="op">$</span><span class="va">prediction</span> <span class="co">#see predicted relationships at each unique value of the a covariate, while holding others at the mean value.</span></span>
-<span><span class="va">inla_m</span><span class="op">$</span><span class="va">wAIC</span> <span class="co">#wAIC of different models. Note that wAIC_optim has the lowest wAIC.</span></span></code></pre></div>
+<span><span class="va">inla_m</span><span class="op">$</span><span class="va">wAIC</span> <span class="co">#wAIC of different models. Note that wAIC_optim has the lowest wAIC.</span></span>
+<span></span>
+<span><span class="co"># Advanced prior specification</span></span>
+<span></span>
+<span><span class="va">prior.fixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec.intercept <span class="op">=</span> <span class="fl">0.001</span>,prec <span class="op">=</span> <span class="fl">0.005</span><span class="op">)</span></span>
+<span><span class="va">prior.family</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hyper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>theta1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"loggamma"</span>,param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4e-5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">prior.phy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"loggamma"</span>,param<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">prior.block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prec<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior<span class="op">=</span><span class="st">"loggamma"</span>,param<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4e-5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">inla_m2</span> <span class="op">&lt;-</span> <span class="fu">CPR</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span></span>
+<span>                 <span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">Phylo</span>,hyper<span class="op">=</span><span class="va">prior.Phylo</span><span class="op">)</span><span class="op">+</span></span>
+<span>                 <span class="fu">f</span><span class="op">(</span><span class="va">block</span>,model<span class="op">=</span><span class="st">"iid"</span><span class="op">)</span>,</span>
+<span>              priors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior.Phylo<span class="op">=</span><span class="va">prior.phy</span>,prior.block<span class="op">=</span><span class="va">prior.block</span><span class="op">)</span>,</span>
+<span>              df <span class="op">=</span> <span class="va">KSR_EF</span>,</span>
+<span>              VCV_sp <span class="op">=</span> <span class="va">VCV_sp</span>,</span>
+<span>              comm<span class="op">=</span><span class="va">KSR</span>,</span>
+<span>              family<span class="op">=</span><span class="st">"gaussian"</span>,</span>
+<span>              optim.lambda <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>              control.fixed <span class="op">=</span> <span class="va">prior.fixed</span>,</span>
+<span>              control.family <span class="op">=</span> <span class="va">prior.family</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

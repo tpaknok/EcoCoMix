@@ -119,13 +119,17 @@ continuous. If you visualize the distributions of different ecosystem
 functions, you can see that some of them have a spike in zero!</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">LAI</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="figure/LAI-1.png" alt="Histograms of LAI"><div class="figcaption">Histograms of LAI</div>
+<div class="figure">
+<img src="figure/LAI-1.png" alt="Histograms of LAI" width="100%"><p class="caption">
+Histograms of LAI
+</p>
 </div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">flwr_total</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="figure/flwr%20total-1.png" alt="Histograms of floral abundance"><div class="figcaption">Histograms of floral abundance</div>
+<div class="figure">
+<img src="figure/flwr%20total-1.png" alt="Histograms of floral abundance" width="100%"><p class="caption">
+Histograms of floral abundance
+</p>
 </div>
 <p>Thus, we will use different distributions for different ecosystem
 functions. For example, we will use negative binomial for integer data,
@@ -177,8 +181,8 @@ specified our own non-informative prior.</p>
 <span>                       <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hyper <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>                         theta1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>initial <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
 <span>                         theta2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>initial <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                                       prior <span class="op">=</span> <span class="st">"normal"</span>,</span>
-<span>                                       param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                       prior <span class="op">=</span> <span class="st">"loggamma"</span>,</span>
+<span>                                       param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                      <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/control.family.html" class="external-link">inla.set.control.family.default</a></span><span class="op">(</span><span class="st">"gaussian"</span><span class="op">)</span>,</span>
 <span>                      <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/control.family.html" class="external-link">inla.set.control.family.default</a></span><span class="op">(</span><span class="st">"gaussian"</span><span class="op">)</span>,</span>
 <span>                      <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/control.family.html" class="external-link">inla.set.control.family.default</a></span><span class="op">(</span><span class="st">"gaussian"</span><span class="op">)</span>,</span>
@@ -204,17 +208,7 @@ will take some time to run!!!</p>
 <span>                                                    family<span class="op">=</span><span class="va">family</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                                    control.family<span class="op">=</span><span class="va">control.family</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                                    inla.rerun<span class="op">=</span><span class="fl">3</span>,</span>
-<span>                                                    optim.lambda <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "poll_total"</span></span>
-<span><span class="co">#&gt; [1] "bugs"</span></span>
-<span><span class="co">#&gt; [1] "bug.rich"</span></span>
-<span><span class="co">#&gt; [1] "litter2012"</span></span>
-<span><span class="co">#&gt; [1] "ave.biomass"</span></span>
-<span><span class="co">#&gt; [1] "flwr_total"</span></span>
-<span><span class="co">#&gt; [1] "Mass.loss.2month"</span></span>
-<span><span class="co">#&gt; [1] "LAI"</span></span>
-<span><span class="co">#&gt; [1] "mean.N.change"</span></span>
-<span><span class="co">#&gt; [1] "Damage_effect"</span></span></code></pre></div>
+<span>                                                    optim.lambda <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="visualizations">Visualizations<a class="anchor" aria-label="anchor" href="#visualizations"></a>
@@ -252,9 +246,11 @@ al. (2024) was produced.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"bottom"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="figure/ggplot2,%20-1.png" style="width:100.0%" alt="Predicted effects of species richness on the ten selected ecosystem functions"><div class="figcaption">Predicted effects of species richness on the ten
-selected ecosystem functions</div>
+<div class="figure">
+<img src="figure/ggplot2,%20-1.png" alt="Predicted effects of species richness on the ten selected ecosystem functions" width="100%"><p class="caption">
+Predicted effects of species richness on the ten selected ecosystem
+functions
+</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

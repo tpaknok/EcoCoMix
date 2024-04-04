@@ -28,7 +28,7 @@ CPR <- function(formula,
   formula_elements <- unlist(strsplit(formula_text,split="\\+"))
   formula_elements <- formula_elements[!grepl("Phylo",formula_elements)]
   no_phylo_formula <- as.formula(paste(formula_elements,collapse="+"))
-  print(response_name)
+  message(response_name)
 
   df$predictor <- "observed"
   df$response <- response_name

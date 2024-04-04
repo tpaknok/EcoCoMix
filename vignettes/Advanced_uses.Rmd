@@ -34,10 +34,32 @@ Generally, you might wish to control for other structures in your data, such as 
 
 Now let's generate a fake blcoking structure.
 
+```r
+KSR_EF$block <- sample(1:7,88,replace=T)
+head(KSR_EF)
+```
+
+```
+##   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect bugs bug.rich
+## 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000    9        7
+## 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195    7        6
+## 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279    4        2
+## 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000    5        3
+## 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093    4        4
+## 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000   11        7
+##   block
+## 1     7
+## 2     4
+## 3     4
+## 4     7
+## 5     1
+## 6     6
+```
 
 ## Run the model!
 
 To run a model with both phylogenetic and spatial (here as block) random effects, just run the following.
+
 
 ```r
 inla_m <- CPR(formula = LAI~Real.rich+
@@ -54,7 +76,8 @@ inla_m <- CPR(formula = LAI~Real.rich+
 ```
 ## [1] "LAI"
 ```
-This, however, will use default priors for everything. Have a look at the prior specification. Note that INLA uses precision instead of variance.
+
+This, however, will use default priors for everything. Have a look at the prior specifications. Note that INLA uses precision instead of variance.
 
 Run these functions to examine what priors are actually used in your model.
 
@@ -68,9 +91,9 @@ inla_m$best_model$all.hyper$random[[2]]$hyper$theta$param #hyperparameter
 ```
 
 ## Notes on internal calculations of INLA
-Apart from the fixed effects, which uses a gaussian distribution, all other parameters are estimated using logGamma distribution. This is because the internal calculations are conducted at log scale before back-transforming them to the original scale. Therefore, the priors must be specificed at log scale too. You can use \code{inla.doc("")} to check the internal calculations of different distributions and priors. For gaussian distribution, use \code{inla.doc("Gaussian")}.
+Apart from the fixed effects, which uses a gaussian distribution, all other parameters are estimated using logGamma distribution. This is because the internal calculations are conducted at log scale before back-transforming them to the original scale. Therefore, the priors must be specificed at log scale too. You can use inla.doc() to check the internal calculations of different distributions and priors. For gaussian distribution, use inla.doc("Gaussian").
 
-Note that if the log-transformed hyperparameters follow logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read \code{inla.doc("Gamma")} to learn more!
+Note that if the log-transformed hyperparameters follow logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read inla.doc("Gamma") to learn more!
 
 You can use other functions to get a sense of what the prior looks like.
 
@@ -78,17 +101,12 @@ You can use other functions to get a sense of what the prior looks like.
 plot(density(rnorm(1000,0,sqrt(1/0.001))))
 ```
 
-![plot of chunk prior investigation](figure/prior investigation-1.png)
+![The prior for the slope estimates](figure/prior investigation-1.png)
 
-```r
-plot(density(rgamma(1000,shape=1,rate=5e-5)))
-```
-
-![plot of chunk prior investigation](figure/prior investigation-2.png)
+## Using manual priors
 
 Let's say we don't like these priors and want to change it a bit. We will create different objects storing our priors. Note that here I am just demonstrating how to manually specify the priors and run CPR, not the thought process to construct meaningful priors.
 
-## Using manual priors
 
 ```r
 prior.fixed <- list(prec.intercept = 0.001,prec = 0.005)
@@ -98,6 +116,7 @@ prior.block <- list(prec=list(prior="loggamma",param=c(1,4e-5)))
 ```
 
 Then just put all of these priors in different arguments. Notet that for the blocking random effects, we will still use the default one.
+
 
 ```r
 inla_m2 <- CPR(formula = LAI~Real.rich+
@@ -116,9 +135,10 @@ inla_m2 <- CPR(formula = LAI~Real.rich+
 ```
 ## [1] "LAI"
 ```
-Yo only need to specify the manual prior in \code{priors}. For example, if you want to use the default prior for block, just use \code{list(prior.phy=prior}. Note that the name of the priors shouldn't contain the word "Phylo" - it is designated to hold the communtiy phylogenetic covariance matrix. If you name the prior with the word "Phylo", an error would occur.
 
-Now Check the priors again!
+You only need to specify the manual prior in \code{priors}. For example, if you want to use the default prior for block, just use list(prior.phy=prior). Note that the name of the priors shouldn't contain the word "Phylo" - it is designated to hold the communtiy phylogenetic covariance matrix. If you name the prior with the word "Phylo", an error would occur.
+
+Now check the priors again!
 
 ```r
 inla_m2$best_model$.args$control.fixed #gaussian distribution, original scale

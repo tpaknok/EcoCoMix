@@ -21,10 +21,11 @@ devtools::install_github("tpaknok/CPR")
 
 ## Main function
 
-The main function of this package is CPR, which conduct Bayesian
+The main function of this package is CPR, which conducts Bayesian
 phylogenetic GLMM using INLA. Briefly, the function automatically
-constructus the phylogenetic covariance between communities based on
-their composition and the evolutionary history of the species. Read this
+constructs the phylogenetic covariance matrix between communities based
+on their composition and the evolutionary history of the species. Read
+this
 [vignette](https://tpaknok.github.io/CPR/articles/Empirical_single.html)
 for a start.
 
@@ -38,7 +39,7 @@ comparative analyses (e.g., correlating different traits), the shared
 evolutionary history between species has to be controlled using
 Generalized Least Square Regression or Generalized Linear Mixed Model.
 
-The functions in CPR helps users to control phylogenetic
-non-independence between communities without intensive coding. Users
-only need 1) species composition in each community and 2) a phylogenetic
-tree including all species in the community data.
+The functions in CPR help users to control phylogenetic non-independence
+between communities without intensive coding. Users only need 1) species
+composition in each community and 2) a phylogenetic tree including all
+species in the community data.

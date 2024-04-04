@@ -38,14 +38,20 @@ We will use lapply to do it. We have ten ecosystem functions, and they have very
 plot(hist(KSR_EF$LAI))
 ```
 
-![Histograms of LAI](figure/LAI-1.png)
+<div class="figure">
+<img src="figure/LAI-1.png" alt="Histograms of LAI" width="100%" />
+<p class="caption">Histograms of LAI</p>
+</div>
 
 
 ```r
 plot(hist(KSR_EF$flwr_total))
 ```
 
-![Histograms of floral abundance](figure/flwr total-1.png)
+<div class="figure">
+<img src="figure/flwr total-1.png" alt="Histograms of floral abundance" width="100%" />
+<p class="caption">Histograms of floral abundance</p>
+</div>
 
 Thus, we will use different distributions for different ecosystem functions. For example, we will use negative binomial for integer data, and zeroinflated negative binomial for integer data that have many zeros. For continuous data, we can use normal distribution, or tweedie distribution if we have too many zeroes.
 
@@ -91,8 +97,8 @@ control.family<- list(inla.set.control.family.default("zeroinflatednbinomial1"),
                        list(hyper = list(
                          theta1 = list(initial = 0),
                          theta2 = list(initial = 0,
-                                       prior = "normal",
-                                       param = c(0,2)))),
+                                       prior = "loggamma",
+                                       param = c(0.1,0.1)))),
                       inla.set.control.family.default("gaussian"),
                       inla.set.control.family.default("gaussian"),
                       inla.set.control.family.default("gaussian"),
@@ -120,16 +126,6 @@ BEF_KSR <- lapply(1:length(family), function(x) CPR(formulas[[x]],
                                                     control.family=control.family[[x]],
                                                     inla.rerun=3,
                                                     optim.lambda = T))
-#> [1] "poll_total"
-#> [1] "bugs"
-#> [1] "bug.rich"
-#> [1] "litter2012"
-#> [1] "ave.biomass"
-#> [1] "flwr_total"
-#> [1] "Mass.loss.2month"
-#> [1] "LAI"
-#> [1] "mean.N.change"
-#> [1] "Damage_effect"
 ```
 
 ## Visualizations
@@ -173,4 +169,7 @@ p <- ggplot(data=all_predictions)+
 plot(p)
 ```
 
-![Predicted effects of species richness on the ten selected ecosystem functions](figure/ggplot2, -1.png){width=100%}
+<div class="figure">
+<img src="figure/ggplot2, -1.png" alt="Predicted effects of species richness on the ten selected ecosystem functions" width="100%" />
+<p class="caption">Predicted effects of species richness on the ten selected ecosystem functions</p>
+</div>

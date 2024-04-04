@@ -14,7 +14,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  cache = FALSE
+  cache = FALSE,
+  out.width="100%"
 )
 ```
 
@@ -129,7 +130,7 @@ DHARMa_res2 <- createDHARMa(sres2,
 plot(DHARMa_res2,quantreg=F)
 ```
 
-Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly.
+Clearly a worse fit than negative binomial! We know that poisson distributions often fail to describe ecological data properly.
 
 There are other functions in DHARMa, so check out the package to build robust models!
 

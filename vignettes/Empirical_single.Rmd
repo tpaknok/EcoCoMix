@@ -43,20 +43,13 @@ The KSR_EF data have multiple ecosystem function.
 
 ```r
 head(KSR_EF)
-#>   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month
-#> 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362
-#> 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718
-#> 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521
-#> 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328
-#> 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608
-#> 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627
-#>   Damage_effect bugs bug.rich
-#> 1     0.0000000    9        7
-#> 2     0.3001195    7        6
-#> 3     0.4195279    4        2
-#> 4     0.0000000    5        3
-#> 5     2.7460093    4        4
-#> 6     0.0000000   11        7
+#>   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect bugs bug.rich
+#> 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000    9        7
+#> 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195    7        6
+#> 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279    4        2
+#> 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000    5        3
+#> 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093    4        4
+#> 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000   11        7
 ```
 
 ## Data Description
@@ -106,30 +99,26 @@ inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               comm=KSR,
               family="nbinomial",
               optim.lambda = T)
-#> [1] "bugs"
 
 summary(inla_m$best_model)
 #> 
 #> Call:
-#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, 
-#>    quantiles = quantiles, E = E, offset = offset, ", " scale = scale, weights = weights, 
-#>    Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = 
-#>    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
-#>    control.compute = control.compute, ", " control.predictor = control.predictor, 
-#>    control.family = control.family, ", " control.inla = control.inla, control.fixed = 
-#>    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " 
-#>    control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
-#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, 
-#>    only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, 
-#>    num.threads = num.threads, ", " keep = keep, working.directory = working.directory, silent = 
-#>    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = 
-#>    .parent.frame)" ) 
+#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = 
+#>    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = 
+#>    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
+#>    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " 
+#>    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = 
+#>    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
+#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = 
+#>    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, 
+#>    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
+#>    .parent.frame = .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.227, Running = 0.248, Post = 0.163, Total = 0.638 
+#>     Pre = 0.2, Running = 0.244, Post = 0.133, Total = 0.577 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.129 0.344      1.419    2.140      2.775 2.140   0
-#> Real.rich   0.076 0.097     -0.116    0.076      0.267 0.076   0
+#> (Intercept) 2.156 0.312      1.516    2.165      2.746 2.165   0
+#> Real.rich   0.080 0.096     -0.109    0.080      0.270 0.080   0
 #> 
 #> Random effects:
 #>   Name	  Model
@@ -137,13 +126,13 @@ summary(inla_m$best_model)
 #> 
 #> Model hyperparameters:
 #>                                                        mean    sd 0.025quant 0.5quant 0.975quant mode
-#> size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.675     2.48       3.69 2.38
-#> Precision for comm                                     2.48 1.356      0.808     2.18       5.97 1.68
+#> size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.678     2.49       3.69 2.39
+#> Precision for comm                                     2.84 1.497      0.948     2.51       6.66 1.96
 #> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 617.33
-#> Effective number of parameters .................: 11.80
+#> Watanabe-Akaike information criterion (WAIC) ...: 617.44
+#> Effective number of parameters .................: 11.93
 #> 
-#> Marginal log-Likelihood:  -866.36 
+#> Marginal log-Likelihood:  -868.48 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
@@ -154,7 +143,6 @@ Let's do some model diagnostics to make sure our model makes sense. First, we wi
 
 ```r
 library(DHARMa)
-#> This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')
 sres <- INLA_simulate(inla_m$best_model)
 DHARMa_res <- createDHARMa(sres,
                            KSR_EF$bugs,
@@ -163,7 +151,10 @@ DHARMa_res <- createDHARMa(sres,
 plot(DHARMa_res,quantreg=F)
 ```
 
-![Outputs from DHARMa for the negative binomial model](figure/Diagnostic-1.png){width=100%}
+<div class="figure">
+<img src="figure/Diagnostic-1.png" alt="Outputs from DHARMa for the negative binomial model" width="100%" />
+<p class="caption">Outputs from DHARMa for the negative binomial model</p>
+</div>
 
 You can see that our data don't deviate a lot from the expected line in the QQ plot, which is a good thing. Also, there is no obvious pattern in the residual graph....so our model should be ok.
 
@@ -179,30 +170,26 @@ inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
               VCV_sp = VCV_sp,
               comm=KSR,
               family="poisson")
-#> [1] "bugs"
 
 summary(inla_m2$best_model)
 #> 
 #> Call:
-#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, 
-#>    quantiles = quantiles, E = E, offset = offset, ", " scale = scale, weights = weights, 
-#>    Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = 
-#>    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
-#>    control.compute = control.compute, ", " control.predictor = control.predictor, 
-#>    control.family = control.family, ", " control.inla = control.inla, control.fixed = 
-#>    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " 
-#>    control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
-#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, 
-#>    only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, 
-#>    num.threads = num.threads, ", " keep = keep, working.directory = working.directory, silent = 
-#>    silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, .parent.frame = 
-#>    .parent.frame)" ) 
+#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = 
+#>    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = 
+#>    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
+#>    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " 
+#>    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = 
+#>    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
+#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = 
+#>    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, 
+#>    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
+#>    .parent.frame = .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.219, Running = 0.199, Post = 0.0739, Total = 0.492 
+#>     Pre = 0.229, Running = 0.198, Post = 0.0576, Total = 0.484 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.013 0.250      1.513    2.016      2.496 2.016   0
-#> Real.rich   0.024 0.061     -0.098    0.024      0.143 0.024   0
+#> (Intercept) 2.071 0.234      1.598    2.075      2.518 2.075   0
+#> Real.rich   0.025 0.065     -0.105    0.026      0.151 0.026   0
 #> 
 #> Random effects:
 #>   Name	  Model
@@ -210,12 +197,12 @@ summary(inla_m2$best_model)
 #> 
 #> Model hyperparameters:
 #>                    mean    sd 0.025quant 0.5quant 0.975quant mode
-#> Precision for comm 1.55 0.592      0.638     1.47       2.93 1.31
+#> Precision for comm 1.97 0.753      0.808     1.87       3.72 1.67
 #> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 872.66
-#> Effective number of parameters .................: 69.38
+#> Watanabe-Akaike information criterion (WAIC) ...: 872.94
+#> Effective number of parameters .................: 69.07
 #> 
-#> Marginal log-Likelihood:  -972.14 
+#> Marginal log-Likelihood:  -975.55 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
@@ -223,14 +210,17 @@ summary(inla_m2$best_model)
 sres2 <- INLA_simulate(inla_m2$best_model)
 DHARMa_res2 <- createDHARMa(sres2,
                            KSR_EF$bugs,
-                           inla_m2$best_model$predictedfittedresponse,
+                           inla_m2$predictedfittedresponse,
                            integerResponse=T)
 plot(DHARMa_res2,quantreg=F)
 ```
 
-![Outputs from DHARMa for the poisson model](figure/gaussian-1.png){width=100%}
+<div class="figure">
+<img src="figure/gaussian-1.png" alt="Outputs from DHARMa for the poisson model" width="100%" />
+<p class="caption">Outputs from DHARMa for the poisson model</p>
+</div>
 
-Clearly a worse fit than negative binomial! We knew that poisson distributions often fail to describe ecological data properly.
+Clearly a worse fit than negative binomial! We know that poisson distributions often fail to describe ecological data properly.
 
 There are other functions in DHARMa, so check out the package to build robust models!
 
@@ -264,6 +254,9 @@ p <- ggplot()+
 plot(p)
 ```
 
-![Predicted effects of species richness on arthropod abundance](figure/bugs-1.png){width=100%}
+<div class="figure">
+<img src="figure/bugs-1.png" alt="Predicted effects of species richness on arthropod abundance" width="100%" />
+<p class="caption">Predicted effects of species richness on arthropod abundance</p>
+</div>
 
 

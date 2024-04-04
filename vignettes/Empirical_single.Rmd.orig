@@ -124,7 +124,7 @@ summary(inla_m2$best_model)
 sres2 <- INLA_simulate(inla_m2$best_model)
 DHARMa_res2 <- createDHARMa(sres2,
                            KSR_EF$bugs,
-                           inla_m2$best_model$predictedfittedresponse,
+                           inla_m2$predictedfittedresponse,
                            integerResponse=T)
 plot(DHARMa_res2,quantreg=F)
 ```

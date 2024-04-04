@@ -20,7 +20,9 @@ CPR(formula,
     control.compute = list(waic = TRUE, config = TRUE),
     prediction.df = "auto",
     predictedfittedresponse = "best_m",
-    inla.rerun = 1, ...)
+    inla.rerun = 1,
+    wAIC_threshold = -2,
+    ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,7 +30,7 @@ CPR(formula,
 an INLA formula.
 }
   \item{priors}{
-prior specifications. If NULL default priors will be used. Use \code{inla.list.models("prior")} to see all prior available.
+A list containing priors for the random effect hyperparameters. If NULL default priors will be used. See examples. For fixed effect and likelihood family, use the control.fixed and control.family argument (see the \code{\link[INLA]{inla}} documentation).
 }
   \item{df}{
 a data frame with the response and predictors
@@ -63,6 +65,9 @@ compute the median posterior predictions of the best model ("best_m"), models wi
   \item{inla.rerun}{
 number of times to rerun INLA models to ensure stable results. Defaulted as 1.
 }
+  \item{wAIC_threshold}{
+Selecting the non-phylogenetic model if including phylogeny does not improve wAIC more than the threshold (i.e, \eqn{wAIC_{optimized/original} - wAIC_{without\_phylogeny} > threshold}). Defaulted as -2.
+}
   \item{\dots}{
 additional arguments passing to \code{\link[INLA]{inla}}
 }
@@ -70,9 +75,11 @@ additional arguments passing to \code{\link[INLA]{inla}}
 \details{
 When specifying the random effect, use \code{Cmatrix = Phylo} to indicate the phylogenetic covariance between communities, and \code{comm} as the identity of each community. See examples. You don't need to create them in the data frame. CPR will automatically create these for you in the internal environment.
 
-The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\eqn{\lambda}). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 after including the optimized/original \eqn{\lambda}, which means \deqn{wAIC_{optimized/original} - wAIC_{without\_phylogeny} > -2}
+The model will always compare the wAIC between the model without considering phylogeny and the model with optimized (\eqn{\lambda}). The model without phylogeny will be selected as "best model" if the wAIC does not reduce more than 2 (this threshold can be changed in the wAIC_threshold argument) after including the optimized/original \eqn{\lambda}, which means \deqn{wAIC_{optimized/original} - wAIC_{without\_phylogeny} > -2}
 
 Note that even if optimized (\eqn{\lambda}) = 0, the model is not equivalent to a linear regression, as the covariance matrices will still consider species overlap between communities. Therefore, the off-diagnoals in glmm are still not zeroes.
+
+Use \code{inla.list.models("prior")} to see all priors available. Note that the name of the prior shouldn't contain "Phylo".
 }
 \value{
   \item{best_model}{
@@ -143,6 +150,26 @@ inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
 summary(inla_m$best_model)
 inla_m$prediction #see predicted relationships at each unique value of the a covariate, while holding others at the mean value.
 inla_m$wAIC #wAIC of different models. Note that wAIC_optim has the lowest wAIC.
+
+# Advanced prior specification
+
+prior.fixed <- list(prec.intercept = 0.001,prec = 0.005)
+prior.family <-  list(hyper=list(theta1 = list(prior="loggamma",param = c(1,4e-5))))
+prior.phy <- list(prec=list(prior="loggamma",param=c(0.1,0.1)))
+prior.block <- list(prec=list(prior="loggamma",param=c(1,4e-5)))
+
+inla_m2 <- CPR(formula = LAI~Real.rich+
+                 f(comm,model="generic0",Cmatrix=Phylo,hyper=prior.Phylo)+
+                 f(block,model="iid"),
+              priors=list(prior.Phylo=prior.phy,prior.block=prior.block),
+              df = KSR_EF,
+              VCV_sp = VCV_sp,
+              comm=KSR,
+              family="gaussian",
+              optim.lambda = T,
+              control.fixed = prior.fixed,
+              control.family = prior.family)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

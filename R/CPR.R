@@ -11,14 +11,19 @@ CPR <- function(formula,
                 prediction.df = "auto",
                 predictedfittedresponse = "best_m",
                 inla.rerun = 1,
+                wAIC_threshold = -2,
                 ...
                 ) {
 
   require(INLA)
-
+  require(stringr)
   formula_text <- Reduce(paste,deparse(formula))
   response_name <- gsub(" ~.*","",formula_text)
   all_vars <- labels(terms(formula))
+
+  community_names <- word(all_vars[grep("Phylo",all_vars)],sep=",")
+  community_names <- gsub("f\\(","",community_names)
+
   fe <- all_vars[-grep("f\\(",all_vars)] #fixed effect
   formula_elements <- unlist(strsplit(formula_text,split="\\+"))
   formula_elements <- formula_elements[!grepl("Phylo",formula_elements)]
@@ -27,7 +32,17 @@ CPR <- function(formula,
 
   df$predictor <- "observed"
   df$response <- response_name
-  df$comm <- 1:nrow(df)
+
+  missing_community_names <- community_names[!community_names %in% colnames(df)]
+  if (length(missing_community_names > 0)) { #create a community ID column if missing
+  comm_id <- replicate(length(missing_community_names),1:nrow(df))
+  colnames(comm_id) <- community_names
+  df <- cbind(df,comm_id)
+  }
+
+  if (length(grep("Phylo", names(priors))) > 0) {
+    stop('The names of your prior should not contain the word "Phylo". Please change the names.')
+  }
 
   ###Create variable
   wAIC_GLM <- wAIC_optim <- wAIC_original <- NA
@@ -130,7 +145,6 @@ CPR <- function(formula,
   #   param <- c(3*sdres,0.01)
   #   priors <- list(priors=list(prec=list(prior="pc.prec"),param=param))
   # }
-
   if (optim.lambda==T) {
   ML.opt<-optim(runif(1,0.2,0.8),
                 likelihood.lambda.INLA,
@@ -149,10 +163,10 @@ CPR <- function(formula,
 
   lambda_INLA<-ML.opt$par
   wAIC <- ML.opt$value
-  V_INLA <- VCV_sp*lambda_INLA
-  diag(V_INLA) <- diag(VCV_sp)
+  VCV_sp_INLA <- VCV_sp*lambda_INLA
+  diag(VCV_sp_INLA) <- diag(VCV_sp)
 
-  C.lambda.INLA<- get_comm_pair_r(comm,V_INLA)
+  C.lambda.INLA<- get_comm_pair_r(comm,VCV_sp_INLA)
   prec.mat.INLA <- solve(C.lambda.INLA)
 
   m1_INLA_optim <- inla(phylo_formula,
@@ -174,7 +188,7 @@ CPR <- function(formula,
                    wAIC_no_phylo = m1_INLA_GLM,
                    wAIC_original_VCV = m1_INLA_original)
 
-  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= -2) {
+  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold) {
     best_m <- m1_INLA_GLM
     best_model_name <- "Without phylogeny"
   } else if (wAIC_optim < wAIC_original) {

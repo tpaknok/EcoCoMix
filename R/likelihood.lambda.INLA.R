@@ -7,7 +7,6 @@ likelihood.lambda.INLA<-function(inla_formula,
                                  priors = NULL,
                                  ...){
   require(INLA)
-  message(lambda, "-INLA")
   V_lambda <- VCV_sp*lambda
   diag(V_lambda) <- diag(VCV_sp)
   C.lambda<- get_comm_pair_r(comm,V_lambda)

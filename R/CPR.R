@@ -17,6 +17,7 @@ CPR <- function(formula,
 
   require(INLA)
   require(stringr)
+
   formula_text <- Reduce(paste,deparse(formula))
   response_name <- gsub(" ~.*","",formula_text)
   all_vars <- labels(terms(formula))
@@ -145,6 +146,7 @@ CPR <- function(formula,
   #   param <- c(3*sdres,0.01)
   #   priors <- list(priors=list(prec=list(prior="pc.prec"),param=param))
   # }
+
   if (optim.lambda==T) {
   ML.opt<-optim(runif(1,0.2,0.8),
                 likelihood.lambda.INLA,
@@ -181,22 +183,6 @@ CPR <- function(formula,
 
   m_optim_result <- m1_INLA_optim$summary.fixed
 
-  wAIC_all <- c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original)
-  min_wAIC_m <- names(which.min(wAIC_all))
-  best_m <- switch(min_wAIC_m,
-                   wAIC_optim = m1_INLA_optim,
-                   wAIC_no_phylo = m1_INLA_GLM,
-                   wAIC_original_VCV = m1_INLA_original)
-
-  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold) {
-    best_m <- m1_INLA_GLM
-    best_model_name <- "Without phylogeny"
-  } else if (wAIC_optim < wAIC_original) {
-    best_model_name <- "Optimized phylogeny"
-  } else {
-    best_model_name <- "Phylogeny without optimization"
-  }
-
   prediction_phylo <- cbind(df,
                             f(m1_INLA_optim$summary.fitted.values, inverse=T),
                             model="With phylogeny",
@@ -207,6 +193,23 @@ CPR <- function(formula,
   fe_sig <- data.frame(predictor = rownames(m1_INLA_optim$summary.fixed),Sig=fe_sig)
   prediction_phylo <- prediction_phylo %>% inner_join(fe_sig,"predictor")
   }
+
+  wAIC_all <- c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original)
+
+  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold | which.min(wAIC_all) == 2) {
+    best_m <- m1_INLA_GLM
+    best_model_name <- "Without phylogeny"
+  } else if (which.min(wAIC_all) == 1) { #will ignore NA
+    best_model_name <- "Optimized phylogeny"
+  } else {
+    best_model_name <- "Phylogeny without optimization"
+  }
+
+  min_wAIC_m <- names(which.min(wAIC_all))
+  best_m <- switch(min_wAIC_m,
+                   wAIC_optim = m1_INLA_optim,
+                   wAIC_no_phylo = m1_INLA_GLM,
+                   wAIC_original_VCV = m1_INLA_original)
 
   rerun <- 1
   if(inla.rerun != 0) {

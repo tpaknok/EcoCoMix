@@ -10,7 +10,7 @@ BEF_simulate <- function(comm,
                          sim=500,
                          seed=1000) {
 
-  sed.seed(seed)
+  set.seed(seed)
   C <- get_comm_pair_r(comm,V)
 
   if (signals_X == "sr") {

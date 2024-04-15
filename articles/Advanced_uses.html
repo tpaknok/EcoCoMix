@@ -101,37 +101,15 @@ effects in CPR models.</p>
 <p>Again let’s load the data first.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/liamrevell/phytools" class="external-link">phytools</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: ape</span></span>
-<span><span class="co">#&gt; Loading required package: maps</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──</span></span>
-<span><span class="co">#&gt; ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
-<span><span class="co">#&gt; ✔ forcats   1.0.0     ✔ stringr   1.5.1</span></span>
-<span><span class="co">#&gt; ✔ ggplot2   3.5.0     ✔ tibble    3.2.1</span></span>
-<span><span class="co">#&gt; ✔ lubridate 1.9.3     ✔ tidyr     1.3.1</span></span>
-<span><span class="co">#&gt; ✔ purrr     1.0.2</span></span>
-<span><span class="co">#&gt; ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
-<span><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
-<span><span class="co">#&gt; ✖ purrr::map()    masks maps::map()</span></span>
-<span><span class="co">#&gt; ✖ dplyr::where()  masks ape::where()</span></span>
-<span><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tpaknok/CPR" class="external-link">CPR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: Matrix</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'Matrix'</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:tidyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     expand, pack, unpack</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR_MLtree"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"KSR_EF"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/vcv.phylo.html" class="external-link">vcv</a></span><span class="op">(</span><span class="va">KSR_MLtree</span><span class="op">)</span> <span class="co">#species level phyologenetic covariance matrix using default (Brownian) model</span></span>
 <span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="va">VCV_sp</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">VCV_comm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: matrixcalc</span></span></code></pre></div>
+<span><span class="va">VCV_comm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="complex-models">Complex Models<a class="anchor" aria-label="anchor" href="#complex-models"></a>
@@ -139,8 +117,8 @@ effects in CPR models.</p>
 <p>Imagine the BEF experiment in KSR has a blocked design (it doesn’t),
 so we add one more column “block” in the data. Theoretically, this
 blocking structure should be addressed by adding a random intercept. In
-popular package such as lme4 or glmmTMB, we will use (1|block) to
-represent the random intercept.</p>
+popular package such as lme4 or glmmTMB, we will use
+<code>(1|block)</code> to represent the random intercept.</p>
 <p>Generally, you might wish to control for other structures in your
 data, such as spatial and temporal structures. INLA is capable of
 handling all of these, and please refer to <a href="https://becarioprecario.bitbucket.io/inla-gitbook/ch-spatial.html" class="external-link">other
@@ -184,12 +162,12 @@ model.</p>
 other parameters are estimated using logGamma distribution. This is
 because the internal calculations are conducted at log scale before
 back-transforming them to the original scale. Therefore, the priors must
-be specificed at log scale too. You can use inla.doc() to check the
-internal calculations of different distributions and priors. For
-gaussian distribution, use inla.doc(“Gaussian”).</p>
+be specificed at log scale too. You can use <code>inla.doc()</code> to
+check the internal calculations of different distributions and priors.
+For gaussian distribution, use <code>inla.doc("Gaussian")</code>.</p>
 <p>Note that if the log-transformed hyperparameters follow
 logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read
-inla.doc(“Gamma”) to learn more!</p>
+<code>inla.doc("Gamma")</code> to learn more!</p>
 <p>You can use other functions to get a sense of what the prior looks
 like.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -226,11 +204,12 @@ for the blocking random effects, we will still use the default one.</p>
 <span>              optim.lambda <span class="op">=</span> <span class="cn">T</span>,</span>
 <span>              control.fixed <span class="op">=</span> <span class="va">prior.fixed</span>,</span>
 <span>              control.family <span class="op">=</span> <span class="va">prior.family</span><span class="op">)</span></span></code></pre></div>
-<p>You only need to specify the manual prior in . For example, if you
-want to use the default prior for block, just use list(prior.phy=prior).
-Note that the name of the priors shouldn’t contain the word “Phylo” - it
-is designated to hold the communtiy phylogenetic covariance matrix. If
-you name the prior with the word “Phylo”, an error would occur.</p>
+<p>You only need to specify the manual prior in the argument
+<code>priors</code>. For example, if you want to use the default prior
+for block, just use <code>list(prior.phy=prior)</code>. Note that the
+name of the priors shouldn’t contain the word “Phylo” - it is designated
+to hold the communtiy phylogenetic covariance matrix. If you name the
+prior with the word “Phylo”, an error would occur.</p>
 <p>Now check the priors again!</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_model</span><span class="op">$</span><span class="va">.args</span><span class="op">$</span><span class="va">control.fixed</span> <span class="co">#gaussian distribution, original scale</span></span>
@@ -252,7 +231,7 @@ instead of the priors), but there are also good reasons to use
 informative priors, especially when the sample size is low. In fact this
 is one of the major advantage of Bayesian analyses!</p>
 <p>Note that default priors are not always non-informative! For example,
-if you specify the fixed effect priors as , they might be
+if you specify the fixed effect priors as N(0,1), they might be
 non-informative if you have standardized the responses and predictors,
 given biological relationships are rarely that strong (like increasing
 the responses by more than 1 SD when the predictors increase by 1 SD).

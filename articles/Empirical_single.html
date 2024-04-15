@@ -206,7 +206,7 @@ if you are interested.</p>
 <p>For simplicty’s sake, we will use the default prior for the random
 and fixed effects, which are all uninformative in this case. However,
 for the dispersion parameter of tweedie, we actually used a gaussian
-distribution N~(0,2). Note that the prior is in log-scale in the <a href="https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf" class="external-link">internal
+distribution N(0,2). Note that the prior is in log-scale in the <a href="https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf" class="external-link">internal
 calculation of INLA</a>. That’s because the default setting loggamma
 (100,100) seems to have a very narrow range, thus becoming very
 informative, at least for our dataset.</p>
@@ -241,22 +241,21 @@ while to run! So be patient!</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = </span></span>
-<span><span class="co">#&gt;    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = </span></span>
-<span><span class="co">#&gt;    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, </span></span>
-<span><span class="co">#&gt;    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " </span></span>
-<span><span class="co">#&gt;    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = </span></span>
-<span><span class="co">#&gt;    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = </span></span>
-<span><span class="co">#&gt;    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = </span></span>
-<span><span class="co">#&gt;    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, </span></span>
-<span><span class="co">#&gt;    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, </span></span>
+<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = E, offset = </span></span>
+<span><span class="co">#&gt;    offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = </span></span>
+<span><span class="co">#&gt;    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, control.compute = control.compute, ", " </span></span>
+<span><span class="co">#&gt;    control.predictor = control.predictor, control.family = control.family, ", " control.inla = control.inla, control.fixed = </span></span>
+<span><span class="co">#&gt;    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " control.hazard = control.hazard, </span></span>
+<span><span class="co">#&gt;    control.lincomb = control.lincomb, ", " control.update = control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = </span></span>
+<span><span class="co">#&gt;    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " </span></span>
+<span><span class="co">#&gt;    keep = keep, working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, </span></span>
 <span><span class="co">#&gt;    .parent.frame = .parent.frame)" ) </span></span>
 <span><span class="co">#&gt; Time used:</span></span>
-<span><span class="co">#&gt;     Pre = 0.2, Running = 0.244, Post = 0.133, Total = 0.577 </span></span>
+<span><span class="co">#&gt;     Pre = 0.223, Running = 0.278, Post = 0.145, Total = 0.646 </span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
-<span><span class="co">#&gt; (Intercept) 2.156 0.312      1.516    2.165      2.746 2.165   0</span></span>
-<span><span class="co">#&gt; Real.rich   0.080 0.096     -0.109    0.080      0.270 0.080   0</span></span>
+<span><span class="co">#&gt; (Intercept) 2.187 0.276      1.624    2.193      2.713 2.193   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.085 0.095     -0.101    0.085      0.274 0.085   0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;   Name     Model</span></span>
@@ -264,13 +263,13 @@ while to run! So be patient!</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model hyperparameters:</span></span>
 <span><span class="co">#&gt;                                                        mean    sd 0.025quant 0.5quant 0.975quant mode</span></span>
-<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.678     2.49       3.69 2.39</span></span>
-<span><span class="co">#&gt; Precision for comm                                     2.84 1.497      0.948     2.51       6.66 1.96</span></span>
+<span><span class="co">#&gt; size for the nbinomial observations (1/overdispersion) 2.53 0.512       1.68     2.48       3.68 2.38</span></span>
+<span><span class="co">#&gt; Precision for comm                                     3.31 1.701       1.14     2.94       7.64 2.32</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 617.44</span></span>
-<span><span class="co">#&gt; Effective number of parameters .................: 11.93</span></span>
+<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 617.75</span></span>
+<span><span class="co">#&gt; Effective number of parameters .................: 12.02</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Marginal log-Likelihood:  -868.48 </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -872.48 </span></span>
 <span><span class="co">#&gt;  is computed </span></span>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span></code></pre></div>
@@ -284,6 +283,7 @@ response from our model. Then we will put it in DHARMa and conduct
 different diagnostics.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/" class="external-link">DHARMa</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</span></span>
 <span><span class="va">sres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/INLA_simulate.html">INLA_simulate</a></span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres</span>,</span>
 <span>                           <span class="va">KSR_EF</span><span class="op">$</span><span class="va">bugs</span>,</span>
@@ -316,35 +316,34 @@ default settings in INLA.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = </span></span>
-<span><span class="co">#&gt;    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = </span></span>
-<span><span class="co">#&gt;    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, </span></span>
-<span><span class="co">#&gt;    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " </span></span>
-<span><span class="co">#&gt;    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = </span></span>
-<span><span class="co">#&gt;    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = </span></span>
-<span><span class="co">#&gt;    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = </span></span>
-<span><span class="co">#&gt;    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, </span></span>
-<span><span class="co">#&gt;    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, </span></span>
+<span><span class="co">#&gt;    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = E, offset = </span></span>
+<span><span class="co">#&gt;    offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = </span></span>
+<span><span class="co">#&gt;    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, control.compute = control.compute, ", " </span></span>
+<span><span class="co">#&gt;    control.predictor = control.predictor, control.family = control.family, ", " control.inla = control.inla, control.fixed = </span></span>
+<span><span class="co">#&gt;    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " control.hazard = control.hazard, </span></span>
+<span><span class="co">#&gt;    control.lincomb = control.lincomb, ", " control.update = control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = </span></span>
+<span><span class="co">#&gt;    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " </span></span>
+<span><span class="co">#&gt;    keep = keep, working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, </span></span>
 <span><span class="co">#&gt;    .parent.frame = .parent.frame)" ) </span></span>
 <span><span class="co">#&gt; Time used:</span></span>
-<span><span class="co">#&gt;     Pre = 0.229, Running = 0.198, Post = 0.0576, Total = 0.484 </span></span>
+<span><span class="co">#&gt;     Pre = 0.225, Running = 0.243, Post = 0.1, Total = 0.568 </span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;              mean    sd 0.025quant 0.5quant 0.975quant  mode kld</span></span>
-<span><span class="co">#&gt; (Intercept) 2.071 0.234      1.598    2.075      2.518 2.075   0</span></span>
-<span><span class="co">#&gt; Real.rich   0.025 0.065     -0.105    0.026      0.151 0.026   0</span></span>
+<span><span class="co">#&gt; (Intercept) 2.026 0.247      1.532    2.030      2.502 2.030   0</span></span>
+<span><span class="co">#&gt; Real.rich   0.024 0.062     -0.099    0.024      0.145 0.024   0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;   Name     Model</span></span>
 <span><span class="co">#&gt;     comm Generic0 model</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model hyperparameters:</span></span>
-<span><span class="co">#&gt;                    mean    sd 0.025quant 0.5quant 0.975quant mode</span></span>
-<span><span class="co">#&gt; Precision for comm 1.97 0.753      0.808     1.87       3.72 1.67</span></span>
+<span><span class="co">#&gt;                    mean   sd 0.025quant 0.5quant 0.975quant mode</span></span>
+<span><span class="co">#&gt; Precision for comm 1.65 0.63      0.679     1.56       3.12 1.40</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 872.94</span></span>
-<span><span class="co">#&gt; Effective number of parameters .................: 69.07</span></span>
+<span><span class="co">#&gt; Watanabe-Akaike information criterion (WAIC) ...: 872.66</span></span>
+<span><span class="co">#&gt; Effective number of parameters .................: 69.30</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Marginal log-Likelihood:  -975.55 </span></span>
+<span><span class="co">#&gt; Marginal log-Likelihood:  -972.73 </span></span>
 <span><span class="co">#&gt;  is computed </span></span>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span>

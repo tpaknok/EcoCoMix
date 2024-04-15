@@ -19,8 +19,29 @@ Again let's load the data first.
 
 ```r
 library(phytools)
+#> Loading required package: ape
+#> Loading required package: maps
 library(tidyverse)
+#> ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
+#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
+#> ✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+#> ✔ purrr     1.0.2
+#> ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
+#> ✖ purrr::map()    masks maps::map()
+#> ✖ dplyr::where()  masks ape::where()
+#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 library(CPR)
+#> Loading required package: Matrix
+#> 
+#> Attaching package: 'Matrix'
+#> 
+#> The following objects are masked from 'package:tidyr':
+#> 
+#>     expand, pack, unpack
 data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")
@@ -28,6 +49,7 @@ data("KSR_EF")
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
+#> Loading required package: matrixcalc
 ```
 
 ## Complex Models
@@ -84,7 +106,7 @@ plot(density(rnorm(1000,0,sqrt(1/0.001))))
 ```
 
 <div class="figure">
-<img src="figure/prior investigation-1.png" alt="The prior for the slope estimates" width="100%" />
+<img src="figure/prior_investigation-1.png" alt="The prior for the slope estimates" width="100%" />
 <p class="caption">The prior for the slope estimates</p>
 </div>
 

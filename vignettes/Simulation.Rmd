@@ -149,7 +149,7 @@ INLA_lambda_0.5 <- lapply(1:sim, function(x) CPR(formula = INLA_formula,
 
 ```
 
-``````{r no lambda,message=FALSE,eval=F}
+```{r no lambda,message=FALSE,eval=F}
 sim_data_no_lambda <- BEF_simulate(comm = KSR,
                          V = VCV_sp,
                          ef_mean = 0,

@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 Assuming that you have multiple ecosystem functions to analyse, you can repeat the code for single ecosystem function analyses multiple times. This is a bit annoying though, especially if you have a lot of data! Here, I will provide an example on how to use a loop to do it.
 
 First, load the data again.
-```{r setup, message=F, warning=F}
+```{r setup, message=FALSE, warning=FALSE}
 library(phytools)
 library(tidyverse)
 library(CPR)

@@ -67,7 +67,7 @@ We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlineli
 
 INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested.
 
-For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N~(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
+For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
 
 Generally, you should think carefully about prior constructions. [Default priors are not always uninformative](https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985), and they can have a huge influence on the data!
 

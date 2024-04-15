@@ -76,7 +76,7 @@ We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlineli
 
 INLA is a very powerful package, but can be a bit complicated to use. As it is a Bayesian analysis, we have to specify priors. INLA has different default priors and check their [website](https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html) if you are interested.
 
-For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N~(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
+For simplicty's sake, we will use the default prior for the random and fixed effects, which are all uninformative in this case. However, for the dispersion parameter of tweedie, we actually used a gaussian distribution N(0,2). Note that the prior is in log-scale in the [internal calculation of INLA](https://inla.r-inla-download.org/r-inla.org/doc/likelihood/tweedie.pdf). That's because the default setting loggamma (100,100) seems to have a very narrow range, thus becoming very informative, at least for our dataset.
 
 Generally, you should think carefully about prior constructions. [Default priors are not always uninformative](https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/oik.05985), and they can have a huge influence on the data!
 
@@ -103,22 +103,21 @@ inla_m <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
 summary(inla_m$best_model)
 #> 
 #> Call:
-#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = 
-#>    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = 
-#>    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
-#>    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " 
-#>    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = 
-#>    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
-#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = 
-#>    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, 
-#>    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
+#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = E, offset = 
+#>    offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = 
+#>    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, control.compute = control.compute, ", " 
+#>    control.predictor = control.predictor, control.family = control.family, ", " control.inla = control.inla, control.fixed = 
+#>    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " control.hazard = control.hazard, 
+#>    control.lincomb = control.lincomb, ", " control.update = control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = 
+#>    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " 
+#>    keep = keep, working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
 #>    .parent.frame = .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.2, Running = 0.244, Post = 0.133, Total = 0.577 
+#>     Pre = 0.223, Running = 0.278, Post = 0.145, Total = 0.646 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.156 0.312      1.516    2.165      2.746 2.165   0
-#> Real.rich   0.080 0.096     -0.109    0.080      0.270 0.080   0
+#> (Intercept) 2.187 0.276      1.624    2.193      2.713 2.193   0
+#> Real.rich   0.085 0.095     -0.101    0.085      0.274 0.085   0
 #> 
 #> Random effects:
 #>   Name	  Model
@@ -126,13 +125,13 @@ summary(inla_m$best_model)
 #> 
 #> Model hyperparameters:
 #>                                                        mean    sd 0.025quant 0.5quant 0.975quant mode
-#> size for the nbinomial observations (1/overdispersion) 2.54 0.514      1.678     2.49       3.69 2.39
-#> Precision for comm                                     2.84 1.497      0.948     2.51       6.66 1.96
+#> size for the nbinomial observations (1/overdispersion) 2.53 0.512       1.68     2.48       3.68 2.38
+#> Precision for comm                                     3.31 1.701       1.14     2.94       7.64 2.32
 #> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 617.44
-#> Effective number of parameters .................: 11.93
+#> Watanabe-Akaike information criterion (WAIC) ...: 617.75
+#> Effective number of parameters .................: 12.02
 #> 
-#> Marginal log-Likelihood:  -868.48 
+#> Marginal log-Likelihood:  -872.48 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')
@@ -143,6 +142,7 @@ Let's do some model diagnostics to make sure our model makes sense. First, we wi
 
 ```r
 library(DHARMa)
+#> This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')
 sres <- INLA_simulate(inla_m$best_model)
 DHARMa_res <- createDHARMa(sres,
                            KSR_EF$bugs,
@@ -174,35 +174,34 @@ inla_m2 <- CPR(formula = bugs~Real.rich+f(comm,model="generic0",Cmatrix=Phylo),
 summary(inla_m2$best_model)
 #> 
 #> Call:
-#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = 
-#>    E, offset = offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = 
-#>    lp.scale, link.covariates = link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, 
-#>    control.compute = control.compute, ", " control.predictor = control.predictor, control.family = control.family, ", " 
-#>    control.inla = control.inla, control.fixed = control.fixed, ", " control.mode = control.mode, control.expert = 
-#>    control.expert, ", " control.hazard = control.hazard, control.lincomb = control.lincomb, ", " control.update = 
-#>    control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = control.pardiso, only.hyperparam = 
-#>    only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " keep = keep, 
-#>    working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
+#>    c("inla.core(formula = formula, family = family, contrasts = contrasts, ", " data = data, quantiles = quantiles, E = E, offset = 
+#>    offset, ", " scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, ", " lp.scale = lp.scale, link.covariates = 
+#>    link.covariates, verbose = verbose, ", " lincomb = lincomb, selection = selection, control.compute = control.compute, ", " 
+#>    control.predictor = control.predictor, control.family = control.family, ", " control.inla = control.inla, control.fixed = 
+#>    control.fixed, ", " control.mode = control.mode, control.expert = control.expert, ", " control.hazard = control.hazard, 
+#>    control.lincomb = control.lincomb, ", " control.update = control.update, control.lp.scale = control.lp.scale, ", " control.pardiso = 
+#>    control.pardiso, only.hyperparam = only.hyperparam, ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = num.threads, ", " 
+#>    keep = keep, working.directory = working.directory, silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug = debug, 
 #>    .parent.frame = .parent.frame)" ) 
 #> Time used:
-#>     Pre = 0.229, Running = 0.198, Post = 0.0576, Total = 0.484 
+#>     Pre = 0.225, Running = 0.243, Post = 0.1, Total = 0.568 
 #> Fixed effects:
 #>              mean    sd 0.025quant 0.5quant 0.975quant  mode kld
-#> (Intercept) 2.071 0.234      1.598    2.075      2.518 2.075   0
-#> Real.rich   0.025 0.065     -0.105    0.026      0.151 0.026   0
+#> (Intercept) 2.026 0.247      1.532    2.030      2.502 2.030   0
+#> Real.rich   0.024 0.062     -0.099    0.024      0.145 0.024   0
 #> 
 #> Random effects:
 #>   Name	  Model
 #>     comm Generic0 model
 #> 
 #> Model hyperparameters:
-#>                    mean    sd 0.025quant 0.5quant 0.975quant mode
-#> Precision for comm 1.97 0.753      0.808     1.87       3.72 1.67
+#>                    mean   sd 0.025quant 0.5quant 0.975quant mode
+#> Precision for comm 1.65 0.63      0.679     1.56       3.12 1.40
 #> 
-#> Watanabe-Akaike information criterion (WAIC) ...: 872.94
-#> Effective number of parameters .................: 69.07
+#> Watanabe-Akaike information criterion (WAIC) ...: 872.66
+#> Effective number of parameters .................: 69.30
 #> 
-#> Marginal log-Likelihood:  -975.55 
+#> Marginal log-Likelihood:  -972.73 
 #>  is computed 
 #> Posterior summaries for the linear predictor and the fitted values are computed
 #> (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')

@@ -19,29 +19,8 @@ Again let's load the data first.
 
 ```r
 library(phytools)
-#> Loading required package: ape
-#> Loading required package: maps
 library(tidyverse)
-#> ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
-#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
-#> ✔ ggplot2   3.5.0     ✔ tibble    3.2.1
-#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-#> ✔ purrr     1.0.2
-#> ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-#> ✖ dplyr::filter() masks stats::filter()
-#> ✖ dplyr::lag()    masks stats::lag()
-#> ✖ purrr::map()    masks maps::map()
-#> ✖ dplyr::where()  masks ape::where()
-#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 library(CPR)
-#> Loading required package: Matrix
-#> 
-#> Attaching package: 'Matrix'
-#> 
-#> The following objects are masked from 'package:tidyr':
-#> 
-#>     expand, pack, unpack
 data("KSR")
 data("KSR_MLtree")
 data("KSR_EF")
@@ -49,12 +28,11 @@ data("KSR_EF")
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
-#> Loading required package: matrixcalc
 ```
 
 ## Complex Models
 
-Imagine the BEF experiment in KSR has a blocked design (it doesn't), so we add one more column "block" in the data. Theoretically, this blocking structure should be addressed by adding a random intercept. In popular package such as lme4 or glmmTMB, we will use (1|block) to represent the random intercept.
+Imagine the BEF experiment in KSR has a blocked design (it doesn't), so we add one more column "block" in the data. Theoretically, this blocking structure should be addressed by adding a random intercept. In popular package such as lme4 or glmmTMB, we will use `(1|block)` to represent the random intercept.
 
 Generally, you might wish to control for other structures in your data, such as spatial and temporal structures. INLA is capable of handling all of these, and please refer to [other INLA resources](https://becarioprecario.bitbucket.io/inla-gitbook/ch-spatial.html) if you need to do so.
 
@@ -95,9 +73,9 @@ inla_m$best_model$all.hyper$random[[2]]$hyper$theta$param #hyperparameter
 ```
 
 ## Internal Calculations of INLA
-Apart from the fixed effects, which uses a gaussian distribution, all other parameters are estimated using logGamma distribution. This is because the internal calculations are conducted at log scale before back-transforming them to the original scale. Therefore, the priors must be specificed at log scale too. You can use inla.doc() to check the internal calculations of different distributions and priors. For gaussian distribution, use inla.doc("Gaussian").
+Apart from the fixed effects, which uses a gaussian distribution, all other parameters are estimated using logGamma distribution. This is because the internal calculations are conducted at log scale before back-transforming them to the original scale. Therefore, the priors must be specificed at log scale too. You can use `inla.doc()` to check the internal calculations of different distributions and priors. For gaussian distribution, use `inla.doc("Gaussian")`.
 
-Note that if the log-transformed hyperparameters follow logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read inla.doc("Gamma") to learn more!
+Note that if the log-transformed hyperparameters follow logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read `inla.doc("Gamma")` to learn more!
 
 You can use other functions to get a sense of what the prior looks like.
 
@@ -139,7 +117,7 @@ inla_m2 <- CPR(formula = LAI~Real.rich+
               control.family = prior.family)
 ```
 
-You only need to specify the manual prior in \code{priors}. For example, if you want to use the default prior for block, just use list(prior.phy=prior). Note that the name of the priors shouldn't contain the word "Phylo" - it is designated to hold the communtiy phylogenetic covariance matrix. If you name the prior with the word "Phylo", an error would occur.
+You only need to specify the manual prior in the argument `priors`. For example, if you want to use the default prior for block, just use `list(prior.phy=prior)`. Note that the name of the priors shouldn't contain the word "Phylo" - it is designated to hold the communtiy phylogenetic covariance matrix. If you name the prior with the word "Phylo", an error would occur.
 
 Now check the priors again!
 
@@ -154,4 +132,4 @@ inla_m2$best_model$all.hyper$random[[2]]$hyper$theta$param #hyperparameter
 ## Notes on Priors
 So how should we specify our priors? Well there are a lot of debates on that and you are encouraged to visit the literature. If you choose to use the default ones, you have to understand what the values are. Many studies prefer using non-informative priors to minimize their influences on the results (i.e., the results are strongly driven by the data instead of the priors), but there are also good reasons to use informative priors, especially when the sample size is low. In fact this is one of the major advantage of Bayesian analyses!
 
-Note that default priors are not always non-informative! For example, if you specify the fixed effect priors as \eqn{N(0,1)}, they might be non-informative if you have standardized the responses and predictors, given biological relationships are rarely that strong (like increasing the responses by more than 1 SD when the predictors increase by 1 SD). However, if you run the analyses in the original scale, it becomes more tricky, because the slope can change according to the unit of the responses and the predictors. For example, if body mass increases by 0.01kg per unit temperature, converting the unit to g will completely change the magnitude of slope (i.e, 10gram)!
+Note that default priors are not always non-informative! For example, if you specify the fixed effect priors as N(0,1), they might be non-informative if you have standardized the responses and predictors, given biological relationships are rarely that strong (like increasing the responses by more than 1 SD when the predictors increase by 1 SD). However, if you run the analyses in the original scale, it becomes more tricky, because the slope can change according to the unit of the responses and the predictors. For example, if body mass increases by 0.01kg per unit temperature, converting the unit to g will completely change the magnitude of slope (i.e, 10gram)!

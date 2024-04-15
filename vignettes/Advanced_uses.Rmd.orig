@@ -81,7 +81,7 @@ Apart from the fixed effects, which uses a gaussian distribution, all other para
 Note that if the log-transformed hyperparameters follow logGamma(a,b), the original hyperparameters follow Gamma(a,b). Read inla.doc("Gamma") to learn more!
 
 You can use other functions to get a sense of what the prior looks like.
-```{r prior investigation, fig.cap = "The prior for the slope estimates"}
+```{r prior_investigation, fig.cap = "The prior for the slope estimates"}
 plot(density(rnorm(1000,0,sqrt(1/0.001))))
 ```
 

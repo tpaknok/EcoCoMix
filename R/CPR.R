@@ -26,6 +26,8 @@ CPR <- function(formula,
   community_names <- gsub("f\\(","",community_names)
 
   fe <- all_vars[-grep("f\\(",all_vars)] #fixed effect
+  re <- all_vars[grep("f\\(",all_vars)] #random effect
+
   formula_elements <- unlist(strsplit(formula_text,split="\\+"))
   formula_elements <- formula_elements[!grepl("Phylo",formula_elements)]
   no_phylo_formula <- as.formula(paste(formula_elements,collapse="+"))
@@ -176,7 +178,7 @@ CPR <- function(formula,
                         family = family,
                         control.predictor=list(compute=TRUE),
                         control.compute = control.compute,
-                        ...)
+                        ...) #optimized_model
 
   wAIC_optim <- m1_INLA_optim$waic$waic
   m1_INLA_optim_r2 <- cor(m1_INLA_optim$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
@@ -247,6 +249,8 @@ CPR <- function(formula,
 
   pfr <- unlist(pfr)
 
+  omega <- calc_omega(m1_INLA_optim)
+
   output <- list(best_model = best_m,
                  best_model_name = best_model_name,
                  predictedfittedresponse = pfr,
@@ -258,7 +262,8 @@ CPR <- function(formula,
                  optimized_model = m_optim_result,
                  original_VCV_model = m_original_result,
                  Cmatrix = prec.mat.INLA,
-                 prediction = prediction
+                 prediction = prediction,
+                 omega = omega
                  )
 
   return(output)

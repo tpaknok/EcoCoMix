@@ -180,6 +180,8 @@ CPR <- function(formula,
                         control.compute = control.compute,
                         ...) #optimized_model
 
+  omega <- calc_omega(m1_INLA_optim)
+
   wAIC_optim <- m1_INLA_optim$waic$waic
   m1_INLA_optim_r2 <- cor(m1_INLA_optim$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
 
@@ -249,13 +251,18 @@ CPR <- function(formula,
 
   pfr <- unlist(pfr)
 
-  omega <- calc_omega(m1_INLA_optim)
+  R2_df <- list(c(calc_R2(m1_INLA_GLM),model="no_phylo"),
+                c(calc_R2(m1_INLA_original),model="original"),
+                c(calc_R2(m1_INLA_optim),model="optimized"))
+
+  R2_df <- as.data.frame(do.call(rbind,R2_df))
 
   output <- list(best_model = best_m,
                  best_model_name = best_model_name,
                  predictedfittedresponse = pfr,
                  wAIC = wAIC_all,
-                 R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),
+                 #R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),
+                 R2 = R2_df,
                  optim_lambda = lambda_INLA,
                  initial_formula = formula,
                  without_phylo_model = m1_INLA_GLM$summary.fixed,

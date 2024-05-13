@@ -161,7 +161,7 @@ save(INLA_eval_lambda_0.5,file="INLA_eval_lambda_0.5.Rdata")
 
 ```
 
-```{r b1=0.25}
+```{r b1=0.25,eval=F}
 b1=0.25
 sim_data_lambda_1 <- BEF_simulate(comm = KSR,
                          V = VCV_sp,

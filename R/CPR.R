@@ -100,12 +100,15 @@ CPR <- function(formula,
                       ...)
 
   wAIC_GLM <- m1_INLA_GLM$waic$waic
-  m1_INLA_GLM_r2<- cor(m1_INLA_GLM$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
+  # m1_INLA_GLM_r2<- cor(m1_INLA_GLM$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
   f <- get(paste0("inla.link.",m1_INLA_GLM$misc$linkfunctions$names)) #link function!!
 
   phylo_formula <- Reduce(paste,deparse(formula))
   phylo_formula <- gsub("Phylo","prec.mat.INLA",phylo_formula)
   phylo_formula <- as.formula(phylo_formula)
+  int_only_formula <- paste(response_name,"~ 1+",re,collapse="+")
+  int_only_formula <- gsub("Phylo","prec.mat.INLA",int_only_formula)
+  int_only_formula <- as.formula(int_only_formula)
 
   if (!is.null(priors)) {
     for (i in 1:length(priors)) {
@@ -180,15 +183,21 @@ CPR <- function(formula,
                         control.compute = control.compute,
                         ...) #optimized_model
 
-  omega <- calc_omega(m1_INLA_optim)
+  m1_INLA_int_only <- inla(int_only_formula,
+                        data = df,
+                        family = family,
+                        control.predictor=list(compute=TRUE),
+                        control.compute = control.compute,
+                        ...) #optimized_model
 
   wAIC_optim <- m1_INLA_optim$waic$waic
-  m1_INLA_optim_r2 <- cor(m1_INLA_optim$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
+  # m1_INLA_optim_r2 <- cor(m1_INLA_optim$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
 
   m_optim_result <- m1_INLA_optim$summary.fixed
 
   prediction_phylo <- cbind(df,
                             f(m1_INLA_optim$summary.fitted.values, inverse=T),
+                            m1_INLA_optim$summary.fitted.values,
                             model="With phylogeny",
                             better_fit = ifelse(best_model == "With phylogeny","Yes","No"))
   prediction_phylo <- prediction_phylo[pos,]
@@ -232,6 +241,7 @@ CPR <- function(formula,
 
   prediction_no_phylo <- cbind(df,
                                f(m1_INLA_GLM$summary.fitted.values, inverse=T),
+                               m1_INLA_GLM$summary.fitted.values,
                                model = "Without phylogeny",
                                better_fit = ifelse(best_model == "With phylogeny","No","Yes"))
   prediction_no_phylo <- prediction_no_phylo[pos,]
@@ -251,26 +261,19 @@ CPR <- function(formula,
 
   pfr <- unlist(pfr)
 
-  R2_df <- list(c(calc_R2(m1_INLA_GLM),model="no_phylo"),
-                c(calc_R2(m1_INLA_original),model="original"),
-                c(calc_R2(m1_INLA_optim),model="optimized"))
-
-  R2_df <- as.data.frame(do.call(rbind,R2_df))
-
+  var_comp <- unlist(get_variance_INLA(m1_INLA_optim,m1_INLA_int_only))
   output <- list(best_model = best_m,
                  best_model_name = best_model_name,
                  predictedfittedresponse = pfr,
                  wAIC = wAIC_all,
-                 #R2 = c(R2_optim=m1_INLA_optim_r2, R2_no_phylo = m1_INLA_GLM_r2,R2_original_VCV = m1_INLA_original_r2),
-                 R2 = R2_df,
                  optim_lambda = lambda_INLA,
                  initial_formula = formula,
                  without_phylo_model = m1_INLA_GLM$summary.fixed,
                  optimized_model = m_optim_result,
                  original_VCV_model = m_original_result,
-                 Cmatrix = prec.mat.INLA,
+                 optimized_phylo_matrix = prec.mat.INLA,
                  prediction = prediction,
-                 omega = omega
+                 variance_component = var_comp
                  )
 
   return(output)

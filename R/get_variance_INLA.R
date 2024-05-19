@@ -37,16 +37,20 @@ get_variance_INLA <- function(INLA_m,
   all_vars <- labels(terms(INLA_m$.args$formula))
   re <- all_vars[grep("f\\(",all_vars)] #random effect
 
-  if (length(re) > 0) {
-  ###constructure fake C matrix such that the f() function runs....
-    generic_0_re <- re[grepl("Cmatrix",re)]
+  generic_0_re <- re[grepl("Cmatrix",re)]
+
+  if(length(generic_0_re) > 0) {
+    generic_0_re <- gsub(" ","",generic_0_re)
     split_re <- strsplit(generic_0_re,",")
     generic_0_mat_names <- sapply(split_re, function(x) unlist(x)[grep("Cmatrix=",x)])
     generic_0_mat_names <- unname(sapply(generic_0_mat_names,function(x) gsub("Cmatrix=|\\)","",x)))
     for (i in 1:length(generic_0_mat_names)) {
-      assign(x,diag(nrow(INLA_m$.args$data)))
+      assign(generic_0_mat_names[[i]],diag(nrow(INLA_m$.args$data)))
     }
+  }
 
+  if (length(re) > 0) {
+  ###constructure fake C matrix such that the f() function runs....
     re_list  <- lapply(re, function(x) eval(parse(text=x))[c("label","weights")])
     re_list <- purrr::transpose(re_list)
     re_list$var <- lapply(INLA_m$summary.hyperpar[match(paste0("Precision for ",re_list$label),rownames(INLA_m$summary.hyperpar)),"0.5quant"],
@@ -84,17 +88,19 @@ get_variance_INLA <- function(INLA_m,
   re <- all_vars[grep("f\\(",all_vars)] #random effect
   phylo_re <- all_vars[grep(phylo_Cmatrix_names,all_vars)]
 
-
-  if (length(phylo_re) > 0) {
-  ###constructure fake C matrix such that the f() function runs....
   generic_0_re <- re[grepl("Cmatrix",phylo_re)]
-  split_re <- strsplit(generic_0_re,",")
-  generic_0_mat_names <- sapply(split_re, function(x) unlist(x)[grep("Cmatrix=",x)])
-  generic_0_mat_names <- unname(sapply(generic_0_mat_names,function(x) gsub("Cmatrix=|\\)","",x)))
-  for (i in 1:length(generic_0_mat_names)) {
-    assign(x,diag(nrow(INLA_m$.args$data)))
+
+  if(length(generic_0_re) > 0) {
+    generic_0_re <- gsub(" ","",generic_0_re)
+    split_re <- strsplit(generic_0_re,",")
+    generic_0_mat_names <- sapply(split_re, function(x) unlist(x)[grep("Cmatrix=",x)])
+    generic_0_mat_names <- unname(sapply(generic_0_mat_names,function(x) gsub("Cmatrix=|\\)","",x)))
+    for (i in 1:length(generic_0_mat_names)) {
+      assign(generic_0_mat_names[[i]],diag(nrow(INLA_m$.args$data)))
+    }
   }
 
+  if (length(phylo_re) > 0) {
     re_list  <- lapply(phylo_re, function(x) eval(parse(text=x))[c("label","weights")])
     re_list <- purrr::transpose(re_list)
     re_list$var <- lapply(INLA_m$summary.hyperpar[match(paste0("Precision for ",re_list$label),rownames(INLA_m$summary.hyperpar)),"0.5quant"],
@@ -129,7 +135,7 @@ get_variance_INLA <- function(INLA_m,
 
 .get_variance_residual <- function (INLA_m,
                                     INLA_m_int_only) {
-  supported_family = c("gaussian","tweedie","poisson","nbinomial","binomial")
+  supported_family = c("gaussian","tweedie","poisson","nbinomial","binomial","zeroinflatednbinomial1")
 
   if (INLA_m$.args$family %in% supported_family) {
   mu <- exp(INLA_m_int_only$summary.fixed$`0.5quant`)
@@ -137,30 +143,49 @@ get_variance_INLA <- function(INLA_m,
     stop("Currently the package doesn't support ",INLA_m$.args$family," distribution.")
   }
 
-  var_residual <- switch(INLA_m$.args$family,
-                         gaussian = (1/INLA_m$summary.hyperpar["Precision for the Gaussian observations","0.5quant"]),
-                         nbinomial = switch(INLA_m$misc$linkfunctions$names,
-                                            log=.get_variance_residual_nbinomial(INLA_m,mu),
-                                            sqrt=0.25,
-                                            "Only supporting log and sqrt link for negative binomial distribution."),
-                         poisson = switch(INLA_m$misc$linkfunctions$names,
-                                          log=mu,
-                                          sqrt=0.25,
-                                          "Only supporting log and sqrt link for poisson distribution."),
-                         tweedie = switch(INLA_m$misc$linkfunctions$names,
-                                          log= .get_variance_residual_tweedie(INLA_m,mu),
-                                          "Only supporting log link for tweedie distribution."),
-                         binomial = switch(INLA_m$misc$linkfunctions$names,
-                                           logit=pi^2/3,
-                                           cloglog=,
-                                           clogloglink=pi^2/6,
-                                           probit=1,
-                                           "Only supporting logit, clogloglink, and probit link for tweedie distribution."),
-                         zeroinflatednbinomial1 = switch(
-                           log=.get_variance_residual_zinfnb(INLA_m),
-                           "Only supporting log link for zero-inflated negative binomial distribution 1."
-                         )
+  if (mu < 6) {
+    warning("mu is close to zero. Estimates of distributional residuals (and hence other R2) may not be reliable?")
+  }
+  cvsquared <- tryCatch(
+    {
+      vv<-switch(INLA_m$.args$family,
+             gaussian = (1/INLA_m$summary.hyperpar["Precision for the Gaussian observations","0.5quant"]),
+             nbinomial = switch(INLA_m$misc$linkfunctions$names,
+                                log=.get_variance_residual_nbinomial(INLA_m,mu),
+                                sqrt=0.25,
+                                "Only supporting log and sqrt link for negative binomial distribution."),
+             poisson = switch(INLA_m$misc$linkfunctions$names,
+                              log=mu,
+                              sqrt=0.25,
+                              "Only supporting log and sqrt link for poisson distribution."),
+             tweedie = switch(INLA_m$misc$linkfunctions$names,
+                              log= .get_variance_residual_tweedie(INLA_m,mu),
+                              "Only supporting log link for tweedie distribution."),
+             binomial = switch(INLA_m$misc$linkfunctions$names,
+                               logit=pi^2/3,
+                               cloglog=,
+                               clogloglink=pi^2/6,
+                               probit=1,
+                               "Only supporting logit, clogloglink, and probit link for tweedie distribution."),
+             zeroinflatednbinomial1 = switch(INLA_m$misc$linkfunctions$names,
+                                             log=.get_variance_residual_zinfnb(INLA_m),
+                                             "Only supporting log link for zero-inflated negative binomial distribution 1."
+             )
+      )
+
+      if (INLA_m$.args$family == "gaussian") {
+        vv <- vv
+      } else {
+        vv <- vv / mu^2
+      }
+    }
   )
+
+  if (INLA_m$.args$family == "gaussian") {
+    cvsquared
+  } else {
+    log1p(cvsquared)
+  }
 }
 
   .get_variance_residual_nbinomial <- function (INLA_m,mu) {
@@ -174,21 +199,21 @@ get_variance_INLA <- function(INLA_m,
     phi * mu^power
   }
 
-  .get_variance_residual_zinfnb <- function(INLA_m) {
-      p <- INLA_m$summary.hyperpar["zero-probability parameter for zero-inflated nbinomial_1","0.5quant"]
-      # mean of conditional distribution
-      mu <- INLA_m$summary.fitted.values[,"0.5quant"]/(1-p)
-      # sigma
-      betad <- INLA_m$summary.hyperpar["size for nbinomial_1 zero-inflated observations","0.5quant"]
-      k <- exp(betad)
-      pvar <- (1 - p) * (log1p(mu * (1 + mu/k)/(mu^2))) + mu^2 * (p^2 + p)
+  .get_variance_residual_zinfnb <- function(INLA_m,mu) {
+    # zi probability
+    p <- INLA_m$summary.hyperpar["zero-probability parameter for zero-inflated nbinomial_1","0.5quant"]
 
+    # median of conditional distribution
+    conditional <- INLA_m$summary.fitted.values[,"0.5quant"]/(1-p)
+
+    # sigma
+    k <- INLA_m$summary.hyperpar["size for nbinomial_1 zero-inflated observations","0.5quant"]
+
+    # variance
+    var <- conditional * (1 + conditional/k)
+
+    pvar <- (1 - p) * var + conditional^2 * (p^2 + p)
     mean(pvar)
-
-    # pearson residuals
-    # pred <- predict(model, type = "response") ## (1 - p) * mu
-    # pred <- stats::predict(model, type_pred = "response", type = "mean_subject")
-    # (get_response(model) - pred) / sqrt(pvar)
   }
 
 

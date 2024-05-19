@@ -298,7 +298,6 @@ CPR <- function(formula,
   } else {
     best_model <- m1_INLA_original
     var_comp <- unlist(get_variance_INLA(best_model,m1_INLA_original_int_only))
-    return_lambda <- NULL
   }
 
   R2 <- get_R2(var_comp)

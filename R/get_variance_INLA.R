@@ -2,7 +2,7 @@ get_variance_INLA <- function(INLA_m,
                               INLA_m_int_only,
                               phylo_Cmatrix_names = "prec.mat.INLA"){
 
-  library(vctrs)
+  require(vctrs)
   var_fixed <- NULL
   var_random <- NULL
   var_residual <- NULL
@@ -33,7 +33,7 @@ get_variance_INLA <- function(INLA_m,
 
 ####
 .get_variance_random_INLA <- function (INLA_m) {
-  library(stringr)
+  require(stringr)
   all_vars <- labels(terms(INLA_m$.args$formula))
   re <- all_vars[grep("f\\(",all_vars)] #random effect
 

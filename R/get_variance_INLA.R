@@ -9,14 +9,12 @@ get_variance_INLA <- function(INLA_m,
   var_phylo <- NULL
 
   ###fixed effect calculation
-  message("get_fixed")
   beta <- INLA_m$summary.fixed$`0.5quant`
   X <- INLA_m$model.matrix
 
   var_fixed <- var(as.vector(beta%*%t(as.matrix(X))))
 
   ###random effect calculation
-  message("get_random")
   var_random <- .get_variance_random_INLA(INLA_m)
 
   ###var_residual

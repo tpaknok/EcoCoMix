@@ -170,7 +170,7 @@ CPR <- function(formula,
     require(NMOF)
 
     grid_result <- gridSearch(fun=likelihood.lambda.INLA,
-                              levels=list(lambda=c(0.2,0.4,0.6,0.8)),
+                              levels=list(lambda=c(0.05,0.25,0.5,0.75,0.95)),
                               lower=0,
                               upper=1,
                               inla_formula = formula,

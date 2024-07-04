@@ -17,6 +17,7 @@ CPR <- function(formula,
 
   require(INLA)
   require(stringr)
+  require(tidyverse)
 
   formula_text <- Reduce(paste,deparse(formula))
   response_name <- gsub(" ~.*","",formula_text)
@@ -315,7 +316,7 @@ CPR <- function(formula,
                  prediction = prediction,
                  variance_component = var_comp,
                  R2 = R2,
-                 init_lambda = grid_result$minlevels
+                 init_lambda = ifelse(optim.lambda==T,grid_result$minlevels,NA)
                  )
 
   return(output)

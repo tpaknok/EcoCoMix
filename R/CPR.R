@@ -243,11 +243,11 @@ CPR <- function(formula,
   return_lambda <- "Optimization was not conducted"
 
   if (optim.lambda == T) {
-    if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold | which.min(wAIC_all) == 2) {
+    if (wAIC_optim - wAIC_GLM >= wAIC_threshold) {
       best_m <- m1_INLA_GLM
       best_model_name <- "Without phylogeny"
       return_lambda <- "Lambda estimate not returned due to a lack of compositional effect."
-    } else if (which.min(wAIC_all) == 1) { #will ignore NA
+    } else { #will ignore NA
       best_model_name <- "Optimized phylogeny"
       return_lambda <- lambda_INLA
       }

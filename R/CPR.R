@@ -239,17 +239,19 @@ CPR <- function(formula,
 
   wAIC_all <- c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original)
 
-  if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold | which.min(wAIC_all) == 2) {
-    best_m <- m1_INLA_GLM
-    best_model_name <- "Without phylogeny"
-    return_lambda <- "Lambda estimate not returned due to a lack of compositional effect."
-  } else if (which.min(wAIC_all) == 1) { #will ignore NA
-    best_model_name <- "Optimized phylogeny"
-    return_lambda <- lambda_INLA
-  } else {
-    best_model_name <- "Phylogeny without optimization"
-    return_lambda <- "Optimization was not conducted"
-  }
+  best_model_name <- "Phylogeny without optimization"
+  return_lambda <- "Optimization was not conducted"
+
+  if (optim.lambda == T) {
+    if (min(wAIC_all,na.rm=T) - wAIC_GLM >= wAIC_threshold | which.min(wAIC_all) == 2) {
+      best_m <- m1_INLA_GLM
+      best_model_name <- "Without phylogeny"
+      return_lambda <- "Lambda estimate not returned due to a lack of compositional effect."
+    } else if (which.min(wAIC_all) == 1) { #will ignore NA
+      best_model_name <- "Optimized phylogeny"
+      return_lambda <- lambda_INLA
+      }
+    }
 
   min_wAIC_m <- names(which.min(wAIC_all))
   best_m <- switch(min_wAIC_m,

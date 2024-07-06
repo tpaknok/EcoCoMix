@@ -24,12 +24,12 @@ BEF_simulate_eval <- function(models, type="INLA") {
     without_phylo_model$model <-  "Without phylogeny"
     optimized_model$model <- "Optimized phylogeny"
 
-    optim_lambda <- lapply(1:length(models),function(x) models[[x]]$optim_lambda)
+    optim_lambda <- lapply(1:length(models),function(x) models[[x]]$optimized_lambda)
     optim_lambda <- do.call(rbind,optim_lambda)
 
     original_VCV_model$optim_lambda <- NA
     without_phylo_model$optim_lambda <-  NA
-    optimized_model$optim_lambda <- optim_lambda
+    optimized_model$optim_lambda <- suppressWarnings(as.numeric(optim_lambda))
 
     all_models <- rbind(original_VCV_model,without_phylo_model,optimized_model)
 

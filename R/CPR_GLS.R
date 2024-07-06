@@ -53,6 +53,6 @@ CPR_GLS <- function(formula,
                  AIC = c(AIC_without_phylo = AIC(m_without_phylo),
                          AIC_original_VCV = AIC(m_original_VCV),
                          AIC_optim = AIC_optim),
-                 optim_lambda = lambda_GLS)
+                 optimized_lambda = lambda_GLS)
   return(output)
 }

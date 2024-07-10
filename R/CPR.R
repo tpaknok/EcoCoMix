@@ -153,6 +153,18 @@ CPR <- function(formula,
     m_original_result <- m1_INLA_original$summary.fixed
   }
 
+  VCV_sp_lambda0 <- VCV_sp*0
+  diag(VCV_sp_lambda0) <- diag(VCV_sp)
+  C.lambda0.INLA<- get_comm_pair_r(comm,VCV_sp_lambda0)
+  prec.mat.lambda0.INLA <- solve(C.lambda0.INLA)
+
+  m1_INLA_lambda0 <- inla(phylo_formula,
+                           data = df,
+                           family = family,
+                           control.predictor=list(compute=TRUE),
+                           control.compute = control.compute,
+                           ...)
+
   # if (priors == "pc.prec") {
   #   message("setup penalizing complexity priors")
   #   # m <- glm(no_phylo_formula,
@@ -170,37 +182,54 @@ CPR <- function(formula,
   if (optim.lambda==T) {
     require(NMOF)
 
+    # grid_result <- gridSearch(fun=likelihood.lambda.INLA,
+    #                           levels=list(lambda=seq(0,1,by=0.025)),
+    #                           lower=0,
+    #                           upper=1,
+    #                           inla_formula = formula,
+    #                           family = family,
+    #                           data = df,
+    #                           VCV_sp = VCV_sp,
+    #                           comm = comm,
+    #                           prior = priors,
+    #                           control.compute = control.compute,
+    #                           printDetail = F,
+    #                           ...) #Determine best starting value among 0.2,0.4,0.6,0.8
+    #
+    # lambda_INLA<- grid_result$minlevels
+
     grid_result <- gridSearch(fun=likelihood.lambda.INLA,
-                              levels=list(lambda=c(0.05,0.25,0.5,0.75,0.95)),
-                              lower=0,
-                              upper=1,
-                              inla_formula = formula,
-                              family = family,
-                              data = df,
-                              VCV_sp = VCV_sp,
-                              comm = comm,
-                              prior = priors,
-                              control.compute = control.compute,
-                              printDetail = F,
+                               levels=list(lambda=c(0.1,0.3,0.5,0.7,0.9)),
+                               lower=0,
+                               upper=1,
+                               inla_formula = formula,
+                               family = family,
+                               data = df,
+                               VCV_sp = VCV_sp,
+                               comm = comm,
+                               prior = priors,
+                               control.compute = control.compute,
+                                printDetail = F,
                               ...) #Determine best starting value among 0.2,0.4,0.6,0.8
 
-    ML.opt<-optim(grid_result$minlevels,
-                  likelihood.lambda.INLA,
-                  inla_formula = formula,
-                  family = family,
-                  data = df,
-                  VCV_sp = VCV_sp,
-                  comm = comm,
-                  prior = priors,
-                  control.compute = control.compute,
-                  method = "L-BFGS-B",
-                  lower = 0.0,
-                  upper = 1.0,
-                  control = optim.control,
-                  ...) #advanced search using L-BFGS-B
+   ML.opt<-optim(grid_result$minlevels,
+                   likelihood.lambda.INLA,
+                   inla_formula = formula,
+                   family = family,
+                   data = df,
+                   VCV_sp = VCV_sp,
+                   comm = comm,
+                   prior = priors,
+                   control.compute = control.compute,
+                   method = "L-BFGS-B",
+                   lower = 0.0,
+                   upper = 1.0,
+                   control = optim.control,
+                   ...) #advanced search using L-BFGS-B
 
     lambda_INLA<-ML.opt$par
     wAIC <- ML.opt$value
+
     VCV_sp_INLA <- VCV_sp*lambda_INLA
     diag(VCV_sp_INLA) <- diag(VCV_sp)
 
@@ -237,7 +266,10 @@ CPR <- function(formula,
     prediction_phylo <- prediction_phylo %>% inner_join(fe_sig,"predictor")
   }
 
-  wAIC_all <- c(wAIC_optim=wAIC_optim, wAIC_no_phylo=wAIC_GLM, wAIC_original_VCV=wAIC_original)
+  wAIC_all <- c(wAIC_optim=wAIC_optim,
+                wAIC_no_comp=wAIC_GLM,
+                wAIC_original_VCV=wAIC_original,
+                wAIC_star=m1_INLA_lambda0$waic$waic)
 
   best_model_name <- "Phylogeny without optimization"
   return_lambda <- NA
@@ -255,7 +287,7 @@ CPR <- function(formula,
   min_wAIC_m <- names(which.min(wAIC_all))
   best_m <- switch(min_wAIC_m,
                    wAIC_optim = m1_INLA_optim,
-                   wAIC_no_phylo = m1_INLA_GLM,
+                   wAIC_no_comp = m1_INLA_GLM,
                    wAIC_original_VCV = m1_INLA_original)
 
   rerun <- 1
@@ -284,7 +316,10 @@ CPR <- function(formula,
   prediction_no_phylo <- prediction_no_phylo %>% inner_join(fe_sig,"predictor")
 
   prediction <- rbind(prediction_no_phylo,prediction_phylo)
+
+  if (length(fe) >= 1) {
   prediction <- split(prediction,prediction$predictor)
+  }
 
   pfr <- switch(predictedfittedresponse,
            best_m = ifelse(is.null(best_m),NA,list(best_m$summary.fitted.values[-pos,"0.5quant"])),

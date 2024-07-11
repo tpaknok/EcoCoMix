@@ -107,6 +107,12 @@ CPR <- function(formula,
                       control.compute = control.compute,
                       ...)
 
+  if(inla.rerun != 0) {
+    for (rerun in 1:inla.rerun) {
+      m1_INLA_GLM <- inla.rerun(m1_INLA_GLM)
+    }
+  }
+
   wAIC_GLM <- m1_INLA_GLM$waic$waic
   # m1_INLA_GLM_r2<- cor(m1_INLA_GLM$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
   f <- get(paste0("inla.link.",m1_INLA_GLM$misc$linkfunctions$names)) #link function!!
@@ -151,12 +157,18 @@ CPR <- function(formula,
     wAIC_original <- m1_INLA_original$waic$waic
     m1_INLA_original_r2<- cor(m1_INLA_original$summary.fitted.values[-pos,"mean"],df[-pos,response_name])^2
     m_original_result <- m1_INLA_original$summary.fixed
+
+    if(inla.rerun != 0) {
+      for (rerun in 1:inla.rerun) {
+        m1_INLA_original <- inla.rerun(m1_INLA_original)
+      }
+    }
   }
 
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
   C.lambda0.INLA<- get_comm_pair_r(comm,VCV_sp_lambda0)
-  prec.mat.lambda0.INLA <- solve(C.lambda0.INLA)
+  prec.mat.INLA <- solve(C.lambda0.INLA)
 
   m1_INLA_lambda0 <- inla(phylo_formula,
                            data = df,
@@ -165,6 +177,13 @@ CPR <- function(formula,
                            control.compute = control.compute,
                            ...)
 
+  if(inla.rerun != 0) {
+    for (rerun in 1:inla.rerun) {
+      m1_INLA_lambda0 <- inla.rerun(m1_INLA_lambda0)
+    }
+  }
+
+  wAIC_star <- m1_INLA_lambda0$waic$waic
   # if (priors == "pc.prec") {
   #   message("setup penalizing complexity priors")
   #   # m <- glm(no_phylo_formula,
@@ -255,6 +274,12 @@ CPR <- function(formula,
 
     m_optim_result <- m1_INLA_optim$summary.fixed
 
+    if(inla.rerun != 0) {
+      for (rerun in 1:inla.rerun) {
+      m1_INLA_optim <- inla.rerun(m1_INLA_optim)
+      }
+    }
+
     prediction_phylo <- cbind(df,
                               f(m1_INLA_optim$summary.fitted.values, inverse=T),
                               model="With phylogeny",
@@ -269,39 +294,30 @@ CPR <- function(formula,
   wAIC_all <- c(wAIC_optim=wAIC_optim,
                 wAIC_no_comp=wAIC_GLM,
                 wAIC_original_VCV=wAIC_original,
-                wAIC_star=m1_INLA_lambda0$waic$waic)
+                wAIC_star=wAIC_star)
+
+  min_wAIC_m <- names(which.min(wAIC_all))
+
+  best_m <- switch(min_wAIC_m,
+                   wAIC_optim = m1_INLA_optim,
+                   wAIC_no_comp = m1_INLA_GLM,
+                   wAIC_original_VCV = m1_INLA_original,
+                   wAIC_star = m1_INLA_lambda0)
+
 
   best_model_name <- "Phylogeny without optimization"
   return_lambda <- NA
 
   if (optim.lambda == T) {
     return_lambda <- lambda_INLA
+    if (wAIC_star < wAIC_optim) {
+      return_lambda <- 0
+    }
     if (wAIC_optim - wAIC_GLM >= wAIC_threshold) {
       best_m <- m1_INLA_GLM
       best_model_name <- "Without phylogeny"
     } else { #will ignore NA
       best_model_name <- "Optimized phylogeny"
-      }
-    }
-
-  min_wAIC_m <- names(which.min(wAIC_all))
-  best_m <- switch(min_wAIC_m,
-                   wAIC_optim = m1_INLA_optim,
-                   wAIC_no_comp = m1_INLA_GLM,
-                   wAIC_original_VCV = m1_INLA_original)
-
-  rerun <- 1
-  if(inla.rerun != 0) {
-    while (rerun <= inla.rerun) {
-    message("rerunning INLA...",rerun,"/",inla.rerun) # https://groups.google.com/g/r-inla-discussion-group/c/qkoV9ZtA1Wo
-    m1_INLA_GLM <- inla.rerun(m1_INLA_GLM)
-    if (optim.lambda == T) {
-      m1_INLA_optim <- inla.rerun(m1_INLA_optim)
-    }
-    if (original.VCV == T) {
-      m1_INLA_original <- inla.rerun(m1_INLA_original)
-    }
-    rerun <- rerun+1
     }
   }
 

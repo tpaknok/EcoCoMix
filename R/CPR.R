@@ -218,7 +218,7 @@ CPR <- function(formula,
     # lambda_INLA<- grid_result$minlevels
 
     grid_result <- gridSearch(fun=likelihood.lambda.INLA,
-                               levels=list(lambda=c(0.1,0.3,0.5,0.7,0.9)),
+                               levels=list(lambda=c(0.2,0.4,0.6,0.8)),
                                lower=0,
                                upper=1,
                                inla_formula = formula,

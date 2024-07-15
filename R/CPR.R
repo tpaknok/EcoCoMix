@@ -312,6 +312,8 @@ CPR <- function(formula,
     return_lambda <- lambda_INLA
     if (wAIC_star < wAIC_optim) {
       return_lambda <- 0
+      m_optim_result <- m1_INLA_lambda0$summary.fixed
+      wAIC_all[[1]] <- wAIC_star
     }
     if (wAIC_optim - wAIC_GLM >= wAIC_threshold) {
       best_m <- m1_INLA_GLM

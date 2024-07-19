@@ -7,6 +7,7 @@ CPR_GLS <- function(formula,
                     ...) {
 
   require(nlme)
+  require(NMOF)
 
   formula <- as.formula(formula)
   m_without_phylo <- gls(formula,data=df)
@@ -74,7 +75,7 @@ CPR_GLS <- function(formula,
   }
 
   if (AIC_original_VCV < AIC_optim & AIC_star > AIC_original_VCV) {
-    m_optim <- m_original
+    m_optim <- m_original_VCV
     lambda_GLS = 1
   }
 

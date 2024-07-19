@@ -1,4 +1,5 @@
 BEF_simulate_eval <- function(models, type="INLA") {
+  if (type == "INLA" | type == "GLS") {
     without_phylo_model <- lapply(1:length(models),function(x) models[[x]]$without_phylo_model[2,])
     original_VCV_model <- lapply(1:length(models),function(x) models[[x]]$original_VCV_model[2,])
     optimized_model <- lapply(1:length(models),function(x) models[[x]]$optimized_model)
@@ -62,7 +63,51 @@ BEF_simulate_eval <- function(models, type="INLA") {
                                max_lambda = max(optimized_model$optim_lambda,na.rm=T),
                                mean_lambda = mean(optimized_model$optim_lambda,na.rm=T),
                                n = length(na.omit(optimized_model$optim_lambda)))
+  }
 
+  if (type == "spaMM") {
+
+    all_optim_models <- lapply(1:length(models),function(x) models[[x]]$optimized_lambda_model)
+
+    NA_pos <- which(is.na(all_optim_models))
+
+    if (length(NA_pos) >= 1) {
+      fill <- summary(models[[1]]$without_comp_model,details=T,verbose=F)$beta_table[2,]
+      fill[!is.na(fill)] <- NA
+      all_optim_models[NA_pos] <- list(fill)
+    }
+
+    all_optim_models <- as.data.frame(do.call(rbind,all_optim_models))
+    all_optim_models$model <- "Optimized compositional effect"
+    all_optim_models$optim_lambda <- unlist(lapply(1:length(models),function(x) models[[x]]$optimized_lambda))
+
+    all_without_comp_models <- as.data.frame(do.call(rbind,lapply(1:length(models), function(x) c(summary(models[[x]]$without_comp_model,details=T,verbose=F)$beta_table[2,]))))
+    all_without_comp_models$model <- "Without compositional effect"
+    all_without_comp_models$optim_lambda <- NA
+
+    all_orig_models <- as.data.frame(do.call(rbind,lapply(1:length(models), function(x) c(summary(models[[x]]$original_VCV_model,details=T,verbose=F)$beta_table[2,]))))
+    all_orig_models$model <- "Original VCV effect"
+    all_orig_models$optim_lambda <- NA
+
+    all_models <- rbind(all_optim_models,all_without_comp_models,all_orig_models)
+    summary_stat <- all_models %>%
+                      group_by(model) %>%
+                      summarize(sig_result = sum(`p-value` < 0.05,na.rm=T),
+                                proportion = sum(`p-value` < 0.05,na.rm=T)/sum(`p-value` >= 0,na.rm=T),
+                                min_slope = min(Estimate,na.rm=T),
+                                max_slope = max(Estimate,na.rm=T),
+                                mean_slope = mean(Estimate,na.rm=T))
+
+
+    AIC <- do.call(rbind,lapply(1:length(models),function(x) models[[x]]$AIC))
+
+    optim_lambda_vec <- unlist(lapply(1:length(models),function(x) models[[x]]$optimized_lambda))
+
+    optim_lambda <- data.frame(min_lambda = min(optim_lambda_vec,na.rm=T),
+                               max_lambda = max(optim_lambda_vec,na.rm=T),
+                               mean_lambda = mean(optim_lambda_vec,na.rm=T),
+                               n = length(na.omit(optim_lambda_vec)))
+  }
     output <- list(summary_stat = summary_stat,
                    result = all_models,
                    AIC = AIC,

@@ -1,98 +1,63 @@
-BEF_simulate <- function(comm,
+BEF_simulate2 <- function(comm,
                          VCV_sp = NULL,
                          scale=1,
-                         # ef_mean,
-                         # sd,
                          b1=0,
-                         signals_X="sr",
+                         signals_X="phy_cor",
                          signals_Y = T,
                          y_mean = 0,
                          y_sd = 1,
-                         # signals_intercept=T,
-                         # signals_slope=F,
+                         x_mean=0,
+                         x_sd = 1,
                          lambda_true=1,
                          sim=500,
                          seed=1000) {
-
+  
   library(MASS)
-
+  library(vegan)
   set.seed(seed)
-
-  if (signals_X == "sr") {
-    x <- replicate(rowSums(comm),n=sim) #species richness
-  }
-
-  # if (signals_X == "phy_cor") {
-  #   x <- replicate(t(chol(C_true)) %*% rnorm(n=nrow(comm),mean=ef_mean,sd=sd),n=sim) #signals in x
-  # }
-
-  # if (signals_X == "phy_cor") {
-  #   x <- replicate(mvrnorm(1,rep(0,nrow(C),C)),n=sim) #signals in x
-  # }
-  #
-
-  if (signals_X == "no_phy_cor") {
-     x <- replicate(rnorm(nrow(comm),0,1),n=sim) #no signals in X
-  }
-
-  if (signals_Y == T) {
-    if (is.null(VCV_sp)) {
-      pbtree <- pbtree(n=ncol(comm),scale=1,tip.label=colnames(comm),nsim=sim)
-      VCV_sp <- lapply(1:sim,function(x) vcv(pbtree[[x]]))
-    } else {
-      VCV_sp <- lapply(1:sim,function(x) VCV_sp)
+  
+  sim_all <- VCV_sp_list <- VCV_true_list <- list()
+  
+  for (i in 1:100) {
+    if(is.null(VCV_sp)){
+      tree <- pbtree(n=ncol(comm))
+      tree$tip.label <- colnames(comm)
+      
+      vcv <- vcv(tree)
+      VCV_sp_list[[i]] <- vcv
+      vcv_true <- vcv*lambda_true
+      diag(vcv_true) <- diag(vcv)
+      } else {
+      VCV_sp_list[[i]] <- VCV_sp
+      vcv_true <- VCV_sp*lambda_true
+      diag(vcv_true) <- diag(VCV_sp)
     }
-
-    lambda_true <- matrix(lambda_true,nrow(VCV_sp[[1]]),ncol(VCV_sp[[1]]))
-    diag(lambda_true) <- 1
-    VCV_true <- lapply(1:sim,function(x) VCV_sp[[x]] * lambda_true)
-    C_true <- lapply(1:sim, function(x) get_comm_pair_r(comm,VCV_true[[x]]))
-  } else {
-    VCV_sp <- VCV_true <- NA
+    
+    
+    VCV_true_list[[i]] <- vcv_true
+    C_true <- get_comm_pair_r(comm,vcv_true)
+    
+    if (signals_X == "phy_cor") {
+    x <- t(chol(C_true)) %*% rnorm(nrow(comm),x_mean,x_sd)
+    } 
+    
+    if (signals_X == "phy_cor") {
+      x <- specnumber(comm)
+    } 
+    
+    if (signals_Y == T) {
+    y <- t(chol(C_true)) %*% rnorm(nrow(comm),y_mean,y_sd)
+    } else {
+      y <- rnorm(nrow(comm),y_mean,y_sd)
+    }
+    
+    sim_all[[i]] <- data.frame(y=y,x=x)
   }
-
-  if (signals_Y == T) {
-    y <- lapply(1:sim, function(z) 0+b1*x[,z]+mvrnorm(1,rep(0,nrow(C_true[[z]])),C_true[[z]]))
-  } else {
-    y <- lapply(1:sim, function(z) 0+b1*x[,z]+rnorm(1,rep(0,y_mean,y_sd)))
-  }
-
-  #comm_int <- t(chol(C_true)) %*% replicate(rnorm(n=nrow(comm),mean=ef_mean,sd=sd),n=sim)
-  #comm_int <- t(chol(C_true)) %*% rnorm(n=nrow(comm),mean=ef_mean,sd=sd)
-  #y <- lapply(1:sim, function(x) b1*x+t(chol(C_true[[x]])) %*% rnorm(n=nrow(comm),mean=ef_mean,sd=sd))#signals in intercept but not slope
-  #sr_E_cor <- NA
-  #slope_int_cor <- NA
-
-  # if (signals_intercept == T & signals_slope==T) {
-  #   library(MASS)
-  #   RE <- replicate(mvrnorm(length(x),
-  #                           mu=c(0,0),
-  #                           Sigma=rbind(c(1.0, 0),c(0, 1.0))),n = sim)#simulate random effect
-  #   comm_int <- t(chol(C_true))%*%RE[,1]
-  #   comm_beta <- t(chol(C_true))%*%RE[,2]
-  #   sr_E_cor <- cor(x,comm_beta*x+comm_int)
-  #   slope_int_cor <- cor(comm_beta,comm_int)
-  #   y <- b1*x+comm_beta*x+comm_int#signals in intercept and slope
-  # }
-  #
-  # if (signals_intercept == T & signals_slope == F) {
-  #   comm_int <- t(chol(C_true)) %*% replicate(rnorm(n=nrow(comm),mean=ef_mean,sd=sd),n=sim)
-  #   y <- b1*x+comm_int#signals in intercept but not slope
-  #   sr_E_cor <- NA
-  #   slope_int_cor <- NA
-  # }
-  #
-  # if (signals_intercept==F & signals_slope == F) {
-  #   y <- b1*x+replicate(rnorm(nrow(comm)),n=sim)#no signals in error
-  #   sr_E_cor <- NA
-  #   slope_int_cor <- NA
-  # }
-
-  sim_all <- lapply(1:sim, function(z) data.frame(y=y[[z]],x=x[,z]))
-  sim_C <- lapply(1:sim, function(z) data.frame)
+ 
+  
   sim_dat <- list(sim_dat = sim_all,
-                  sim_phy = VCV_sp,
-                  true_phy = VCV_true)
-
+                  sim_phy = VCV_sp_list,
+                  true_phy = VCV_true_list)
+  
   return(sim_dat)
 }

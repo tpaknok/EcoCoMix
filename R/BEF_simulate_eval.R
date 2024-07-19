@@ -75,6 +75,8 @@ BEF_simulate_eval <- function(models, type="INLA") {
       fill <- summary(models[[1]]$without_comp_model,details=T,verbose=F)$beta_table[2,]
       fill[!is.na(fill)] <- NA
       all_optim_models[NA_pos] <- list(fill)
+    } else {
+      all_optim_models <- lapply(1:length(models), function(x) summary(models[[x]]$optimized_lambda_model,details=T,verbose=F)$beta_table[2,])
     }
 
     all_optim_models <- as.data.frame(do.call(rbind,all_optim_models))

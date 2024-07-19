@@ -98,9 +98,9 @@ CPR_spaMM <- function(formula,
       AIC_optim <- AIC_star
     }
 
-    if (AIC_original_VCV < AIC_optim & AIC_star > AIC_original_VCV) {
+    if (AIC_original_VCV <= AIC_optim & AIC_original_VCV <= AIC_star) {
       m_optim <- m_original_VCV
-      lambda_spaMM = 1
+      lambda_spaMM <- 1
       AIC_optim <- AIC_original_VCV
     }
 

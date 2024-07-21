@@ -94,6 +94,7 @@ CPR_spaMM <- function(formula,
                      corrMatrix=as_precision(C.lambda.spaMM),
                      data=data,
                      method.spaMM=method.spaMM,
+                     init=init,
                      ...)
 
     AIC_optim <- AIC(m_optim,verbose=F)[[1]]

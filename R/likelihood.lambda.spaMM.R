@@ -4,7 +4,10 @@ likelihood.lambda.spaMM<-function(lambda,
                                   VCV_sp,
                                   comm,
                                   init=list(lambda=NaN,phi=NaN),
+                                  method.spaMM = "REML",
                                   ...){
+
+  message(lambda)
 
   formula <- as.formula(formula)
   VCV_sp_lambda <- VCV_sp*lambda
@@ -16,11 +19,13 @@ likelihood.lambda.spaMM<-function(lambda,
   n <- ncol(C.lambda)
 
   m_spamm <- fitme(formula,
-              corrMatrix=C.lambda,
+              corrMatrix=as_precision(C.lambda),
               data=data,
               init=init,
+              method=method.spaMM,
               ...)
 
   AIC <- AIC(m_spamm,verbose=F)[[1]]
   return(AIC)
 }
+

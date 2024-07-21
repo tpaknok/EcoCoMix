@@ -5,7 +5,8 @@ CPR_spaMM <- function(formula,
                     optim.lambda=T,
                     original.VCV=T,
                     AIC_threshold = -4,
-                    init=list(lambda=NaN,phi=NaN),
+                    init=list(lambda=NA),
+                    method.spaMM = "REML",
                     ...) {
 
   require(nlme)
@@ -34,9 +35,10 @@ CPR_spaMM <- function(formula,
   C.lambda.spaMM <- get_comm_pair_r(comm,VCV_sp)
   rownames(C.lambda.spaMM) <- data$comp_id
   m_original_VCV <- fitme(formula,
-                          corrMatrix=C.lambda.spaMM,
+                          corrMatrix=as_precision(C.lambda.spaMM),
                           data=data,
                           init=init,
+                          method=method.spaMM,
                           ...)
 
   AIC_original_VCV <- AIC(m_original_VCV,verbose=F)[[1]]
@@ -46,9 +48,10 @@ CPR_spaMM <- function(formula,
   C.lambda0.spaMM <- get_comm_pair_r(comm,VCV_sp_lambda0)
   rownames(C.lambda0.spaMM) <- data$comp_id
   m_lambda0 <- fitme(formula,
-                   corrMatrix=C.lambda0.spaMM,
+                   corrMatrix=as_precision(C.lambda0.spaMM),
                    data=data,
                    init=init,
+                   method=method.spaMM,
                    ...)
   AIC_star <- AIC(m_lambda0,verbose=F)[[1]]
 
@@ -63,6 +66,7 @@ CPR_spaMM <- function(formula,
                               VCV_sp = VCV_sp,
                               comm = comm,
                               printDetail = F,
+                              method.spaMM=method.spaMM,
                               init=init,
                               ...)
 
@@ -76,6 +80,7 @@ CPR_spaMM <- function(formula,
                   lower=0.0,
                   upper=1,
                   init=init,
+                  method.spaMM = method.spaMM,
                   ...)
 
     lambda_spaMM<-ML.opt$par
@@ -86,8 +91,9 @@ CPR_spaMM <- function(formula,
     rownames(C.lambda.spaMM) <- data$comp_id
 
     m_optim <- fitme(formula,
-                     corrMatrix=C.lambda.spaMM,
+                     corrMatrix=as_precision(C.lambda.spaMM),
                      data=data,
+                     method.spaMM=method.spaMM,
                      ...)
 
     AIC_optim <- AIC(m_optim,verbose=F)[[1]]

@@ -2,6 +2,7 @@ likelihood.lambda.spaMM<-function(lambda,
                                   formula,
                                   data,
                                   VCV_sp,
+                                  comm_kronecker=NULL,
                                   comm,
                                   init=list(lambda=NaN,phi=NaN),
                                   method.spaMM = "REML",
@@ -13,7 +14,7 @@ likelihood.lambda.spaMM<-function(lambda,
   VCV_sp_lambda <- VCV_sp*lambda
   diag(VCV_sp_lambda) <- diag(VCV_sp)
 
-  C.lambda<- get_comm_pair_r(comm,VCV_sp_lambda)
+  C.lambda<- get_comm_pair_r(comm,VCV_sp_lambda,comm_kronecker = comm_kronecker)$covM
   rownames(C.lambda) <- 1:nrow(data)
 
   n <- ncol(C.lambda)

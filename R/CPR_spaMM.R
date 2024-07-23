@@ -32,7 +32,7 @@ CPR_spaMM <- function(formula,
   optimized_model_result <- NA
   best_m <- m_optim <- NA
 
-  C.lambda.spaMM <- get_comm_pair_r(comm,VCV_sp)
+  C.lambda.spaMM <- get_comm_pair_r(comm,VCV_sp,force.PD=F)$covM
   rownames(C.lambda.spaMM) <- data$comp_id
   m_original_VCV <- fitme(formula,
                           corrMatrix=as_precision(C.lambda.spaMM),
@@ -45,7 +45,7 @@ CPR_spaMM <- function(formula,
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
 
-  C.lambda0.spaMM <- get_comm_pair_r(comm,VCV_sp_lambda0)
+  C.lambda0.spaMM <- get_comm_pair_r(comm,VCV_sp_lambda0,force.PD=F)$covM
   rownames(C.lambda0.spaMM) <- data$comp_id
   m_lambda0 <- fitme(formula,
                    corrMatrix=as_precision(C.lambda0.spaMM),
@@ -87,7 +87,7 @@ CPR_spaMM <- function(formula,
     logL<--ML.opt$value
     VCV_sp_optim <- VCV_sp*lambda_spaMM
     diag(VCV_sp_optim) <- diag(VCV_sp)
-    C.lambda.spaMM<- get_comm_pair_r(comm,VCV_sp_optim)
+    C.lambda.spaMM<- get_comm_pair_r(comm,VCV_sp_optim,force.PD=F)$covM
     rownames(C.lambda.spaMM) <- data$comp_id
 
     m_optim <- fitme(formula,

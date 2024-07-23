@@ -4,10 +4,13 @@ BEF_simulate <- function(comm,
                          b1=0,
                          signals_X="phy_cor",
                          signals_Y = T,
+                         intercept = 0,
                          y_mean = 0,
                          y_sd = 1,
                          x_mean=0,
                          x_sd = 1,
+                         noise_mean = 0,
+                         noise_sd = 0,
                          lambda_true=1,
                          sim=500,
                          seed=1000) {
@@ -52,9 +55,9 @@ BEF_simulate <- function(comm,
 
     if (signals_Y == T) {
     #y <- t(chol(C_true)) %*% rnorm(nrow(comm),y_mean,y_sd)
-      y <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
+      y <- intercept+b1*x+mvrnorm(1,rep(0,nrow(C_true)),C_true)+rnorm(nrow(comm),noise_mean,noise_sd)
     } else {
-      y <- rnorm(nrow(comm),y_mean,y_sd)
+      y <- intercept+b1*x+rnorm(nrow(comm),y_mean,y_sd)+rnorm(nrow(comm),noise_mean,noise_sd)
     }
 
     sim_all[[i]] <- data.frame(y=y,x=x)

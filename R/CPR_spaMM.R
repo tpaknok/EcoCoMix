@@ -164,7 +164,11 @@ CPR_spaMM <- function(formula,
      return(result)
    }
 
+   if (!is.null(best_m$call$corrMatrix)) {
    best_model_satt <- .drop1_spamm(best_m,get(gsub("as_precision(*)","",best_m$call$corrMatrix)[[2]]))
+   } else {
+     best_model_satt <- list(result=anova(m_without_comp))
+   }
    original_VCV_model_satt <- .drop1_spamm(m_original_VCV,C.lambda.spaMM)
    optim_model_satt <- .drop1_spamm(m_optim,C.lambda.optim.spaMM)
    true_model_satt <- .drop1_spamm(m_true,C.true)

@@ -113,7 +113,7 @@ BEF_simulate_eval <- function(models, type="spaMM") {
 
 
     AIC <- do.call(rbind,lapply(1:length(models),function(x) models[[x]]$models$AIC))
-    AIC <- c(AIC,models[[1]]$true_lambda)
+    AIC$true_lambda <- models[[1]]$true_lambda
 
     optim_lambda_vec <- unlist(lapply(1:length(models),function(x) models[[x]]$models$optimized_lambda))
 

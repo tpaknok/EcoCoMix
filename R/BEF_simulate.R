@@ -86,6 +86,7 @@ BEF_simulate <- function(comm,
     library(phytools)
 
     conv <- c(0,0,0,0)
+    count <- 0
 
     while (length(unique(conv)) != 1 | unique(conv) == 0) {
 
@@ -123,8 +124,15 @@ BEF_simulate <- function(comm,
                         control.optim=list(factr=1e15))
 
     conv <- models$conv
+
+    count=count+1
     }
-    return(models)
+
+    result <- list(models=models,
+                   true_lambda = lambda_true,
+                   count = count)
+
+    return(result)
   # }
 }
 

@@ -112,7 +112,7 @@ BEF_simulate_eval <- function(models, type="spaMM") {
                                 mean_slope = mean(Estimate,na.rm=T))
 
 
-    AIC <- do.call(rbind,lapply(1:length(models),function(x) models[[x]]$models$AIC))
+    AIC <- as.data.frame(do.call(rbind,lapply(1:length(models),function(x) models[[x]]$models$AIC)))
     AIC$true_lambda <- models[[1]]$true_lambda
 
     optim_lambda_vec <- unlist(lapply(1:length(models),function(x) models[[x]]$models$optimized_lambda))

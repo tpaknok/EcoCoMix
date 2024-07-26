@@ -150,7 +150,7 @@ CPR_spaMM <- function(formula,
      model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
      result_satt <- drop1(model,verbose=F)
 
-     msg <- tryCatchWEM(drop1(model,verbose=F))$warning
+     msg <- tryCatchWEM(drop1(model,verbose=F))
 
      if (is.null(msg$warning)) {
        msg$warning <- "OK"

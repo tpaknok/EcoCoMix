@@ -104,7 +104,7 @@ BEF_simulate <- function(comm,
 
     C_true <- get_comm_pair_r(comm,vcv_true,force.PD=F)$covM
     x <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
-    y <- mvrnorm(1,rep(0,nrow(C_true)),C_true)+rnorm(nrow(comm),noise_mean,noise_sd)
+    y <- b1*x+mvrnorm(1,rep(0,nrow(C_true)),C_true)+rnorm(nrow(comm),noise_mean,noise_sd)
     data <- data.frame(y=y,x=x,comp_id=as.character(1:nrow(comm)))
 
     sim_data <- list(data=data,

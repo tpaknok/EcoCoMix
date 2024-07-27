@@ -88,7 +88,7 @@ BEF_simulate <- function(comm,
     conv <- c(0,0,0,0)
     count <- 0
 
-    while (length(unique(conv)) != 1 | unique(conv) == 0) {
+    while (sum(grepl("0",conv)) > 0) {
 
     if(is.null(VCV_sp)){
       tree <- pbtree(n=ncol(comm))

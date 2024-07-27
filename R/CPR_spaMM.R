@@ -17,7 +17,6 @@ CPR_spaMM <- function(formula,
   require(admisc)
 
   message("modelling")
-  .env <- new.env()
   data$comp_id <- 1:nrow(data)
 
   formula_text <- Reduce(paste,deparse(formula))
@@ -38,7 +37,6 @@ CPR_spaMM <- function(formula,
 
   C.lambda.spaMM <- get_comm_pair_r(comm,VCV_sp,force.PD=F)$covM
   rownames(C.lambda.spaMM) <- as.character(data$comp_id)
-  C.lambda.spaMM <- C.lambda.spaMM #seems the package only extracts vars from the global environment...
 
   m_original_VCV <- fitme(formula,
                           corrMatrix=as_precision(C.lambda.spaMM),
@@ -47,13 +45,36 @@ CPR_spaMM <- function(formula,
                           method=method.spaMM,
                           ...)
 
+  .drop1_spamm <- function(model,C) {
+    conv <- 0
+    model$call$corrMatrix <- as_precision(C)
+    model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
+    result_satt <- drop1(model,verbose=F)
+
+    msg <- tryCatchWEM(drop1(model,verbose=F),capture=F)
+
+    if (is.null(msg$warning)) {
+      msg$warning <- "OK"
+    }
+
+    if (!grepl("converge",msg$warning)) {
+      conv <- 1
+    }
+
+    result <- list(result=result_satt,
+                   msg=msg,
+                   conv=conv)
+    return(result)
+  }
+
+  original_VCV_model_satt <- .drop1_spamm(m_original_VCV,C.lambda.spaMM)
+
   AIC_original_VCV <- AIC(m_original_VCV,verbose=F)[[1]]
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
 
   C.lambda0.spaMM <- get_comm_pair_r(comm,VCV_sp_lambda0,force.PD=F)$covM
   rownames(C.lambda0.spaMM) <- as.character(data$comp_id)
-  C.lambda0.spaMM <- C.lambda0.spaMM #seems the package only extracts vars from the global environment...
 
   m_lambda0 <- fitme(formula,
                    corrMatrix=as_precision(C.lambda0.spaMM),
@@ -63,6 +84,7 @@ CPR_spaMM <- function(formula,
                    ...)
   AIC_star <- AIC(m_lambda0,verbose=F)[[1]]
 
+  C.true <- true_model_satt <- NULL
   if (!is.null(true_VCV)) {
     C.true <- get_comm_pair_r(comm,true_VCV,force.PD=F)$covM
     rownames(C.true) <- as.character(data$comp_id)
@@ -75,6 +97,7 @@ CPR_spaMM <- function(formula,
                     method=method.spaMM,
                     ...)
     AIC_true <- AIC(m_true,verbose=F)[[1]]
+    true_model_satt <- .drop1_spamm(m_true,C.true)
   }
 
   if (optim.lambda == T) {
@@ -90,7 +113,6 @@ CPR_spaMM <- function(formula,
                               printDetail = F,
                               method.spaMM=method.spaMM,
                               init=init,
-                              control=control.optim,
                               ...)
 
     ML.opt<-optim(grid_result$minlevels,
@@ -141,38 +163,18 @@ CPR_spaMM <- function(formula,
     } else {
       best_m <- m_without_comp
     }
+
+    optim_model_satt <- .drop1_spamm(m_optim,C.lambda.optim.spaMM)
+
+    if (!is.null(best_m$call$corrMatrix)) {
+      best_model_satt <- .drop1_spamm(best_m,get(gsub("as_precision(*)","",best_m$call$corrMatrix)[[2]]))
+    } else {
+      best_model_satt <- list(result=anova(m_without_comp))
+    }
   }
 
   ##########drop 1
-   .drop1_spamm <- function(model,C) {
-     conv <- 0
-     model$call$corrMatrix <- as_precision(C)
-     model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
-     result_satt <- drop1(model,verbose=F)
-
-     msg <- tryCatchWEM(drop1(model,verbose=F))
-
-     if (is.null(msg$warning)) {
-       msg$warning <- "OK"
-     }
-
-     if (!grepl("converge",msg$warning)) conv <- 1
-
-     result <- list(result=result_satt,
-                    msg=msg,
-                    conv=conv)
-     return(result)
-   }
-
-   if (!is.null(best_m$call$corrMatrix)) {
-   best_model_satt <- .drop1_spamm(best_m,get(gsub("as_precision(*)","",best_m$call$corrMatrix)[[2]]))
-   } else {
-     best_model_satt <- list(result=anova(m_without_comp))
-   }
-   original_VCV_model_satt <- .drop1_spamm(m_original_VCV,C.lambda.spaMM)
-   optim_model_satt <- .drop1_spamm(m_optim,C.lambda.optim.spaMM)
-   true_model_satt <- .drop1_spamm(m_true,C.true)
-  # best_model_satt <- drop1(best_m)
+   # best_model_satt <- drop1(best_m)
   # optim_model_satt <- drop1(m_optim)
   # original_VCV_model_satt <- drop1(m_original_VCV)
   # true_model_satt <- drop1(m_true)

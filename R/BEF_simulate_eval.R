@@ -84,36 +84,54 @@ BEF_simulate_eval <- function(models, type="spaMM") {
     all_optim_models <- as.data.frame(do.call(rbind,all_optim_models))
     all_optim_models$model <- "Optimized compositional effect"
     all_optim_models$optim_lambda <- unlist(lapply(1:length(models),function(x) models[[x]]$models$optimized_lambda))
+    all_optim_models <- data.frame(all_optim_models,
+                                   min_richness=models[[1]]$models$min_richness,
+                                   max_richness=models[[1]]$models$max_richness,
+                                   nspp=models[[1]]$models$nspp)
 
     all_orig_models <- as.data.frame(do.call(rbind,lapply(1:length(models), function(x) c(unlist(summary(models[[x]]$models$original_VCV_model,details=T,verbose=F)$beta_table[2,]),
                                                                                           unlist(models[[x]]$models$original_VCV_m_satt)))))
     all_orig_models$model <- "Original VCV effect"
     all_orig_models$optim_lambda <- NA
+    all_orig_models <- data.frame(all_orig_models,
+                                  min_richness=models[[1]]$models$min_richness,
+                                  max_richness=models[[1]]$models$max_richness,
+                                  nspp=models[[1]]$models$nspp)
 
     all_true_models <- as.data.frame(do.call(rbind,lapply(1:length(models), function(x) c(unlist(summary(models[[x]]$models$true_model,details=T,verbose=F)$beta_table[2,]),
                                                                                           unlist(models[[x]]$models$true_model_satt)))))
     all_true_models$model <- "True VCV effect"
     all_true_models$optim_lambda <- NA
+    all_true_models <- data.frame(all_true_models,
+                                  min_richness=models[[1]]$models$min_richness,
+                                  max_richness=models[[1]]$models$max_richness,
+                                  nspp=models[[1]]$models$nspp)
 
     all_without_comp_models <- as.data.frame(do.call(rbind,lapply(1:length(models), function(x) c(summary(models[[x]]$models$without_comp_model,details=T,verbose=F)$beta_table[2,]))))
     all_without_comp_models$model <- "Without compositional effect"
     all_without_comp_models$optim_lambda <- NA
+    all_without_comp_models <- data.frame(all_without_comp_models,
+                                          min_richness=models[[1]]$models$min_richness,
+                                          max_richness=models[[1]]$models$max_richness,
+                                          nspp=models[[1]]$models$nspp)
+
 
     all_models <- plyr::rbind.fill(all_optim_models,all_without_comp_models,all_orig_models,all_true_models)
-    all_models[all_models$model != "Without compositional effect","p-value"] <- all_models[all_models$model != "Without compositional effect","Pr(>F)"]
+    all_models[all_models$model != "Without compositional effect","p-value"] <- all_models[all_models$model != "Without compositional effect","Pr..F."]
+
     all_models$true_lambda <- models[[1]]$true_lambda
 
     summary_stat <- all_models %>%
-                      group_by(model,true_lambda) %>%
-                      summarize(sig_result = sum(`p-value` < 0.05,na.rm=T),
-                                proportion = sum(`p-value` < 0.05,na.rm=T)/sum(`p-value` >= 0,na.rm=T),
+                      group_by(model,true_lambda,min_richness,max_richness,nspp) %>%
+                      summarize(sig_result = sum(`p.value` < 0.05,na.rm=T),
+                                proportion = sum(`p.value` < 0.05,na.rm=T)/sum(`p.value` >= 0,na.rm=T),
                                 min_slope = min(Estimate,na.rm=T),
                                 max_slope = max(Estimate,na.rm=T),
                                 mean_slope = mean(Estimate,na.rm=T))
 
-
     AIC <- as.data.frame(do.call(rbind,lapply(1:length(models),function(x) models[[x]]$models$AIC)))
     AIC$true_lambda <- models[[1]]$true_lambda
+    AIC <- data.frame(AIC,min_richness=models[[1]]$models$min_richness, max_richness=models[[1]]$models$max_richness,nspp=models[[1]]$models$nspp)
 
     optim_lambda_vec <- unlist(lapply(1:length(models),function(x) models[[x]]$models$optimized_lambda))
 
@@ -121,7 +139,10 @@ BEF_simulate_eval <- function(models, type="spaMM") {
                                max_lambda = max(optim_lambda_vec,na.rm=T),
                                mean_lambda = mean(optim_lambda_vec,na.rm=T),
                                true_lambda = models[[1]]$true_lambda,
-                               n = length(na.omit(optim_lambda_vec)))
+                               n = length(na.omit(optim_lambda_vec)),
+                               min_richness=models[[1]]$models$min_richness,
+                               max_richness=models[[1]]$models$max_richness,
+                               nspp=models[[1]]$models$nspp)
 
     count <- sum(unlist(lapply(1:length(models),function(x) models[[x]]$count)))
   }

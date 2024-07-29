@@ -1,6 +1,10 @@
 BEF_simulate <- function(comm,
                          VCV_sp = NULL,
                          scale=1,
+                         nspp=15,
+                         nsite=50,
+                         min_richness=1,
+                         max_richness=4,
                          spaMM_formula,
                          b1=0,
                          signals_X="phy_cor",
@@ -87,6 +91,23 @@ BEF_simulate <- function(comm,
 
     conv <- c(0,0,0,0)
     count <- 0
+
+    comp <- list()
+
+    if(is.null(comm)) {
+    comm <- matrix(0,nrow=nspp,ncol=nsite)
+
+    while (any(colSums(comm) == 0) | rowSums(comm) < max_richness) {
+      for (j in 1:nsite) {
+        pos <- sample(1:nspp, sample(min_richness:max_richness,1))
+        temp_comp <- rep(0,nspp)
+        temp_comp[pos] <- 1
+        comp[[j]] <- temp_comp
+      }
+      comm <- do.call(rbind,comp)
+      colnames(comm) <- paste0("sp",1:nspp)
+      }
+    }
 
     while (sum(grepl("0",conv)) > 0) {
 

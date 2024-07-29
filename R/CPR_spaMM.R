@@ -27,8 +27,8 @@ CPR_spaMM <- function(formula,
   formula <- as.formula(formula)
   no_phylo_formula <- as.formula(no_phylo_formula)
 
-  m_without_comp <- fitme(no_phylo_formula,data=data)
-  AIC_without_phylo <- AIC(m_without_comp,verbose=F)[[1]]
+  m_without_comp <- fitme(no_phylo_formula,data=data,...)
+  AIC_without_phylo <- AIC(m_without_comp,verbose=F)[[2]]
 
   lambda_spaMM <- NA
   AIC_optim <- AIC_true <- NA
@@ -49,6 +49,7 @@ CPR_spaMM <- function(formula,
     conv <- 0
     model$call$corrMatrix <- as_precision(C)
     model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
+    model$call$data <- model$data
     result_satt <- drop1(model,verbose=F)
 
     msg <- tryCatchWEM(drop1(model,verbose=F),capture=F)
@@ -69,7 +70,7 @@ CPR_spaMM <- function(formula,
 
   original_VCV_model_satt <- .drop1_spamm(m_original_VCV,C.lambda.spaMM)
 
-  AIC_original_VCV <- AIC(m_original_VCV,verbose=F)[[1]]
+  AIC_original_VCV <- AIC(m_original_VCV,verbose=F)[[2]]
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
 
@@ -82,9 +83,9 @@ CPR_spaMM <- function(formula,
                    init=init,
                    method=method.spaMM,
                    ...)
-  AIC_star <- AIC(m_lambda0,verbose=F)[[1]]
+  AIC_star <- AIC(m_lambda0,verbose=F)[[2]]
 
-  C.true <- true_model_satt <- NULL
+  C.true <- true_model_satt <- m_true<- NULL
   if (!is.null(true_VCV)) {
     C.true <- get_comm_pair_r(comm,true_VCV,force.PD=F)$covM
     rownames(C.true) <- as.character(data$comp_id)
@@ -96,7 +97,7 @@ CPR_spaMM <- function(formula,
                     init=init,
                     method=method.spaMM,
                     ...)
-    AIC_true <- AIC(m_true,verbose=F)[[1]]
+    AIC_true <- AIC(m_true,verbose=F)[[2]]
     true_model_satt <- .drop1_spamm(m_true,C.true)
   }
 
@@ -116,6 +117,7 @@ CPR_spaMM <- function(formula,
                               ...)
 
     ML.opt<-optim(grid_result$minlevels,
+                  #runif(1),
                   likelihood.lambda.spaMM,
                   formula=formula,
                   data=data,
@@ -144,7 +146,7 @@ CPR_spaMM <- function(formula,
                      init=init,
                      ...)
 
-    AIC_optim <- AIC(m_optim,verbose=F)[[1]]
+    AIC_optim <- AIC(m_optim,verbose=F)[[2]]
 
     if (AIC_star < AIC_optim & AIC_star < AIC_original_VCV) {
       m_optim <- m_lambda0
@@ -198,5 +200,8 @@ CPR_spaMM <- function(formula,
                  conv = c(best_m=best_model_satt$conv,
                              optim_m=optim_model_satt$conv,
                              orig_m=original_VCV_model_satt$conv,
-                             true_m=true_model_satt$conv))
+                             true_m=true_model_satt$conv),
+                 min_richness=min(rowSums(comm)),
+                 max_richness=max(rowSums(comm)),
+                 nspp = ncol(comm))
 }

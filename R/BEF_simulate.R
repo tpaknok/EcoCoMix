@@ -97,7 +97,7 @@ BEF_simulate <- function(comm,
     if(is.null(comm)) {
     comm <- matrix(0,nrow=nspp,ncol=nsite)
 
-    while (any(colSums(comm) == 0) | rowSums(comm) < max_richness) {
+    while (any(colSums(comm) == 0) | max(rowSums(comm)) < max_richness) {
       for (j in 1:nsite) {
         pos <- sample(1:nspp, sample(min_richness:max_richness,1))
         temp_comp <- rep(0,nspp)

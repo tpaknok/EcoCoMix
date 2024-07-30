@@ -98,13 +98,15 @@ BEF_simulate <- function(comm,
     comm <- matrix(0,nrow=nspp,ncol=nsite)
 
     while (any(colSums(comm) == 0) | max(rowSums(comm)) < max_richness) {
-      for (j in 1:nsite) {
+      for (j in 1:(nsite-2)) {
         pos <- sample(1:nspp, sample(min_richness:max_richness,1))
         temp_comp <- rep(0,nspp)
         temp_comp[pos] <- 1
         comp[[j]] <- temp_comp
       }
       comm <- do.call(rbind,comp)
+      comm <- rbind(comm,rep(1,nspp))
+      comm <- rbind(comm,c(1,rep(0,nspp-1)))
       colnames(comm) <- paste0("sp",1:nspp)
       }
     }

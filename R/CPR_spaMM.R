@@ -35,7 +35,10 @@ CPR_spaMM <- function(formula,
   optimized_model_result <- NA
   best_m <- m_optim <- NA
 
-  C.lambda.spaMM <- get_comm_pair_r(comm,VCV_sp,force.PD=F)$covM
+  comm_cov <- get_comm_pair_r(comm,VCV_sp,force.PD=F)
+  C.lambda.spaMM <- comm_cov$covM
+  comm_kronecker <- comm_cov$comm_kronecker
+
   rownames(C.lambda.spaMM) <- as.character(data$comp_id)
 
   m_original_VCV <- fitme(formula,
@@ -113,6 +116,7 @@ CPR_spaMM <- function(formula,
                               comm = comm,
                               printDetail = F,
                               method.spaMM=method.spaMM,
+                              comm_kronecker=comm_kronecker,
                               init=init,
                               ...)
 
@@ -128,6 +132,7 @@ CPR_spaMM <- function(formula,
                   upper=1,
                   init=init,
                   method.spaMM = method.spaMM,
+                  comm_kronecker=comm_kronecker,
                   control=control.optim,
                   ...)
 
@@ -137,7 +142,6 @@ CPR_spaMM <- function(formula,
     diag(VCV_sp_optim) <- diag(VCV_sp)
     C.lambda.optim.spaMM <- get_comm_pair_r(comm,VCV_sp_optim,force.PD=F)$covM
     rownames(C.lambda.optim.spaMM) <- as.character(data$comp_id)
-    C.lambda.optim.spaMM <- C.lambda.optim.spaMM #seems the package only extracts vars from the global environment...
 
     m_optim <- fitme(formula,
                      corrMatrix=as_precision(C.lambda.optim.spaMM),

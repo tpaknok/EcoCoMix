@@ -105,7 +105,7 @@ BEF_simulate <- function(comm,
         comp[[j]] <- temp_comp
       }
       comm <- do.call(rbind,comp)
-      comm <- rbind(comm,rep(1,nspp))
+      comm <- rbind(comm,c(rep(1,max_richness),rep(0,nspp-max_richness)))
       comm <- rbind(comm,c(1,rep(0,nspp-1)))
       colnames(comm) <- paste0("sp",1:nspp)
       }

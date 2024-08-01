@@ -151,9 +151,40 @@ BEF_simulate <- function(comm,
     count=count+1
     }
 
-    result <- list(models=models,
-                   true_lambda = lambda_true,
-                   count = count)
+    # result <- list(models=models,
+                   # true_lambda = lambda_true,
+                   # count = count)
+
+    #extract significance?
+    m_optim_sig <- ifelse(models$optimized_lambda_model_satt$`Pr(>F)` < 0.05,1,0)
+    m_true_sig <- ifelse(models$true_model_satt$`Pr(>F)` < 0.05,1,0)
+    m_original_sig <- ifelse(models$original_VCV_m_satt$`Pr(>F)` < 0.05,1,0)
+    m_best_sig <- ifelse(models$best_model_satt$`Pr(>F)` < 0.05,1,0)
+    m_without_comp_sig <- ifelse(summary(models$without_comp_model,details=T,verbose=F)$beta_table[2,4] < 0.05,1,0)
+    sig <- c(m_optim_sig=m_optim_sig,
+             m_true_sig=m_true_sig,
+             m_original_sig=m_original_sig,
+             m_best_sig=m_best_sig,
+             m_without_comp_sig=m_without_comp_sig)
+
+    slope <- c(m_optim_slope=summary(models$optimized_lambda_model,verbose=F)$beta_table[2,1],
+               m_true_slope = summary(models$true_model,verbose=F)$beta_table[2,1],
+               m_original_slope = summary(models$original_VCV_model,verbose=F)$beta_table[2,1],
+               m_best_slope = summary(models$best_model,verbose=F)$beta_table[2,1],
+               m_without_comp_slope = summary(models$without_comp_model,verbose=F)$beta_table[2,1])
+
+    optim_lambda <- c(models$optimized_lambda)
+
+    AIC <- c(models$AIC)
+
+    result <- c(sig,slope,
+                optim_lambda,
+                AIC,
+                min_richness=models$min_richness,
+                max_richness=models$max_richness,
+                nspp=models$nspp,
+                true_lambda = lambda_true,
+                count=count)
 
     return(result)
   # }

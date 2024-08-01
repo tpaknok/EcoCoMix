@@ -170,7 +170,7 @@ CPR_spaMM <- function(formula,
       best_m <- m_without_comp
     }
 
-    optim_model_satt <- .drop1_spamm(m_optim,C.lambda.optim.spaMM)
+    optim_model_satt <- .drop1_spamm(m_optim,get(gsub("as_precision(*)","",m_optim$call$corrMatrix)[[2]]))
 
     if (!is.null(best_m$call$corrMatrix)) {
       best_model_satt <- .drop1_spamm(best_m,get(gsub("as_precision(*)","",best_m$call$corrMatrix)[[2]]))

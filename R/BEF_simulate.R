@@ -10,13 +10,10 @@ BEF_simulate <- function(comm,
                          signals_X="phy_cor",
                          signals_Y = T,
                          intercept = 0,
-                         y_mean = 0,
-                         y_sd = 1,
-                         x_mean=0,
-                         x_sd = 1,
                          noise_mean = 0,
                          noise_sd = 1,
-                         lambda_true=1) {
+                         lambda_true=1,
+                         conv_fail_drop = T) {
                          #seed=1000) {
 
   # library(MASS)
@@ -91,7 +88,9 @@ BEF_simulate <- function(comm,
 
     conv <- c(0,0,0,0)
     count <- 0
+    dummy <- 1
 
+    while (sum(grepl("0",conv)) > 0) {
     comp <- list()
 
     if(is.null(comm)) {
@@ -111,8 +110,6 @@ BEF_simulate <- function(comm,
       }
     }
 
-    while (sum(grepl("0",conv)) > 0) {
-
     if(is.null(VCV_sp)){
       tree <- pbtree(n=ncol(comm))
       tree$tip.label <- colnames(comm)
@@ -123,7 +120,8 @@ BEF_simulate <- function(comm,
     } else {
       vcv_true <- VCV_sp*lambda_true
       diag(vcv_true) <- diag(VCV_sp)
-    }
+      }
+
 
     C_true <- get_comm_pair_r(comm,vcv_true,force.PD=F)$covM
     x <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
@@ -149,7 +147,11 @@ BEF_simulate <- function(comm,
     conv <- models$conv
 
     count=count+1
+
+    if (conv_fail_drop == F) conv <- c(1,1,1,1)
+
     }
+
 
     # result <- list(models=models,
                    # true_lambda = lambda_true,

@@ -141,7 +141,21 @@ CPR_spaMM <- function(formula,
                   control=control.optim,
                   ...)
 
-    ML.opt_int<-optim(grid_result$minlevels,
+    grid_result_int <- gridSearch(fun=likelihood.lambda.spaMM,
+                              levels=list(lambda=c(0.2,0.4,0.6,0.8)),
+                              lower=0,
+                              upper=1,
+                              formula = f_null,
+                              data = data,
+                              VCV_sp = VCV_sp,
+                              comm = comm,
+                              printDetail = F,
+                              method.spaMM=method.spaMM,
+                              comm_kronecker=comm_kronecker,
+                              init=init,
+                              ...)
+
+    ML.opt_int<-optim(grid_result_int$minlevels,
                   #runif(1),
                   likelihood.lambda.spaMM,
                   formula=f_null,

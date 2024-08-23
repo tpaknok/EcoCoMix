@@ -88,6 +88,11 @@ CPR_spaMM <- function(formula,
                    ...)
   AIC_star <- AIC(m_lambda0,verbose=F)[[2]]
 
+  re <- names(ranef(m_lambda0))
+  re <- paste0(re,collapse="+")
+  response <- as.character(m_lambda0$predictor)[[2]]
+  f_null <- as.formula(paste0(response,"~",re))
+
   C.true <- true_model_satt <- m_true<- NULL
   if (!is.null(true_VCV)) {
     C.true <- get_comm_pair_r(comm,true_VCV,force.PD=F)$covM
@@ -136,7 +141,24 @@ CPR_spaMM <- function(formula,
                   control=control.optim,
                   ...)
 
-    lambda_spaMM<-ML.opt$par
+    ML.opt_int<-optim(grid_result$minlevels,
+                  #runif(1),
+                  likelihood.lambda.spaMM,
+                  formula=f_null,
+                  data=data,
+                  VCV_sp=VCV_sp,
+                  method = "L-BFGS-B",
+                  comm=comm,
+                  lower=0.0,
+                  upper=1,
+                  init=init,
+                  method.spaMM = method.spaMM,
+                  comm_kronecker=comm_kronecker,
+                  control=control.optim,
+                  ...)
+
+    lambda_spaMM_int <- ML.opt_int$par
+    lambda_spaMM <- ML.opt$par
     logL<--ML.opt$value
     VCV_sp_optim <- VCV_sp*lambda_spaMM
     diag(VCV_sp_optim) <- diag(VCV_sp)
@@ -201,6 +223,7 @@ CPR_spaMM <- function(formula,
                          AIC_star = AIC_star,
                          AIC_true = AIC_true),
                  optimized_lambda = lambda_spaMM,
+                 optimized_lambda_int = lambda_spaMM_int,
                  conv = c(best_m=best_model_satt$conv,
                              optim_m=optim_model_satt$conv,
                              orig_m=original_VCV_model_satt$conv,

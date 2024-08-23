@@ -173,12 +173,14 @@ BEF_simulate <- function(comm,
                m_best_slope = summary(models$best_model,verbose=F)$beta_table[2,1],
                m_without_comp_slope = summary(models$without_comp_model,verbose=F)$beta_table[2,1])
 
-    optim_lambda <- c(models$optimized_lambda)
+    optim_lambda <- c(optim_lambda=models$optimized_lambda)
 
     AIC <- c(models$AIC)
 
-    result <- c(sig,slope,
+    result <- c(sig,
+                slope,
                 optim_lambda,
+                optim_lambda_int = models$optimized_lambda_int,
                 AIC,
                 min_richness=models$min_richness,
                 max_richness=models$max_richness,

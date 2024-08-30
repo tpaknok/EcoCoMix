@@ -4,17 +4,16 @@ likelihood.lambda.spaMM<-function(lambda,
                                   VCV_sp,
                                   comm_kronecker=NULL,
                                   comm,
-                                  init=list(lambda=NaN,phi=NaN),
+                                  init=list(lambda=NA),
                                   method.spaMM = "REML",
                                   ...){
 
   message(lambda)
-
   formula <- as.formula(formula)
   VCV_sp_lambda <- VCV_sp*lambda
   diag(VCV_sp_lambda) <- diag(VCV_sp)
 
-  C.lambda<- get_comm_pair_r(comm,VCV_sp_lambda,comm_kronecker = comm_kronecker)$covM
+  C.lambda<- get_comm_pair_r(comm,VCV_sp_lambda,comm_kronecker = comm_kronecker)$corM
   rownames(C.lambda) <- 1:nrow(data)
 
   n <- ncol(C.lambda)
@@ -26,7 +25,7 @@ likelihood.lambda.spaMM<-function(lambda,
               method=method.spaMM,
               ...)
 
-  AIC <- AIC(m_spamm,verbose=F)[[1]]
+  AIC <- AIC(m_spamm,verbose=F)[[2]]
   return(AIC)
 }
 

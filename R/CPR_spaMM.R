@@ -6,9 +6,11 @@ CPR_spaMM <- function(formula,
                       original.VCV=T,
                       AIC_threshold = -4,
                       init=list(lambda=NA),
+                      init_optim = list(lambda=NA),
                       method.spaMM = "REML",
                       true_VCV = NULL,
                       control.optim=NULL,
+                      comm_kronecker = NULL,
                       ...) {
 
   require(nlme)
@@ -17,6 +19,7 @@ CPR_spaMM <- function(formula,
   require(admisc)
 
   message("modelling")
+  time1<-Sys.time()
   data$comp_id <- 1:nrow(data)
 
   formula_text <- Reduce(paste,deparse(formula))
@@ -27,16 +30,26 @@ CPR_spaMM <- function(formula,
   formula <- as.formula(formula)
   no_phylo_formula <- as.formula(no_phylo_formula)
 
-  m_without_comp <- fitme(no_phylo_formula,data=data,...)
+
+  m_without_comp <- fitme(no_phylo_formula,
+                          data=data,
+                          ...)
+
+
   AIC_without_phylo <- AIC(m_without_comp,verbose=F)[[2]]
 
   lambda_spaMM <- NA
-  AIC_optim <- AIC_true <- NA
+  AIC_optim <- AIC_true <- AIC_optim_int <- AIC_int_only <- NA
   optimized_model_result <- NA
   best_m <- m_optim <- NA
 
-  comm_cov <- get_comm_pair_r(comm,VCV_sp,force.PD=F)
-  C.lambda.spaMM <- comm_cov$covM
+  comm_cov <- get_comm_pair_r(comm,
+                              VCV_sp,
+                              comm_kronecker=comm_kronecker,
+                              force.PD=F)
+
+
+  C.lambda.spaMM <- comm_cov$corM
   comm_kronecker <- comm_cov$comm_kronecker
 
   rownames(C.lambda.spaMM) <- as.character(data$comp_id)
@@ -48,26 +61,35 @@ CPR_spaMM <- function(formula,
                           method=method.spaMM,
                           ...)
 
+
   .drop1_spamm <- function(model,C) {
     conv <- 0
-    model$call$corrMatrix <- as_precision(C)
-    model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
-    model$call$data <- model$data
-    result_satt <- drop1(model,verbose=F)
 
-    msg <- tryCatchWEM(drop1(model,verbose=F),capture=F)
+    if (length(fixef(model)) == 1 & names(fixef(model))[[1]] == ("(Intercept)")) {
+      msg <- "drop1 not conducted"
+      result_satt <- "Intercept-only model. drop1 was not conducted"
+    } else {
+      model$call$corrMatrix <- as_precision(C)
+      model$call$method <- ifelse(method.spaMM == "REML","REML","ML")
+      model$call$data <- model$data
+      model$family$family <- as.character(paste0(model$family$family))
+      model$family$link <- as.character(paste0(model$family$link))
 
-    if (is.null(msg$warning)) {
-      msg$warning <- "OK"
+      result_satt <- drop1(model,verbose=F)
+      msg <- tryCatchWEM(drop1(model,verbose=F),capture=F)
+
+      if (is.null(msg$warning)) {
+        msg$warning <- "OK"
+      }
+
+      if (!grepl("converge",msg$warning)) {
+        conv <- 1
+      }
     }
 
-    if (!grepl("converge",msg$warning)) {
-      conv <- 1
-    }
-
-    result <- list(result=result_satt,
-                   msg=msg,
-                   conv=conv)
+      result <- list(result=result_satt,
+                     msg=msg,
+                     conv=conv)
     return(result)
   }
 
@@ -77,7 +99,10 @@ CPR_spaMM <- function(formula,
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
 
-  C.lambda0.spaMM <- get_comm_pair_r(comm,VCV_sp_lambda0,force.PD=F)$covM
+  C.lambda0.spaMM <- get_comm_pair_r(comm,
+                                     VCV_sp_lambda0,
+                                     comm_kronecker=comm_kronecker,
+                                     force.PD=F)$corM
   rownames(C.lambda0.spaMM) <- as.character(data$comp_id)
 
   m_lambda0 <- fitme(formula,
@@ -86,18 +111,21 @@ CPR_spaMM <- function(formula,
                    init=init,
                    method=method.spaMM,
                    ...)
+
   AIC_star <- AIC(m_lambda0,verbose=F)[[2]]
 
   re <- names(ranef(m_lambda0))
   re <- paste0(re,collapse="+")
   response <- as.character(m_lambda0$predictor)[[2]]
-  f_null <- as.formula(paste0(response,"~",re))
+  f_null <- as.formula(paste0(response,"~1+",re))
 
   C.true <- true_model_satt <- m_true<- NULL
   if (!is.null(true_VCV)) {
-    C.true <- get_comm_pair_r(comm,true_VCV,force.PD=F)$covM
+    C.true <- get_comm_pair_r(comm,
+                              true_VCV,
+                              comm_kronecker=comm_kronecker,
+                              force.PD=F)$corM
     rownames(C.true) <- as.character(data$comp_id)
-    C.true <- C.true #seems the package only extracts vars from the global environment...
 
     m_true <- fitme(formula,
                     corrMatrix=as_precision(C.true),
@@ -108,7 +136,6 @@ CPR_spaMM <- function(formula,
     AIC_true <- AIC(m_true,verbose=F)[[2]]
     true_model_satt <- .drop1_spamm(m_true,C.true)
   }
-
   if (optim.lambda == T) {
 
     grid_result <- gridSearch(fun=likelihood.lambda.spaMM,
@@ -122,7 +149,7 @@ CPR_spaMM <- function(formula,
                               printDetail = F,
                               method.spaMM=method.spaMM,
                               comm_kronecker=comm_kronecker,
-                              init=init,
+                              init=init_optim,
                               ...)
 
     ML.opt<-optim(grid_result$minlevels,
@@ -135,7 +162,7 @@ CPR_spaMM <- function(formula,
                   comm=comm,
                   lower=0.0,
                   upper=1,
-                  init=init,
+                  init=init_optim,
                   method.spaMM = method.spaMM,
                   comm_kronecker=comm_kronecker,
                   control=control.optim,
@@ -152,7 +179,7 @@ CPR_spaMM <- function(formula,
                               printDetail = F,
                               method.spaMM=method.spaMM,
                               comm_kronecker=comm_kronecker,
-                              init=init,
+                              init=init_optim,
                               ...)
 
     ML.opt_int<-optim(grid_result_int$minlevels,
@@ -165,18 +192,44 @@ CPR_spaMM <- function(formula,
                   comm=comm,
                   lower=0.0,
                   upper=1,
-                  init=init,
+                  init=init_optim,
                   method.spaMM = method.spaMM,
                   comm_kronecker=comm_kronecker,
                   control=control.optim,
                   ...)
 
     lambda_spaMM_int <- ML.opt_int$par
+    VCV_sp_optim_int <- VCV_sp*lambda_spaMM_int
+    diag(VCV_sp_optim_int) <- diag(VCV_sp)
+    C.lambda.optim.spaMM.int <- get_comm_pair_r(comm,
+                                                VCV_sp_optim_int,
+                                                comm_kronecker = comm_kronecker,
+                                                force.PD=F)$corM
+    rownames(C.lambda.optim.spaMM.int) <- as.character(data$comp_id)
+
+    m_optim_int <- fitme(f_null,
+                     corrMatrix=as_precision(C.lambda.optim.spaMM.int),
+                     data=data,
+                     method=method.spaMM,
+                     init=init,
+                     ...)
+
+    AIC_optim_int <- AIC(m_optim_int,verbose=F)[[2]]
+
+    m_int <- fitme(as.formula(paste0(response,"~1")),
+                   data=data,
+                   ...)
+
+    AIC_int_only <- AIC(m_int,verbose=F)[[2]]
+
     lambda_spaMM <- ML.opt$par
     logL<--ML.opt$value
     VCV_sp_optim <- VCV_sp*lambda_spaMM
     diag(VCV_sp_optim) <- diag(VCV_sp)
-    C.lambda.optim.spaMM <- get_comm_pair_r(comm,VCV_sp_optim,force.PD=F)$covM
+    C.lambda.optim.spaMM <- get_comm_pair_r(comm,
+                                            VCV_sp_optim,
+                                            comm_kronecker = comm_kronecker,
+                                            force.PD=F)$corM
     rownames(C.lambda.optim.spaMM) <- as.character(data$comp_id)
 
     m_optim <- fitme(formula,
@@ -221,25 +274,40 @@ CPR_spaMM <- function(formula,
   # original_VCV_model_satt <- drop1(m_original_VCV)
   # true_model_satt <- drop1(m_true)
 
+  if (optim.lambda) {
+    conv_best_m <- best_model_satt$conv
+    conv_optim_m <- optim_model_satt$conv
+    best_model_satt <- best_model_satt$result
+    optim_model_satt <- optim_model_satt$result
+    optimized_lambda <- lambda_spaMM
+    optimized_lambda_int <- lambda_spaMM_int
+  } else {
+    best_model_satt <- optim_model_satt <- optimized_lambda <- optimized_lambda_int <- NA
+    conv_best_m <- conv_optim_m <- 1
+  }
+
    output <- list(best_model = best_m,
-                 best_model_satt = best_model_satt$result,
+                 best_model_satt = best_model_satt,
                  optimized_lambda_model = m_optim,
-                 optimized_lambda_model_satt = optim_model_satt$result,
+                 optimized_lambda_model_satt = optim_model_satt,
                  original_VCV_model = m_original_VCV,
                  original_VCV_m_satt = original_VCV_model_satt$result,
                  true_model = m_true,
                  true_model_satt = true_model_satt$result,
+                 without_comp_anova = anova(m_without_comp),
                  without_comp_model = m_without_comp,
                  star_model = m_lambda0,
                  AIC = c(AIC_without_phylo =  AIC_without_phylo,
                          AIC_original_VCV =  AIC_original_VCV,
                          AIC_optim = AIC_optim,
                          AIC_star = AIC_star,
-                         AIC_true = AIC_true),
-                 optimized_lambda = lambda_spaMM,
-                 optimized_lambda_int = lambda_spaMM_int,
-                 conv = c(best_m=best_model_satt$conv,
-                             optim_m=optim_model_satt$conv,
+                         AIC_true = AIC_true,
+                         AIC_optim_int = AIC_optim_int,
+                         AIC_int_only = AIC_int_only),
+                 optimized_lambda = optimized_lambda ,
+                 optimized_lambda_int = optimized_lambda_int,
+                 conv = c(best_m=conv_best_m,
+                             optim_m=conv_optim_m,
                              orig_m=original_VCV_model_satt$conv,
                              true_m=true_model_satt$conv),
                  min_richness=min(rowSums(comm)),

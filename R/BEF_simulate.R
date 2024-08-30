@@ -1,85 +1,26 @@
 BEF_simulate <- function(comm,
                          VCV_sp = NULL,
-                         scale=1,
                          nspp=15,
                          nsite=50,
                          min_richness=1,
                          max_richness=4,
                          spaMM_formula,
                          b1=0,
+                         b2=1,
+                         b3=1,
                          signals_X="phy_cor",
                          signals_Y = T,
                          intercept = 0,
                          noise_mean = 0,
                          noise_sd = 1,
-                         lambda_true=1,
-                         conv_fail_drop = T) {
+                         non_phy_cor_mean = 0,
+                         non_phy_cor_sd = 1,
+                         lambda_true_x1=1,
+                         lambda_true_x2=1,
+                         scale_all=F,
+                         conv_fail_drop = T,
+                         ...) {
                          #seed=1000) {
-
-  # library(MASS)
-  # library(vegan)
-  # set.seed(seed)
-  #
-  # sim_all <- VCV_sp_list <- VCV_true_list <- list()
-  #
-  # for (i in 1:sim) {
-  #   if(is.null(VCV_sp)){
-  #     tree <- pbtree(n=ncol(comm))
-  #     tree$tip.label <- colnames(comm)
-  #
-  #     vcv <- vcv(tree)
-  #     VCV_sp_list[[i]] <- vcv
-  #     vcv_true <- vcv*lambda_true
-  #     diag(vcv_true) <- diag(vcv)
-  #     } else {
-  #     VCV_sp_list[[i]] <- VCV_sp
-  #     vcv_true <- VCV_sp*lambda_true
-  #     diag(vcv_true) <- diag(VCV_sp)
-  #   }
-  #
-  #
-  #   VCV_true_list[[i]] <- vcv_true
-  #   C_true <- get_comm_pair_r(comm,vcv_true)
-  #
-  #   if (signals_X == "phy_cor") {
-  #   #x <- t(chol(C_true)) %*% rnorm(nrow(comm),x_mean,x_sd)
-  #     x <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
-  #   }
-  #
-  #   if (signals_X == "sr") {
-  #     x <- specnumber(comm)
-  #   }
-  #
-  #   if (signals_X == "no_phy_cor") {
-  #     x <- rnorm(nrow(comm),x_mean,x_sd)
-  #   }
-  #
-  #   if (signals_Y == T) {
-  #   #y <- t(chol(C_true)) %*% rnorm(nrow(comm),y_mean,y_sd)
-  #     y <- intercept+b1*x+mvrnorm(1,rep(0,nrow(C_true)),C_true)+rnorm(nrow(comm),noise_mean,noise_sd)
-  #   } else {
-  #     y <- intercept+b1*x+rnorm(nrow(comm),y_mean,y_sd)+rnorm(nrow(comm),noise_mean,noise_sd)
-  #   }
-  #
-  #   sim_all[[i]] <- data.frame(y=y,x=x)
-  # }
-  # require(parallel)
-  #
-  # .simulate_data <- function(comm,
-  #                            VCV_sp,
-  #                            scale,
-  #                            b1,
-  #                            signals_X,
-  #                            signals_Y,
-  #                            intercept,
-  #                            y_mean,
-  #                            y_sd,
-  #                            x_mean,
-  #                            x_sd,
-  #                            noise_mean,
-  #                            noise_sd,
-  #                            lambda_true,
-  #                            force.PD = F) {
     library(MASS)
     library(vegan)
     library(CPR)
@@ -108,6 +49,11 @@ BEF_simulate <- function(comm,
       comm <- rbind(comm,c(1,rep(0,nspp-1)))
       colnames(comm) <- paste0("sp",1:nspp)
       }
+    } else {
+      nspp <- ncol(comm)
+      nsite <- nrow(comm)
+      min_richness <- min(rowSums(comm))
+      max_richness <- max(rowSums(comm))
     }
 
     if(is.null(VCV_sp)){
@@ -115,22 +61,43 @@ BEF_simulate <- function(comm,
       tree$tip.label <- colnames(comm)
 
       vcv <- vcv(tree)
-      vcv_true <- vcv*lambda_true
-      diag(vcv_true) <- diag(vcv)
+      vcv_true_x1 <- vcv * lambda_true_x1
+      vcv_true_x2 <- vcv * lambda_true_x2
+      diag(vcv_true_x1) <- diag(vcv)
+      diag(vcv_true_x2) <- diag(vcv)
     } else {
-      vcv_true <- VCV_sp*lambda_true
-      diag(vcv_true) <- diag(VCV_sp)
+
+      vcv <- VCV_sp
+      vcv_true_x1 <- VCV_sp * lambda_true_x1
+      vcv_true_x2 <- VCV_sp * lambda_true_x2
+      diag(vcv_true_x1) <- diag(VCV_sp)
+      diag(vcv_true_x2) <- diag(VCV_sp)
       }
 
+    comm_pair <- get_comm_pair_r(comm,vcv_true_x2,force.PD=F)
+    C_true_x2 <- comm_pair$corM
+    comm_kronecker <- comm_pair$comm_kronecker
+    if (lambda_true_x1 == lambda_true_x2) C_true_x1<-C_true_x2
+    if (lambda_true_x1 != lambda_true_x2) C_true_x1 <- get_comm_pair_r(comm,vcv_true_x2,force.PD=F)$corM
 
-    C_true <- get_comm_pair_r(comm,vcv_true,force.PD=F)$covM
-    x <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
-    y <- b1*x+mvrnorm(1,rep(0,nrow(C_true)),C_true)+rnorm(nrow(comm),noise_mean,noise_sd)
-    data <- data.frame(y=y,x=x,comp_id=as.character(1:nrow(comm)))
+    if (signals_X == "phy_cor") x1 <- mvrnorm(1,rep(0,nrow(C_true_x1)),C_true_x1)
+    if (signals_X == "non_phy_cor") x1 <- rnorm(nrow(comm),non_phy_cor_mean,non_phy_cor_sd)
+    if (signals_X == "sr") x1 <- rowSums(comm)
+
+    x2 <- mvrnorm(1,rep(0,nrow(C_true_x2)),C_true_x2)
+
+    x3 <- rnorm(nrow(comm),noise_mean,noise_sd)
+
+    data <- data.frame(x1=x1,x2=x2,x3=x3,comp_id=as.character(1:nrow(comm)))
+
+    if (scale_all) data[,1:3] <- scale(data[,1:3])
+
+    y <- b1*x1+x2+x3
+    data <- data.frame(y=y,data)
 
     sim_data <- list(data=data,
                      sim_phy=vcv,
-                     true_phy=vcv_true)
+                     true_phy=vcv_true_x2)
 
     spaMM_formula <- as.formula(spaMM_formula)
 
@@ -139,11 +106,8 @@ BEF_simulate <- function(comm,
                         VCV_sp = sim_data$sim_phy,
                         true_VCV = sim_data$true_phy,
                         comm=comm,
-                        family= "gaussian",
-                        optim.lambda = T,
-                        control.HLfit = list(max.iter=10000),
-                        control.optim=list(factr=1e15))
-
+                        comm_kronecker = comm_kronecker,
+                        ...)
     conv <- models$conv
 
     count=count+1
@@ -157,38 +121,61 @@ BEF_simulate <- function(comm,
                    # true_lambda = lambda_true,
                    # count = count)
 
-    #extract significance?
+    #extract significance
+
+    m_optim_sig <- NA
+
+    if (all(!is.na(unlist(models$optimized_lambda_model_satt))))
     m_optim_sig <- ifelse(models$optimized_lambda_model_satt$`Pr(>F)` < 0.05,1,0)
-    m_true_sig <- ifelse(models$true_model_satt$`Pr(>F)` < 0.05,1,0)
+
+        m_true_sig <- ifelse(models$true_model_satt$`Pr(>F)` < 0.05,1,0)
     m_original_sig <- ifelse(models$original_VCV_m_satt$`Pr(>F)` < 0.05,1,0)
-    m_best_sig <- ifelse(models$best_model_satt$`Pr(>F)` < 0.05,1,0)
-    m_without_comp_sig <- ifelse(summary(models$without_comp_model,details=T,verbose=F)$beta_table[2,4] < 0.05,1,0)
+
+    m_best_sig <- NA
+    if (all(!is.na(unlist(models$best_model_satt))))
+    m_best_sig <- ifelse(models$best_model_satt$`Pr(>F)`[[1]] < 0.05,1,0)
+
+    m_without_comp_sig <- ifelse(anova(models$without_comp_model)$`Pr(>F)`[[1]] < 0.05,1,0)
+
     sig <- c(m_optim_sig=m_optim_sig,
              m_true_sig=m_true_sig,
              m_original_sig=m_original_sig,
              m_best_sig=m_best_sig,
              m_without_comp_sig=m_without_comp_sig)
 
-    slope <- c(m_optim_slope=summary(models$optimized_lambda_model,verbose=F)$beta_table[2,1],
+    slope <- c(m_optim_slope=ifelse(!is.na(m_optim_sig),summary(models$optimized_lambda_model,verbose=F)$beta_table[2,1],NA),
                m_true_slope = summary(models$true_model,verbose=F)$beta_table[2,1],
                m_original_slope = summary(models$original_VCV_model,verbose=F)$beta_table[2,1],
-               m_best_slope = summary(models$best_model,verbose=F)$beta_table[2,1],
+               m_best_slope = ifelse(!is.na(m_best_sig),summary(models$best_model,verbose=F)$beta_table[2,1],NA),
                m_without_comp_slope = summary(models$without_comp_model,verbose=F)$beta_table[2,1])
 
-    optim_lambda <- c(optim_lambda=models$optimized_lambda)
+    optim_lambda <- ifelse(!is.na(m_optim_sig),c(optim_lambda=models$optimized_lambda),NA)
 
     AIC <- c(models$AIC)
 
     result <- c(sig,
                 slope,
-                optim_lambda,
+                optim_lambda = optim_lambda,
                 optim_lambda_int = models$optimized_lambda_int,
                 AIC,
                 min_richness=models$min_richness,
                 max_richness=models$max_richness,
                 nspp=models$nspp,
-                true_lambda = lambda_true,
-                count=count)
+                true_lambda_x1 = lambda_true_x1,
+                true_lambda_x2 = lambda_true_x2,
+                r_x1x2 = cor(x1,x2),
+                count=count,
+                optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]],NA),
+                optim_r2c = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[2]],NA),
+                NumDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$NumDF,NA),
+                DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA)
+                )
+    result <- data.frame(t(result))
+
+    result$signals_X <- signals_X
+    result$data <- ifelse(is.null(VCV_sp),"Simulated","Provided")
+
+
 
     return(result)
   # }

@@ -168,14 +168,14 @@ BEF_simulate <- function(comm,
                 optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]],NA),
                 optim_r2c = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[2]],NA),
                 NumDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$NumDF,NA),
-                DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA)
-                )
+                DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA),
+                b1 = b1)
     result <- data.frame(t(result))
 
+    result$signals_X <- NA
+    result$data <- NA
     result$signals_X <- signals_X
     result$data <- ifelse(is.null(VCV_sp),"Simulated","Provided")
-
-
 
     return(result)
   # }

@@ -11,6 +11,7 @@ CPR_spaMM <- function(formula,
                       true_VCV = NULL,
                       control.optim=NULL,
                       comm_kronecker = NULL,
+                      int_model = T,
                       ...) {
 
   require(nlme)
@@ -42,7 +43,7 @@ CPR_spaMM <- function(formula,
   AIC_optim <- AIC_true <- AIC_optim_int <- AIC_int_only <- NA
   optimized_model_result <- NA
   best_m <- m_optim <- NA
-
+  lambda_spaMM_int <- lambda_spaMM <- NA
   comm_cov <- get_comm_pair_r(comm,
                               VCV_sp,
                               comm_kronecker=comm_kronecker,
@@ -136,8 +137,8 @@ CPR_spaMM <- function(formula,
     AIC_true <- AIC(m_true,verbose=F)[[2]]
     true_model_satt <- .drop1_spamm(m_true,C.true)
   }
-  if (optim.lambda == T) {
 
+  if (optim.lambda == T) {
     grid_result <- gridSearch(fun=likelihood.lambda.spaMM,
                               levels=list(lambda=c(0.2,0.4,0.6,0.8)),
                               lower=0,
@@ -168,59 +169,6 @@ CPR_spaMM <- function(formula,
                   control=control.optim,
                   ...)
 
-    grid_result_int <- gridSearch(fun=likelihood.lambda.spaMM,
-                              levels=list(lambda=c(0.2,0.4,0.6,0.8)),
-                              lower=0,
-                              upper=1,
-                              formula = f_null,
-                              data = data,
-                              VCV_sp = VCV_sp,
-                              comm = comm,
-                              printDetail = F,
-                              method.spaMM=method.spaMM,
-                              comm_kronecker=comm_kronecker,
-                              init=init_optim,
-                              ...)
-
-    ML.opt_int<-optim(grid_result_int$minlevels,
-                  #runif(1),
-                  likelihood.lambda.spaMM,
-                  formula=f_null,
-                  data=data,
-                  VCV_sp=VCV_sp,
-                  method = "L-BFGS-B",
-                  comm=comm,
-                  lower=0.0,
-                  upper=1,
-                  init=init_optim,
-                  method.spaMM = method.spaMM,
-                  comm_kronecker=comm_kronecker,
-                  control=control.optim,
-                  ...)
-
-    lambda_spaMM_int <- ML.opt_int$par
-    VCV_sp_optim_int <- VCV_sp*lambda_spaMM_int
-    diag(VCV_sp_optim_int) <- diag(VCV_sp)
-    C.lambda.optim.spaMM.int <- get_comm_pair_r(comm,
-                                                VCV_sp_optim_int,
-                                                comm_kronecker = comm_kronecker,
-                                                force.PD=F)$corM
-    rownames(C.lambda.optim.spaMM.int) <- as.character(data$comp_id)
-
-    m_optim_int <- fitme(f_null,
-                     corrMatrix=as_precision(C.lambda.optim.spaMM.int),
-                     data=data,
-                     method=method.spaMM,
-                     init=init,
-                     ...)
-
-    AIC_optim_int <- AIC(m_optim_int,verbose=F)[[2]]
-
-    m_int <- fitme(as.formula(paste0(response,"~1")),
-                   data=data,
-                   ...)
-
-    AIC_int_only <- AIC(m_int,verbose=F)[[2]]
 
     lambda_spaMM <- ML.opt$par
     logL<--ML.opt$value
@@ -265,6 +213,62 @@ CPR_spaMM <- function(formula,
       best_model_satt <- .drop1_spamm(best_m,get(gsub("as_precision(*)","",best_m$call$corrMatrix)[[2]]))
     } else {
       best_model_satt <- list(result=anova(m_without_comp))
+    }
+
+    if (int_model & optim.lambda) {
+      grid_result_int <- gridSearch(fun=likelihood.lambda.spaMM,
+                                    levels=list(lambda=c(0.2,0.4,0.6,0.8)),
+                                    lower=0,
+                                    upper=1,
+                                    formula = f_null,
+                                    data = data,
+                                    VCV_sp = VCV_sp,
+                                    comm = comm,
+                                    printDetail = F,
+                                    method.spaMM=method.spaMM,
+                                    comm_kronecker=comm_kronecker,
+                                    init=init_optim,
+                                    ...)
+
+      ML.opt_int<-optim(grid_result_int$minlevels,
+                        #runif(1),
+                        likelihood.lambda.spaMM,
+                        formula=f_null,
+                        data=data,
+                        VCV_sp=VCV_sp,
+                        method = "L-BFGS-B",
+                        comm=comm,
+                        lower=0.0,
+                        upper=1,
+                        init=init_optim,
+                        method.spaMM = method.spaMM,
+                        comm_kronecker=comm_kronecker,
+                        control=control.optim,
+                        ...)
+
+      lambda_spaMM_int <- ML.opt_int$par
+      VCV_sp_optim_int <- VCV_sp*lambda_spaMM_int
+      diag(VCV_sp_optim_int) <- diag(VCV_sp)
+      C.lambda.optim.spaMM.int <- get_comm_pair_r(comm,
+                                                  VCV_sp_optim_int,
+                                                  comm_kronecker = comm_kronecker,
+                                                  force.PD=F)$corM
+      rownames(C.lambda.optim.spaMM.int) <- as.character(data$comp_id)
+
+      m_optim_int <- fitme(f_null,
+                           corrMatrix=as_precision(C.lambda.optim.spaMM.int),
+                           data=data,
+                           method=method.spaMM,
+                           init=init,
+                           ...)
+
+      AIC_optim_int <- AIC(m_optim_int,verbose=F)[[2]]
+
+      m_int <- fitme(as.formula(paste0(response,"~1")),
+                     data=data,
+                     ...)
+
+      AIC_int_only <- AIC(m_int,verbose=F)[[2]]
     }
   }
 

@@ -262,12 +262,30 @@ CPR_spaMM <- function(formula,
                            init=init,
                            ...)
 
-      AIC_optim_int <- AIC(m_optim_int,verbose=F)[[2]]
+      m_optim_int_star <- fitme(f_null,
+                           corrMatrix=as_precision(C.lambda0.spaMM),
+                           data=data,
+                           method=method.spaMM,
+                           init=init,
+                           ...)
+
+      m_optim_int_BM <- fitme(f_null,
+                                corrMatrix=as_precision(C.lambda.spaMM),
+                                data=data,
+                                method=method.spaMM,
+                                init=init,
+                                ...)
 
       m_int <- fitme(as.formula(paste0(response,"~1")),
                      data=data,
                      ...)
 
+      AIC_int <- c(AIC(m_optim_int,verbose=F)[[2]], AIC(m_optim_int_star,verbose=F)[[2]],AIC(m_optim_int_BM,verbose=F)[[2]])
+      AIC_int_pos <- which.min(AIC_int)
+      AIC_optim_int <- AIC_int[AIC_int_pos]
+
+      if (AIC_int_pos == 2) {m_optim_int <- m_optim_int_star optimized_lambda_int <- 0}
+      if (AIC_int_pos == 3) m_optim_int <- m_optim_int_BM optimized_lambda_int <- 1}
       AIC_int_only <- AIC(m_int,verbose=F)[[2]]
     }
   }
@@ -291,30 +309,31 @@ CPR_spaMM <- function(formula,
   }
 
    output <- list(best_model = best_m,
-                 best_model_satt = best_model_satt,
-                 optimized_lambda_model = m_optim,
-                 optimized_lambda_model_satt = optim_model_satt,
-                 original_VCV_model = m_original_VCV,
-                 original_VCV_m_satt = original_VCV_model_satt$result,
-                 true_model = m_true,
-                 true_model_satt = true_model_satt$result,
-                 without_comp_anova = anova(m_without_comp),
-                 without_comp_model = m_without_comp,
-                 star_model = m_lambda0,
-                 AIC = c(AIC_without_phylo =  AIC_without_phylo,
-                         AIC_original_VCV =  AIC_original_VCV,
-                         AIC_optim = AIC_optim,
-                         AIC_star = AIC_star,
-                         AIC_true = AIC_true,
-                         AIC_optim_int = AIC_optim_int,
-                         AIC_int_only = AIC_int_only),
-                 optimized_lambda = optimized_lambda ,
-                 optimized_lambda_int = optimized_lambda_int,
-                 conv = c(best_m=conv_best_m,
-                             optim_m=conv_optim_m,
-                             orig_m=original_VCV_model_satt$conv,
-                             true_m=true_model_satt$conv),
-                 min_richness=min(rowSums(comm)),
-                 max_richness=max(rowSums(comm)),
-                 nspp = ncol(comm))
+                  best_model_satt = best_model_satt,
+                  optimized_lambda_model = m_optim,
+                  optimized_lambda_model_satt = optim_model_satt,
+                  original_VCV_model = m_original_VCV,
+                  original_VCV_m_satt = original_VCV_model_satt$result,
+                  true_model = m_true,
+                  true_model_satt = true_model_satt$result,
+                  without_comp_anova = anova(m_without_comp),
+                  without_comp_model = m_without_comp,
+                  intercept_only_model = m_optim_int,
+                  star_model = m_lambda0,
+                  AIC = c(AIC_without_phylo =  AIC_without_phylo,
+                          AIC_original_VCV =  AIC_original_VCV,
+                          AIC_optim = AIC_optim,
+                          AIC_star = AIC_star,
+                          AIC_true = AIC_true,
+                          AIC_optim_int = AIC_optim_int,
+                          AIC_int_only = AIC_int_only),
+                  optimized_lambda = optimized_lambda ,
+                  optimized_lambda_int = optimized_lambda_int,
+                  conv = c(best_m=conv_best_m,
+                           optim_m=conv_optim_m,
+                           orig_m=original_VCV_model_satt$conv,
+                           true_m=true_model_satt$conv),
+                  min_richness=min(rowSums(comm)),
+                  max_richness=max(rowSums(comm)),
+                  nspp = ncol(comm))
 }

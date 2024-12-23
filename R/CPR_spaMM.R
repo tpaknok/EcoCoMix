@@ -38,7 +38,7 @@ CPR_spaMM <- function(formula,
                           ...)
 
 
-  AIC_without_phylo <- AIC(m_without_comp,verbose=F)[[2]]
+  AIC_without_comp <- AIC(m_without_comp,verbose=F)[[2]]
 
   lambda_spaMM <- NA
   AIC_optim <- AIC_true <- AIC_optim_int <- AIC_int_only <- NA
@@ -202,7 +202,7 @@ CPR_spaMM <- function(formula,
       AIC_optim <- AIC_original_VCV
     }
 
-    if (AIC_optim - AIC_without_phylo < AIC_threshold) {
+    if (AIC_optim - AIC_without_comp < AIC_threshold) {
       best_m <- m_optim
     } else {
       best_m <- m_without_comp
@@ -216,6 +216,7 @@ CPR_spaMM <- function(formula,
       best_model_satt <- list(result=anova(m_without_comp))
     }
 
+    m_optim_int <- NULL
     if (int_model & optim.lambda) {
       grid_result_int <- gridSearch(fun=likelihood.lambda.spaMM,
                                     levels=list(lambda=c(0.2,0.4,0.6,0.8)),
@@ -292,8 +293,10 @@ CPR_spaMM <- function(formula,
       if (AIC_int_pos == 3) {
         m_optim_int <- m_optim_int_BM
         optimized_lambda_int <- 1
-        }
+      }
+
       AIC_int_only <- AIC(m_int,verbose=F)[[2]]
+
     }
   }
 
@@ -327,7 +330,7 @@ CPR_spaMM <- function(formula,
                   without_comp_model = m_without_comp,
                   intercept_only_model = m_optim_int,
                   star_model = m_lambda0,
-                  AIC = c(AIC_without_phylo =  AIC_without_phylo,
+                  AIC = c(AIC_without_comp =  AIC_without_comp,
                           AIC_original_VCV =  AIC_original_VCV,
                           AIC_optim = AIC_optim,
                           AIC_star = AIC_star,

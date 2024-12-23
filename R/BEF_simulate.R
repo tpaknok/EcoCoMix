@@ -83,6 +83,7 @@ BEF_simulate <- function(comm,
     if (scale_all) data[,1:3] <- scale(data[,1:3])
 
     y <- b0+b1*x1+x2+x3
+
     data <- data.frame(y=y,data)
 
     sim_data <- list(data=data,
@@ -119,10 +120,11 @@ BEF_simulate <- function(comm,
     if (all(!is.na(unlist(models$optimized_lambda_model_satt))))
     m_optim_sig <- ifelse(models$optimized_lambda_model_satt$`Pr(>F)` < 0.05,1,0)
 
-        m_true_sig <- ifelse(models$true_model_satt$`Pr(>F)` < 0.05,1,0)
+    m_true_sig <- ifelse(models$true_model_satt$`Pr(>F)` < 0.05,1,0)
     m_original_sig <- ifelse(models$original_VCV_m_satt$`Pr(>F)` < 0.05,1,0)
 
     m_best_sig <- NA
+
     if (all(!is.na(unlist(models$best_model_satt))))
     m_best_sig <- ifelse(models$best_model_satt$`Pr(>F)`[[1]] < 0.05,1,0)
 
@@ -154,18 +156,19 @@ BEF_simulate <- function(comm,
                 nspp=models$nspp,
                 true_lambda = lambda_true,
                 r_x1x2 = cor(x1,x2),
+                b1 = b1,
                 count=count,
                 optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]],NA),
                 optim_r2c = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[2]],NA),
                 NumDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$NumDF,NA),
-                DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA),
-                b1 = b1)
+                DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA)
+                )
     result <- data.frame(t(result))
 
     result$signals_X <- NA
-    result$data <- NA
+    result$phylo_structure <- NA
     result$signals_X <- signals_X
-    result$data <- ifelse(is.null(VCV_sp),"Simulated","Provided")
+    result$phylo_structure <- ifelse(is.null(VCV_sp),"Simulated","Provided")
 
     return(result)
   # }

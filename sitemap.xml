@@ -1,60 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://tpaknok.github.io/CPR/404.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/articles/Advanced_uses.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/articles/Empirical_multiple.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/articles/Empirical_single.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/articles/Simulation.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/BEF_simulate.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/BEF_simulate_eval.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/CPR.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/CPR_GLS.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/INLA_simulate.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/get_comm_pair.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/likelihood.lambda.INLA.html</loc>
-  </url>
-  <url>
-    <loc>https://tpaknok.github.io/CPR/reference/likelihood.lambda.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://tpaknok.github.io/CPR/404.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/LICENSE-text.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/articles/Advanced_uses.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/articles/Empirical_multiple.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/articles/Empirical_single.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/articles/Simulation.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/articles/index.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/authors.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/index.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/BEF_simulate.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/BEF_simulate_eval.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/CPR.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/CPR_GLS.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/INLA_simulate.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/get_comm_pair.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/index.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/likelihood.lambda.INLA.html</loc></url>
+<url><loc>https://tpaknok.github.io/CPR/reference/likelihood.lambda.html</loc></url>
 </urlset>
+

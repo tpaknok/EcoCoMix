@@ -5,18 +5,14 @@ BEF_simulate <- function(comm,
                          min_richness=1,
                          max_richness=4,
                          spaMM_formula,
+                         b0=0,
                          b1=0,
-                         b2=1,
-                         b3=1,
                          signals_X="phy_cor",
-                         signals_Y = T,
-                         intercept = 0,
                          noise_mean = 0,
                          noise_sd = 1,
                          non_phy_cor_mean = 0,
                          non_phy_cor_sd = 1,
-                         lambda_true_x1=1,
-                         lambda_true_x2=1,
+                         lambda_true=1,
                          scale_all=F,
                          conv_fail_drop = T,
                          ...) {
@@ -61,30 +57,24 @@ BEF_simulate <- function(comm,
       tree$tip.label <- colnames(comm)
 
       vcv <- vcv(tree)
-      vcv_true_x1 <- vcv * lambda_true_x1
-      vcv_true_x2 <- vcv * lambda_true_x2
-      diag(vcv_true_x1) <- diag(vcv)
-      diag(vcv_true_x2) <- diag(vcv)
+      vcv_true <- vcv * lambda_true
+      diag(vcv_true) <- diag(vcv)
     } else {
 
       vcv <- VCV_sp
-      vcv_true_x1 <- VCV_sp * lambda_true_x1
-      vcv_true_x2 <- VCV_sp * lambda_true_x2
-      diag(vcv_true_x1) <- diag(VCV_sp)
-      diag(vcv_true_x2) <- diag(VCV_sp)
+      vcv_true <- VCV_sp * lambda_true
+      diag(vcv_true) <- diag(VCV_sp)
       }
 
-    comm_pair <- get_comm_pair_r(comm,vcv_true_x2,force.PD=F)
-    C_true_x2 <- comm_pair$corM
+    comm_pair <- get_comm_pair_r(comm,vcv_true,force.PD=F)
+    C_true <- comm_pair$corM
     comm_kronecker <- comm_pair$comm_kronecker
-    if (lambda_true_x1 == lambda_true_x2) C_true_x1<-C_true_x2
-    if (lambda_true_x1 != lambda_true_x2) C_true_x1 <- get_comm_pair_r(comm,vcv_true_x2,force.PD=F)$corM
 
-    if (signals_X == "phy_cor") x1 <- mvrnorm(1,rep(0,nrow(C_true_x1)),C_true_x1)
+    if (signals_X == "phy_cor") x1 <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
     if (signals_X == "non_phy_cor") x1 <- rnorm(nrow(comm),non_phy_cor_mean,non_phy_cor_sd)
     if (signals_X == "sr") x1 <- rowSums(comm)
 
-    x2 <- mvrnorm(1,rep(0,nrow(C_true_x2)),C_true_x2)
+    x2 <- mvrnorm(1,rep(0,nrow(C_true)),C_true)
 
     x3 <- rnorm(nrow(comm),noise_mean,noise_sd)
 
@@ -92,12 +82,12 @@ BEF_simulate <- function(comm,
 
     if (scale_all) data[,1:3] <- scale(data[,1:3])
 
-    y <- b1*x1+x2+x3
+    y <- b0+b1*x1+x2+x3
     data <- data.frame(y=y,data)
 
     sim_data <- list(data=data,
                      sim_phy=vcv,
-                     true_phy=vcv_true_x2)
+                     true_phy=vcv_true)
 
     spaMM_formula <- as.formula(spaMM_formula)
 
@@ -108,6 +98,7 @@ BEF_simulate <- function(comm,
                         comm=comm,
                         comm_kronecker = comm_kronecker,
                         ...)
+
     conv <- models$conv
 
     count=count+1
@@ -161,8 +152,7 @@ BEF_simulate <- function(comm,
                 min_richness=models$min_richness,
                 max_richness=models$max_richness,
                 nspp=models$nspp,
-                true_lambda_x1 = lambda_true_x1,
-                true_lambda_x2 = lambda_true_x2,
+                true_lambda = lambda_true,
                 r_x1x2 = cor(x1,x2),
                 count=count,
                 optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]],NA),

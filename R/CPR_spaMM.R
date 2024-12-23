@@ -34,6 +34,7 @@ CPR_spaMM <- function(formula,
 
   m_without_comp <- fitme(no_phylo_formula,
                           data=data,
+                          method=method.spaMM,
                           ...)
 
 
@@ -284,8 +285,14 @@ CPR_spaMM <- function(formula,
       AIC_int_pos <- which.min(AIC_int)
       AIC_optim_int <- AIC_int[AIC_int_pos]
 
-      if (AIC_int_pos == 2) {m_optim_int <- m_optim_int_star optimized_lambda_int <- 0}
-      if (AIC_int_pos == 3) m_optim_int <- m_optim_int_BM optimized_lambda_int <- 1}
+      if (AIC_int_pos == 2) {
+        m_optim_int <- m_optim_int_star
+        optimized_lambda_int <- 0
+        }
+      if (AIC_int_pos == 3) {
+        m_optim_int <- m_optim_int_BM
+        optimized_lambda_int <- 1
+        }
       AIC_int_only <- AIC(m_int,verbose=F)[[2]]
     }
   }

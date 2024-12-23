@@ -93,7 +93,7 @@ level.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ape/man/vcv.phylo.html" class="external-link">vcv</a></span><span class="op">(</span><span class="va">KSR_MLtree</span><span class="op">)</span> <span class="co">#species level phyologenetic covariance matrix using default (Brownian) model</span></span>
 <span><span class="va">VCV_sp</span> <span class="op">&lt;-</span> <span class="va">VCV_sp</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">VCV_sp</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">VCV_comm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comm_pair.html">get_comm_pair_r</a></span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span>
+<span><span class="va">VCV_comm</span> <span class="op">&lt;-</span> <span class="fu">get_comm_pair_r</span><span class="op">(</span><span class="va">KSR</span>,<span class="va">VCV_sp</span><span class="op">)</span></span>
 <span><span class="va">VCV_comm</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;           [,1]      [,2]      [,3]      [,4]      [,5]</span></span>
 <span><span class="co">#&gt; [1,] 1.0000000 0.7031681 0.5639611 0.5601336 0.7539047</span></span>
@@ -270,7 +270,7 @@ different diagnostics.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/" class="external-link">DHARMa</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is DHARMa 0.4.6. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</span></span>
-<span><span class="va">sres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/INLA_simulate.html">INLA_simulate</a></span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
+<span><span class="va">sres</span> <span class="op">&lt;-</span> <span class="fu">INLA_simulate</span><span class="op">(</span><span class="va">inla_m</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres</span>,</span>
 <span>                           <span class="va">KSR_EF</span><span class="op">$</span><span class="va">bugs</span>,</span>
 <span>                           fittedPredictedResponse<span class="op">=</span><span class="va">inla_m</span><span class="op">$</span><span class="va">predictedfittedresponse</span>,</span>
@@ -334,7 +334,7 @@ default settings in INLA.</p>
 <span><span class="co">#&gt; Posterior summaries for the linear predictor and the fitted values are computed</span></span>
 <span><span class="co">#&gt; (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</span></span>
 <span></span>
-<span><span class="va">sres2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/INLA_simulate.html">INLA_simulate</a></span><span class="op">(</span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
+<span><span class="va">sres2</span> <span class="op">&lt;-</span> <span class="fu">INLA_simulate</span><span class="op">(</span><span class="va">inla_m2</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span></span>
 <span><span class="va">DHARMa_res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/createDHARMa.html" class="external-link">createDHARMa</a></span><span class="op">(</span><span class="va">sres2</span>,</span>
 <span>                           <span class="va">KSR_EF</span><span class="op">$</span><span class="va">bugs</span>,</span>
 <span>                           <span class="va">inla_m2</span><span class="op">$</span><span class="va">predictedfittedresponse</span>,</span>

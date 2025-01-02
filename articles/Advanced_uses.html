@@ -119,7 +119,7 @@ INLA resources</a> if you need to do so.</p>
 <p>To run a model with both phylogenetic and spatial (here as block)
 random effects, just run the following.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">inla_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CPR.html">CPR</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">inla_m</span> <span class="op">&lt;-</span> <span class="fu">CPR</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span></span>
 <span>                 <span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">Phylo</span><span class="op">)</span><span class="op">+</span></span>
 <span>                 <span class="fu">f</span><span class="op">(</span><span class="va">block</span>,model<span class="op">=</span><span class="st">"iid"</span><span class="op">)</span>,</span>
 <span>               priors<span class="op">=</span><span class="cn">NULL</span>,</span>
@@ -179,7 +179,7 @@ the thought process to construct meaningful priors.</p>
 <p>Then just put all of these priors in different arguments. Notet that
 for the blocking random effects, we will still use the default one.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">inla_m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CPR.html">CPR</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">inla_m2</span> <span class="op">&lt;-</span> <span class="fu">CPR</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">LAI</span><span class="op">~</span><span class="va">Real.rich</span><span class="op">+</span></span>
 <span>                 <span class="fu">f</span><span class="op">(</span><span class="va">comm</span>,model<span class="op">=</span><span class="st">"generic0"</span>,Cmatrix<span class="op">=</span><span class="va">Phylo</span>,hyper<span class="op">=</span><span class="va">prior.phy</span><span class="op">)</span><span class="op">+</span></span>
 <span>                 <span class="fu">f</span><span class="op">(</span><span class="va">block</span>,model<span class="op">=</span><span class="st">"iid"</span><span class="op">)</span>,</span>
 <span>              priors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prior.phy<span class="op">=</span><span class="va">prior.phy</span>,prior.block<span class="op">=</span><span class="va">prior.block</span><span class="op">)</span>,</span>

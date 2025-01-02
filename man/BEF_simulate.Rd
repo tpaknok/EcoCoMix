@@ -7,24 +7,23 @@ Simulating a BEF relationship and evaluting different analytical methods}
 Simulating a BEF relationship with/without phylogenetic signals, followed by evaluating different analytical methods based on type-I/type-II errors, estimated phylogenetic signals, and R2.
 }
 \usage{
-BEF_simulate <- function(comm,
-                         VCV_sp = NULL,
-                         nspp=15,
-                         nsite=50,
-                         min_richness=1,
-                         max_richness=4,
-                         spaMM_formula,
-                         b0=0,
-                         b1=0,
-                         signals_X="phy_cor",
-                         noise_mean = 0,
-                         noise_sd = 1,
-                         non_phy_cor_mean = 0,
-                         non_phy_cor_sd = 1,
-                         lambda_true=1,
-                         scale_all=F,
-                         conv_fail_drop = T,
-                         ...)
+BEF_simulate(comm,
+             CV_sp = NULL,
+             nspp=15,
+             nsite=50,
+             min_richness=1, max_richness=4,
+             spaMM_formula,
+             b0=0,
+             b1=0,
+             signals_X="phy_cor",
+             noise_mean = 0,
+             noise_sd = 1,
+             non_phy_cor_mean = 0,
+             non_phy_cor_sd = 1,
+             lambda_true=1,
+             scale_all=F,
+             conv_fail_drop = T,
+             ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -150,9 +149,8 @@ for (i in 1:sim) {
                                            scale_all=F,
                                            control.optim=list(factr=1e12),
                                            optim.lambda=T,
-                                           init=list(), #specification for spaMM
-                                           init_optim=list(), #specification for spaMM
-                                           int_model=F), #specification for spaMM
+                                           init=list(), #specification for spaMM - calculations will be faster
+                                           int_model=F)
                               error = function(e) e)
   }
 

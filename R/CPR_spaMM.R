@@ -5,9 +5,7 @@ CPR_spaMM <- function(formula,
                       optim.lambda=T,
                       original.VCV=T,
                       AIC_threshold = -4,
-                      init=list(lambda=NA),
-                      init_optim = list(lambda=NA),
-                      method.spaMM = "REML",
+                      method.spaMM = "ML",
                       true_VCV = NULL,
                       control.optim=NULL,
                       comm_kronecker = NULL,
@@ -19,7 +17,6 @@ CPR_spaMM <- function(formula,
   require(spaMM)
   require(admisc)
 
-  message("modelling")
   time1<-Sys.time()
   data$comp_id <- 1:nrow(data)
 
@@ -59,7 +56,6 @@ CPR_spaMM <- function(formula,
   m_original_VCV <- fitme(formula,
                           corrMatrix=as_precision(C.lambda.spaMM),
                           data=data,
-                          init=init,
                           method=method.spaMM,
                           ...)
 
@@ -110,7 +106,6 @@ CPR_spaMM <- function(formula,
   m_lambda0 <- fitme(formula,
                    corrMatrix=as_precision(C.lambda0.spaMM),
                    data=data,
-                   init=init,
                    method=method.spaMM,
                    ...)
 
@@ -132,7 +127,6 @@ CPR_spaMM <- function(formula,
     m_true <- fitme(formula,
                     corrMatrix=as_precision(C.true),
                     data=data,
-                    init=init,
                     method=method.spaMM,
                     ...)
     AIC_true <- AIC(m_true,verbose=F)[[2]]
@@ -151,7 +145,6 @@ CPR_spaMM <- function(formula,
                               printDetail = F,
                               method.spaMM=method.spaMM,
                               comm_kronecker=comm_kronecker,
-                              init=init_optim,
                               ...)
 
     ML.opt<-optim(grid_result$minlevels,
@@ -164,7 +157,6 @@ CPR_spaMM <- function(formula,
                   comm=comm,
                   lower=0.0,
                   upper=1,
-                  init=init_optim,
                   method.spaMM = method.spaMM,
                   comm_kronecker=comm_kronecker,
                   control=control.optim,
@@ -185,7 +177,6 @@ CPR_spaMM <- function(formula,
                      corrMatrix=as_precision(C.lambda.optim.spaMM),
                      data=data,
                      method=method.spaMM,
-                     init=init,
                      ...)
 
     AIC_optim <- AIC(m_optim,verbose=F)[[2]]
@@ -229,7 +220,6 @@ CPR_spaMM <- function(formula,
                                     printDetail = F,
                                     method.spaMM=method.spaMM,
                                     comm_kronecker=comm_kronecker,
-                                    init=init_optim,
                                     ...)
 
       ML.opt_int<-optim(grid_result_int$minlevels,
@@ -242,7 +232,6 @@ CPR_spaMM <- function(formula,
                         comm=comm,
                         lower=0.0,
                         upper=1,
-                        init=init_optim,
                         method.spaMM = method.spaMM,
                         comm_kronecker=comm_kronecker,
                         control=control.optim,
@@ -261,21 +250,18 @@ CPR_spaMM <- function(formula,
                            corrMatrix=as_precision(C.lambda.optim.spaMM.int),
                            data=data,
                            method=method.spaMM,
-                           init=init,
                            ...)
 
       m_optim_int_star <- fitme(f_null,
                            corrMatrix=as_precision(C.lambda0.spaMM),
                            data=data,
                            method=method.spaMM,
-                           init=init,
                            ...)
 
       m_optim_int_BM <- fitme(f_null,
                                 corrMatrix=as_precision(C.lambda.spaMM),
                                 data=data,
                                 method=method.spaMM,
-                                init=init,
                                 ...)
 
       m_int <- fitme(as.formula(paste0(response,"~1")),
@@ -318,32 +304,33 @@ CPR_spaMM <- function(formula,
     conv_best_m <- conv_optim_m <- 1
   }
 
-   output <- list(best_model = best_m,
-                  best_model_satt = best_model_satt,
-                  optimized_lambda_model = m_optim,
-                  optimized_lambda_model_satt = optim_model_satt,
-                  original_VCV_model = m_original_VCV,
-                  original_VCV_m_satt = original_VCV_model_satt$result,
-                  true_model = m_true,
-                  true_model_satt = true_model_satt$result,
-                  without_comp_anova = anova(m_without_comp),
-                  without_comp_model = m_without_comp,
-                  intercept_only_model = m_optim_int,
-                  star_model = m_lambda0,
-                  AIC = c(AIC_without_comp =  AIC_without_comp,
-                          AIC_original_VCV =  AIC_original_VCV,
-                          AIC_optim = AIC_optim,
-                          AIC_star = AIC_star,
-                          AIC_true = AIC_true,
-                          AIC_optim_int = AIC_optim_int,
-                          AIC_int_only = AIC_int_only),
-                  optimized_lambda = optimized_lambda ,
-                  optimized_lambda_int = optimized_lambda_int,
-                  conv = c(best_m=conv_best_m,
-                           optim_m=conv_optim_m,
-                           orig_m=original_VCV_model_satt$conv,
-                           true_m=true_model_satt$conv),
-                  min_richness=min(rowSums(comm)),
-                  max_richness=max(rowSums(comm)),
-                  nspp = ncol(comm))
+  output <- list(best_model = best_m,
+                 best_model_satt = best_model_satt,
+                 optimized_lambda_model = m_optim,
+                 optimized_lambda_model_satt = optim_model_satt,
+                 original_VCV_model = m_original_VCV,
+                 original_VCV_m_satt = original_VCV_model_satt$result,
+                 true_model = m_true,
+                 true_model_satt = true_model_satt$result,
+                 without_comp_anova = anova(m_without_comp),
+                 without_comp_model = m_without_comp,
+                 intercept_only_model = m_optim_int,
+                 star_model = m_lambda0,
+                 AIC = c(AIC_without_comp =  AIC_without_comp,
+                         AIC_original_VCV =  AIC_original_VCV,
+                         AIC_optim = AIC_optim,
+                         AIC_star = AIC_star,
+                         AIC_true = AIC_true,
+                         AIC_optim_int = AIC_optim_int,
+                         AIC_int_only = AIC_int_only),
+                 optimized_lambda = optimized_lambda ,
+                 optimized_lambda_int = optimized_lambda_int,
+                 conv = c(best_m=conv_best_m,
+                          optim_m=conv_optim_m,
+                          orig_m=original_VCV_model_satt$conv,
+                          true_m=true_model_satt$conv),
+                 min_richness=min(rowSums(comm)),
+                 max_richness=max(rowSums(comm)),
+                 nspp = ncol(comm))
+
 }

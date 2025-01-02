@@ -1,4 +1,4 @@
-get_R2 <- function(model) {
+get_R2 <- function(model,model_null) {
 
   get_variance_spaMM <- function(spaMM_m, spaMM_m_int_only){
 
@@ -80,7 +80,7 @@ get_R2 <- function(model) {
       mu <- 1
     }
 
-    if (family(spaMM_m)$family == "negbin2") {
+    if (family(spaMM_m)$family == "negbin2") { #experimental
       mu <- exp(as.vector(fixef(spaMM_m_int_only)) + 0.5 * .get_variance_random_spaMM(spaMM_m_int_only))
       sig <- get_inits_from_fit(spaMM_m)$init$NB_shape
     }
@@ -96,15 +96,11 @@ get_R2 <- function(model) {
   }
 
   if (model$family$family != "gaussian") {
-  re <- names(ranef(model))
-  re <- paste0(re,collapse="+")
-  response <- as.character(model$predictor)[[2]]
-  f_null <- as.formula(paste0(response,"~",re))
-  model_null <- update(model,f_null,verbose=F)
-  m_var <- get_variance_spaMM(model,model_null)
-  } else {
-    m_var <- get_variance_spaMM(model)
+    stop("Currently the function only supports gaussian distribution.")
   }
+
+  m_var <- get_variance_spaMM(model)
+
 
   R2m <- m_var$var_fixed/(m_var$var_fixed+m_var$var_random+m_var$var_residual)
   R2c <- (m_var$var_fixed+m_var$var_random)/(m_var$var_fixed+m_var$var_random+m_var$var_residual)

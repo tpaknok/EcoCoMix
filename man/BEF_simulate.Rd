@@ -156,3 +156,4 @@ for (i in 1:sim) {
 
 
 all_result <- as.data.frame(do.call(rbind,result))
+}

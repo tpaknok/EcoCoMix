@@ -63,6 +63,10 @@ get_R2 <- function(model,model_null) {
         }
       }
 
+      if (length(Sigma) > 1) {
+      Sigma<-diag(Sigma)
+      }
+
       Z <- as.matrix(X[, rn, drop = FALSE])
       Z.m <- as.matrix(Z) %*% Sigma
 

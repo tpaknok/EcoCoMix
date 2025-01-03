@@ -8,22 +8,26 @@ Provide marginal and conditional R-squared for outputs from spaMM
 Provide marginal and conditional R-squared for outputs from spaMM
 }
 \usage{
-get_R2(model)
+get_R2(spaMM_m,spaMM_m_int_only = NULL)
 }
 
 \arguments{
-  \item{model}{model output from spaMM
+  \item{spaMM_m}{model output from spaMM
+  }
+  \item{spaMM_m_int_only}{intercept-only model from spaMM. Only needed for negative binomial distribution.
+  }
 }
-}
+
 \details{
-The function is based on \code{performance}{r2}, which does not support spaMM. Note that the model currently only supports gassuian distribution. If the model doesn't contain any compositional autocorrelation, it's probably easier to use other packages (e.g. lme4, glmmTMB), which is better supported by other R packages and the calculation of R-squared is easier.
+The function is based on \code{\link[performance]{R2}} from the performance package, which does not support spaMM. Note that the model currently only supports gassuian and negative binomial (negbin2) distribution. If the model doesn't contain any compositional autocorrelation, it's probably easier to use other packages or functions (e.g. lme4, glmmTMB, lm, glm), which is better supported by other R packages.
 
-Another solution is to calculate the correlation coefficient between observed and predicted responses (prediction can be based on fixed effects only or full model). This is technically not the same as marginal and conditional R-squared, but should be a easy solution.
-
+You can also calculate the correlation coefficient between observed and predicted responses (prediction can be based on fixed effects only or full model, depending on the purposes). This is technically not the same as marginal and conditional R-squared, but should be a easy solution if you have models based on distributions not supported here.
 }
 \value{
-\item{R2m}{Marginal R-squared.}
-\item{R2c}{Conditional R-squared.}
+  \item{R2m}{Marginal R-squared.
+  }
+  \item{R2c}{Conditional R-squared.
+  }
 }
 
 \author{
@@ -44,14 +48,42 @@ data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
 
+### Normal distribution
 m_LAI <- CPR_spaMM(LAI~Real.rich+corrMatrix(1|comp_id),
-          data=KSR_EF,
-          comm=KSR,
-          VCV_sp = vcv(KSR_MLtree),
-          method.spaMM="REML")
+                   data=KSR_EF,
+                   comm=KSR,
+                   VCV_sp = vcv(KSR_MLtree),
+                   method.spaMM = "REML")
 
-m_LAI$best_model
-m_LAI$best_model_satt
-plot(simulateResiduals(m_LAI$optimized_lambda_model,re.form=NULL))
-get_R2(m_LAI$best_model)
+get_R2(m_LAI$best_model) #get R2 for best model
+get_R2(m_LAI$original_VCV_model) #get R2 for model based on the provided phylogenetic covariance matrix between species
+
+### nbinom2
+m_bugs <- CPR_spaMM(bugs~Real.rich+corrMatrix(1|comp_id),
+                   data=KSR_EF,
+                   comm=KSR,
+                   VCV_sp = vcv(KSR_MLtree),
+                   family="negbin2")
+
+# for the full model with lambda = 1
+# obtain phylogenetic correlation matrix at the community level
+phy_comm_M <- get_comm_pair_r(KSR,vcv(KSR_MLtree))$corM
+
+m_bugs_int <- fitme(bugs~1+corrMatrix(1|comp_id),corrMatrix=as_precision(phy_comm_M),data=KSR_EF,family="negbin2")
+
+get_R2(m_bugs$original_VCV_model,m_bugs_int)
+
+# for the full model with optimized lambda (also the best model in this case)
+
+# modify the species level phylogenetic covariance matrix based on the optimized
+optim_VCV_sp <- vcv(KSR_MLtree)*m_LAI$optimized_lambda  lambda
+diag(optim_VCV_sp) <- diag(vcv(KSR_MLtree))
+
+# obtain phylogenetic correlation matrix at the community level
+phy_comm_M <- get_comm_pair_r(KSR,optim_VCV_sp)$corM
+
+m_bugs_int <- fitme(bugs~1+corrMatrix(1|comp_id),corrMatrix=as_precision(phy_comm_M),data=KSR_EF,family="negbin2")
+
+get_R2(m_bugs$best_model,m_bugs_int)
+
 }

@@ -1,4 +1,4 @@
-get_R2 <- function(model,model_null) {
+get_R2 <- function(spaMM_m,spaMM_m_int_only = NULL) {
 
   get_variance_spaMM <- function(spaMM_m, spaMM_m_int_only){
 
@@ -15,7 +15,9 @@ get_R2 <- function(model,model_null) {
 
     var_fixed <- var(as.vector(beta%*%t(as.matrix(X))))
     ###random effect calculation
+
     var_random <- .get_variance_random_spaMM(spaMM_m)
+
     ###var_residual
     var_residual <- .get_variance_residual(spaMM_m,spaMM_m_int_only)
     # ###var_phylo
@@ -85,6 +87,7 @@ get_R2 <- function(model,model_null) {
     }
 
     if (family(spaMM_m)$family == "negbin2") { #experimental
+
       mu <- exp(as.vector(fixef(spaMM_m_int_only)) + 0.5 * .get_variance_random_spaMM(spaMM_m_int_only))
       sig <- get_inits_from_fit(spaMM_m)$init$NB_shape
     }
@@ -99,12 +102,15 @@ get_R2 <- function(model,model_null) {
     )
   }
 
-  if (model$family$family != "gaussian") {
+  if (spaMM_m$family$family != "gaussian" & spaMM_m$family$family != "negbin2") {
     stop("Currently the function only supports gaussian distribution.")
   }
 
-  m_var <- get_variance_spaMM(model)
-
+  if (length(ranef(spaMM_m)) == 0) {
+    stop("No random effect in the model. If you are looking for the R2 for the best model, simply refer to without_comp_model_R2 in the output.
+         You can also consider refitting the model using fitme and pseudoR2 (or other functions like glm/lm) to obtain R2.")
+  }
+  m_var <- get_variance_spaMM(spaMM_m,spaMM_m_int_only)
 
   R2m <- m_var$var_fixed/(m_var$var_fixed+m_var$var_random+m_var$var_residual)
   R2c <- (m_var$var_fixed+m_var$var_random)/(m_var$var_fixed+m_var$var_random+m_var$var_residual)

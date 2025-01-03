@@ -101,6 +101,7 @@ CPR_spaMM <- function(formula,
                                      VCV_sp_lambda0,
                                      comm_kronecker=comm_kronecker,
                                      force.PD=F)$corM
+
   rownames(C.lambda0.spaMM) <- as.character(data$comp_id)
 
   m_lambda0 <- fitme(formula,
@@ -314,6 +315,7 @@ CPR_spaMM <- function(formula,
                  true_model_satt = true_model_satt$result,
                  without_comp_anova = anova(m_without_comp),
                  without_comp_model = m_without_comp,
+                 without_comp_model_R2 = pseudoR2(m_without_comp),
                  intercept_only_model = m_optim_int,
                  star_model = m_lambda0,
                  AIC = c(AIC_without_comp =  AIC_without_comp,

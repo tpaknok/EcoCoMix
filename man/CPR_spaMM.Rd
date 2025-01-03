@@ -109,5 +109,4 @@ m_LAI <- CPR_spaMM(LAI~Real.rich+corrMatrix(1|comp_id),
 m_LAI$best_model
 m_LAI$best_model_satt
 plot(simulateResiduals(m_LAI$optimized_lambda_model,re.form=NULL))
-get_R2(m_LAI$best_model)
 }

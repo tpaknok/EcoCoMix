@@ -33,9 +33,9 @@ data(Orthodont,package="nlme")
 Orthodont$nsex <- as.numeric(Orthodont$Sex=="Male")
 Orthodont$nsexage <- with(Orthodont, nsex*age)
 m <- lmer(distance ~ age + (age||Subject), data=Orthodont)
-m_TMB <- glmmTMB(distance ~ age + (age||Subject)+(age||spp), data=Orthodont,REML=T)
+m_TMB <- glmmTMB(distance ~ age + nsex+ (age+nsex||Subject), data=Orthodont,REML=T)
 
-m_spaMM <- fitme(distance ~ age + (age||Subject), data=Orthodont,method="REML")
+m_spaMM <- fitme(distance ~ age + nsex +(age||Subject), data=Orthodont,method="REML")
 
 performance::r2(m)
 performance::r2(m_TMB)
@@ -58,3 +58,56 @@ summary(m_spaMM3)
 get_variance_spaMM(m_spaMM2,m_spaMM3)
 
 get_variance(m1)
+
+###
+mixed_effects_info <- list(
+  beta = lme4::fixef(model),
+  X = lme4::getME(model, "X"),
+  vc = lme4::VarCorr(model),
+  re = lme4::ranef(model)
+)
+
+.collapse_cond <- function(x) {
+  if (is.list(x) && "cond" %in% names(x)) {
+    x[["cond"]]
+  } else {
+    x
+  }
+}
+
+if (inherits(model, c("glmmTMB", "MixMod"))) {
+  mixed_effects_info <- lapply(mixed_effects_info, .collapse_cond)
+}
+
+.compute_variance_random <- function(model, terms, mixed_effects_info) {
+  if (is.null(terms)) {
+    return(NULL)
+  }
+  .sigma_sum <- function(Sigma) {
+    rn <- rownames(Sigma)
+
+    # fix for models w/o intercept
+    if (!any(startsWith(colnames(mixed_effects_info$X), "(Intercept)"))) {
+      mixed_effects_info$X <- cbind("(Intercept)" = 1, mixed_effects_info$X)
+    }
+
+    if (!is.null(rn)) {
+      valid <- rownames(Sigma) %in% colnames(mixed_effects_info$X)
+      if (!all(valid)) {
+        rn <- rn[valid]
+        Sigma <- Sigma[valid, valid, drop = FALSE]
+      }
+    }
+
+    Z <- mixed_effects_info$X[, rn, drop = FALSE]
+    Z.m <- Z %*% Sigma
+    sum(diag(crossprod(Z.m, Z))) / n_obs(model)
+  }
+
+  # if (inherits(x, "MixMod")) {
+  #   .sigma_sum(mixed_effects_info$vc)
+  # } else {
+  #   sum(sapply(mixed_effects_info$vc[terms], .sigma_sum))
+  # }
+  sum(sapply(mixed_effects_info$vc[terms], .sigma_sum))
+}

@@ -8,21 +8,22 @@ Simulating a BEF relationship with/without phylogenetic signals, followed by eva
 }
 \usage{
 BEF_simulate(comm,
-             CV_sp = NULL,
+             CV_sp=NULL,
              nspp=15,
              nsite=50,
-             min_richness=1, max_richness=4,
+             min_richness=1,
+             max_richness=4,
              spaMM_formula,
              b0=0,
              b1=0,
              signals_X="phy_cor",
-             noise_mean = 0,
-             noise_sd = 1,
-             non_phy_cor_mean = 0,
-             non_phy_cor_sd = 1,
+             noise_mean=0,
+             noise_sd=1,
+             non_phy_cor_mean=0,
+             non_phy_cor_sd=1,
              lambda_true=1,
-             scale_all=F,
-             conv_fail_drop = T,
+             scale_all=FALSE,
+             conv_fail_drop=TRUE,
              ...)
 }
 %- maybe also 'usage' for other objects documented here.

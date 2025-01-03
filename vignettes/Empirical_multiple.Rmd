@@ -83,7 +83,7 @@ family <- list("zeroinflatednbinomial1",
             "gaussian",
             "tweedie",
             "gaussian",
-            "gaussian",
+            "tweedie",
             "gaussian",
             "gaussian") #family for each response
 
@@ -94,13 +94,17 @@ control.family<- list(inla.set.control.family.default("zeroinflatednbinomial1"),
                       inla.set.control.family.default("nbinomial"),
                       inla.set.control.family.default("gaussian"),
                       inla.set.control.family.default("gaussian"),
-                       list(hyper = list(
-                         theta1 = list(initial = 0),
-                         theta2 = list(initial = 0,
+                      list(hyper = list(
+                           theta1 = list(initial = 0),
+                           theta2 = list(initial = 0,
                                        prior = "loggamma",
                                        param = c(0.1,0.1)))),
                       inla.set.control.family.default("gaussian"),
-                      inla.set.control.family.default("gaussian"),
+                      list(hyper = list(
+                           theta1 = list(initial = 0),
+                           theta2 = list(initial = 0,
+                                       prior = "loggamma",
+                                       param = c(0.1,0.1)))),
                       inla.set.control.family.default("gaussian"),
                       inla.set.control.family.default("gaussian")) #hyperparameter priors
 
@@ -155,7 +159,7 @@ Now just some ggplot2 code, and this is how the figure in Tsang et al. (2024) wa
 ```r
 library(ggplot2)
 p <- ggplot(data=all_predictions)+
-  geom_jitter(data=plot_data,aes(y=value,x=Real.rich),width=0)+
+  geom_jitter(data=plot_data,aes(y=value,x=Real.rich),width=0.05)+
   geom_line(aes(y=`0.5quant`,x=Real.rich,colour=model,linetype=Sig))+
   geom_ribbon(aes(y=`0.5quant`,x=Real.rich,fill=model,ymin=`0.025quant`,ymax=`0.975quant`),alpha=0.3,colour="transparent")+
   facet_wrap(~response,scales="free",nrow=5,ncol=2)+

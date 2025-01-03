@@ -8,7 +8,7 @@ Phylogenetic covariance or correlation Matrix at the community level
 The function computes the expected covariances or correations of any community-level properties between communities.
 }
 \usage{
-get_comm_pair_r(comm, VCV_sp, comm_kronecker = NULL, force.PD = F)
+get_comm_pair_r(comm, VCV_sp, comm_kronecker=NULL, force.PD=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,7 +22,7 @@ get_comm_pair_r(comm, VCV_sp, comm_kronecker = NULL, force.PD = F)
   For internal calculation only in \code{\link[CPR]{CPR_spaMM}}.
 }
   \item{force.PD}{
-  Forcing Positive Definite using \code{\link[Matrix]{nearPD}}. Defaulted as FALSE
+  Forcing Positive Definite using \code{\link[Matrix]{nearPD}}. Defaulted as FALSE.
 }
 }
 \details{

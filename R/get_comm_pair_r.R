@@ -1,7 +1,7 @@
 get_comm_pair_r <- function (comm,
                              VCV_sp,
                              comm_kronecker = NULL,
-                             force.PD = F) {
+                             force.PD = FALSE) {
   require(Matrix)
   require(matrixcalc)
 

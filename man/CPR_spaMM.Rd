@@ -12,14 +12,15 @@ CPR_spaMM(formula,
           data,
           VCV_sp,
           comm,
-          optim.lambda = T,
-          original.VCV = T,
-          AIC_threshold = -4,
-          method.spaMM = "REML",
-          true_VCV = NULL,
-          control.optim = NULL,
-          comm_kronecker = NULL,
-          int_model = T,
+          force.PD=FALSE,
+          optim.lambda=TRUE,
+          original.VCV=TRUE,
+          AIC_threshold=-4,
+          method.spaMM="REML",
+          true_VCV=NULL,
+          control.optim=NULL,
+          comm_kronecker=NULL,
+          int_model=TRUE,
           ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -35,6 +36,9 @@ CPR_spaMM(formula,
 }
   \item{comm}{
   a site(row)-species(column) matrix. Pleasure ensure species names are consistent between VCV_sp and comm.
+}
+  \item{force.PD}{
+  Forcing Positive Definite using \code{\link[Matrix]{nearPD}}. Defaulted as FALSE.
 }
   \item{optim.lambda}{
   TRUE/FALSE. Whether lambda should be optimized (through finding value with the lowest cAIC).

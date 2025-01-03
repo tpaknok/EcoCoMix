@@ -13,8 +13,8 @@ BEF_simulate <- function(comm,
                          non_phy_cor_mean = 0,
                          non_phy_cor_sd = 1,
                          lambda_true=1,
-                         scale_all=F,
-                         conv_fail_drop = T,
+                         scale_all=FALSE,
+                         conv_fail_drop = TRUE,
                          ...) {
                          #seed=1000) {
     library(MASS)

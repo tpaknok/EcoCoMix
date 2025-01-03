@@ -2,14 +2,15 @@ CPR_spaMM <- function(formula,
                       data,
                       VCV_sp,
                       comm,
-                      optim.lambda=T,
-                      original.VCV=T,
+                      force.PD = FALSE,
+                      optim.lambda=TRUE,
+                      original.VCV=TRUE,
                       AIC_threshold = -4,
                       method.spaMM = "ML",
                       true_VCV = NULL,
                       control.optim=NULL,
                       comm_kronecker = NULL,
-                      int_model = T,
+                      int_model = TRUE,
                       ...) {
 
   require(nlme)
@@ -45,7 +46,7 @@ CPR_spaMM <- function(formula,
   comm_cov <- get_comm_pair_r(comm,
                               VCV_sp,
                               comm_kronecker=comm_kronecker,
-                              force.PD=F)
+                              force.PD=force.PD)
 
 
   C.lambda.spaMM <- comm_cov$corM
@@ -100,7 +101,7 @@ CPR_spaMM <- function(formula,
   C.lambda0.spaMM <- get_comm_pair_r(comm,
                                      VCV_sp_lambda0,
                                      comm_kronecker=comm_kronecker,
-                                     force.PD=F)$corM
+                                     force.PD=force.PD)$corM
 
   rownames(C.lambda0.spaMM) <- as.character(data$comp_id)
 
@@ -122,7 +123,7 @@ CPR_spaMM <- function(formula,
     C.true <- get_comm_pair_r(comm,
                               true_VCV,
                               comm_kronecker=comm_kronecker,
-                              force.PD=F)$corM
+                              force.PD=force.PD)$corM
     rownames(C.true) <- as.character(data$comp_id)
 
     m_true <- fitme(formula,
@@ -171,7 +172,7 @@ CPR_spaMM <- function(formula,
     C.lambda.optim.spaMM <- get_comm_pair_r(comm,
                                             VCV_sp_optim,
                                             comm_kronecker = comm_kronecker,
-                                            force.PD=F)$corM
+                                            force.PD=force.PD)$corM
     rownames(C.lambda.optim.spaMM) <- as.character(data$comp_id)
 
     m_optim <- fitme(formula,
@@ -244,7 +245,7 @@ CPR_spaMM <- function(formula,
       C.lambda.optim.spaMM.int <- get_comm_pair_r(comm,
                                                   VCV_sp_optim_int,
                                                   comm_kronecker = comm_kronecker,
-                                                  force.PD=F)$corM
+                                                  force.PD=force.PD)$corM
       rownames(C.lambda.optim.spaMM.int) <- as.character(data$comp_id)
 
       m_optim_int <- fitme(f_null,

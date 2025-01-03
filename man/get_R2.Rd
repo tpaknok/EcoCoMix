@@ -8,7 +8,7 @@ Provide marginal and conditional R-squared for outputs from spaMM
 Provide marginal and conditional R-squared for outputs from spaMM
 }
 \usage{
-get_R2(spaMM_m,spaMM_m_int_only = NULL)
+get_R2(spaMM_m,spaMM_m_int_only=NULL)
 }
 
 \arguments{
@@ -52,8 +52,8 @@ data(KSR_EF)
 m_LAI <- CPR_spaMM(LAI~Real.rich+corrMatrix(1|comp_id),
                    data=KSR_EF,
                    comm=KSR,
-                   VCV_sp = vcv(KSR_MLtree),
-                   method.spaMM = "REML")
+                   VCV_sp=vcv(KSR_MLtree),
+                   method.spaMM="REML")
 
 get_R2(m_LAI$best_model) #get R2 for best model
 get_R2(m_LAI$original_VCV_model) #get R2 for model based on the provided phylogenetic covariance matrix between species

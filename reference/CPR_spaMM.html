@@ -48,14 +48,15 @@
 <span>          <span class="va">data</span>,</span>
 <span>          <span class="va">VCV_sp</span>,</span>
 <span>          <span class="va">comm</span>,</span>
-<span>          optim.lambda <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>          original.VCV <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>          AIC_threshold <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,</span>
-<span>          method.spaMM <span class="op">=</span> <span class="st">"REML"</span>,</span>
-<span>          true_VCV <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>          control.optim <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>          comm_kronecker <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>          int_model <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>          force.PD<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>          optim.lambda<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>          original.VCV<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>          AIC_threshold<span class="op">=</span><span class="op">-</span><span class="fl">4</span>,</span>
+<span>          method.spaMM<span class="op">=</span><span class="st">"REML"</span>,</span>
+<span>          true_VCV<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>          control.optim<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>          comm_kronecker<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>          int_model<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>          <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -73,6 +74,9 @@
 
   <dt id="arg-comm">comm<a class="anchor" aria-label="anchor" href="#arg-comm"></a></dt>
 <dd><p>a site(row)-species(column) matrix. Pleasure ensure species names are consistent between VCV_sp and comm.</p></dd>
+
+  <dt id="arg-force-pd">force.PD<a class="anchor" aria-label="anchor" href="#arg-force-pd"></a></dt>
+<dd><p>Forcing Positive Definite using <code><a href="https://rdrr.io/pkg/Matrix/man/nearPD.html" class="external-link">nearPD</a></code>. Defaulted as FALSE.</p></dd>
 
   <dt id="arg-optim-lambda">optim.lambda<a class="anchor" aria-label="anchor" href="#arg-optim-lambda"></a></dt>
 <dd><p>TRUE/FALSE. Whether lambda should be optimized (through finding value with the lowest cAIC).</p></dd>

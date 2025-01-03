@@ -158,8 +158,8 @@ BEF_simulate <- function(comm,
                 r_x1x2 = cor(x1,x2),
                 b1 = b1,
                 count=count,
-                optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]],NA),
-                optim_r2c = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[2]],NA),
+                optim_r2m = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[1]]),
+                optim_r2c = ifelse(!is.na(m_optim_sig),get_R2(models$optimized_lambda_model)[[2]]),
                 NumDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$NumDF,NA),
                 DenDF = ifelse(!is.na(m_optim_sig),models$optimized_lambda_model_satt$DenDF,NA)
                 )

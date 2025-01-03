@@ -107,8 +107,7 @@ get_R2 <- function(spaMM_m,spaMM_m_int_only = NULL) {
   }
 
   if (length(ranef(spaMM_m)) == 0) {
-    stop("No random effect in the model. If you are looking for the R2 for the best model, simply refer to without_comp_model_R2 in the output.
-         You can also consider refitting the model using fitme and pseudoR2 (or other functions like glm/lm) to obtain R2.")
+    stop("No random effect in the model. Consider refitting the model using fitme and pseudoR2 (or other functions like glm/lm) to obtain R2.")
   }
   m_var <- get_variance_spaMM(spaMM_m,spaMM_m_int_only)
 

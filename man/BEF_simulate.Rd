@@ -146,13 +146,13 @@ for (i in 1:sim) {
                                            noise_mean = 0,
                                            noise_sd = 0.01, #very low noise
                                            lambda_true= lambda_true[[i]],
-                                           conv_fail_drop = T,
-                                           scale_all=F,
+                                           conv_fail_drop = TRUE,
+                                           scale_all=FALSE,
                                            control.optim=list(factr=1e12),
-                                           optim.lambda=T,
+                                           optim.lambda=TRUE,
                                            init=list(), #specification for spaMM - calculations will be faster
-                                           int_model=F)
-                              error = function(e) e)
+                                           int_model=FALSE),
+                              error = function(e) e) #catch error return
   }
 
 

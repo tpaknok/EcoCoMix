@@ -86,4 +86,15 @@ m_bugs_int <- fitme(bugs~1+corrMatrix(1|comp_id),corrMatrix=as_precision(phy_com
 
 get_R2(m_bugs$best_model,m_bugs_int)
 
+### best model without random effect
+m_litter <- CPR_spaMM(litter2012~Real.rich+corrMatrix(1|comp_id),
+                   data=KSR_EF,
+                   comm=KSR,
+                   VCV_sp = vcv(KSR_MLtree))
+
+m_litter_best <- fitme(litter2012~Real.rich,data=KSR_EF) #fitme approach
+pseudoR2(m_litter_best)
+
+m_litter_best2 <- lm(litter2012~Real.rich,data=KSR_EF)
+summary(m_litter_best2) #same result
 }

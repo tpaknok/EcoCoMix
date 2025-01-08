@@ -6,8 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-CPR addresses phylogenetic non-independence between species in community
-analyses.
+EcoCoMix addresses phylogenetic non-independence between species in
+community analyses.
 
 ## Installation
 
@@ -16,18 +16,17 @@ You can install the development version of CPR from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("tpaknok/CPR")
+devtools::install_github("tpaknok/EcoCoMix")
 ```
 
 ## Main function
 
-The main function of this package is CPR, which conducts Bayesian
-phylogenetic GLMM using INLA. Briefly, the function automatically
-constructs the phylogenetic covariance matrix between communities based
-on their composition and the evolutionary history of the species. Read
-this
-[vignette](https://tpaknok.github.io/CPR/articles/Empirical_single.html)
-for a start.
+The main function of this package is EcoCoMix, which address
+compoisitional autocorrelation in regression. Briefly, the function
+automatically constructs the compositional (after considering
+phylogenetic covariance between species if provided) matrix between
+communities based on their composition and the evolutionary history of
+the species.
 
 ## Background
 

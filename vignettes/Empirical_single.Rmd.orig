@@ -34,7 +34,6 @@ Let's get the variane covariance matrix at species and community level.
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
-VCV_comm[1:5,1:5]
 ```
 
 The KSR_EF data have multiple ecosystem function.

@@ -1,5 +1,5 @@
-\name{CPR_spaMM}
-\alias{CPR_spaMM}
+\name{EcoCoMix}
+\alias{EcoCoMix}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Modeling community-level data controlling compositional autocorrelation.
@@ -8,7 +8,7 @@ Modeling community-level data controlling compositional autocorrelation.
 The function uses fitme (package spaMM) to model compositional autocorrelation when analyzing community-level data. Phylogenetic relationship between species can be provided or optimized (assuming a Brownian motion in the latter case)
 }
 \usage{
-CPR_spaMM(formula,
+EcoCoMix(formula,
           data,
           VCV_sp,
           comm,
@@ -96,7 +96,7 @@ Toby P.N. Tsang
 \examples{
 library(phytools)
 library(tidyverse)
-library(CPR)
+library(EcoCoMix)
 library(ape)
 library(DHARMa)
 
@@ -104,7 +104,7 @@ data(KSR)
 data(KSR_MLtree)
 data(KSR_EF)
 
-m_LAI <- CPR_spaMM(LAI~Real.rich+corrMatrix(1|comp_id),
+m_LAI <- EcoCoMix(LAI~Real.rich+corrMatrix(1|comp_id),
           data=KSR_EF,
           comm=KSR,
           VCV_sp = vcv(KSR_MLtree),

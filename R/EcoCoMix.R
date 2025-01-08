@@ -1,4 +1,4 @@
-CPR_spaMM <- function(formula,
+EcoCoMix <- function(formula,
                       data,
                       VCV_sp,
                       comm,
@@ -287,12 +287,6 @@ CPR_spaMM <- function(formula,
 
     }
   }
-
-  ##########drop 1
-   # best_model_satt <- drop1(best_m)
-  # optim_model_satt <- drop1(m_optim)
-  # original_VCV_model_satt <- drop1(m_original_VCV)
-  # true_model_satt <- drop1(m_true)
 
   if (optim.lambda) {
     conv_best_m <- best_model_satt$conv

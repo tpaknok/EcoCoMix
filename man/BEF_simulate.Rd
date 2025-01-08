@@ -45,7 +45,7 @@ BEF_simulate(comm,
   \item{lambda_true}{Phylogenetic signals in how species contribution to ecosyste functions. This can lead to phylogeny influencing compositional autocorrelation between communities. The default is 1.}
   \item{scale_all}{Standardizing all variables after centering, The default is FALSE.}
   \item{conv_fail_drop}{Drop results when spaMM failed to converge. The default is TRUE.}
-  \item{...}{Othert arguments that will be passed to CPR_spaMM.}
+  \item{...}{Othert arguments that will be passed to EcoCoMix.}
 }
 \details{
 The simulated relationship is \deqn{Y = X_{0}+b_{1}X_{1}+X_{2}+X_{3}}
@@ -110,13 +110,13 @@ Other results:
 Toby P.N. Tsang
 }
 \seealso{
-\code{\link[CPR]{CPR_spaMM}}
+\code{\link[EcoCoMix]{EcoCoMix}}
 }
 \examples{
 
 library(phytools)
 library(tidyverse)
-library(CPR)
+library(EcoCoMix)
 library(ape)
 
 nspp <- 14

@@ -40,7 +40,7 @@ Toby P.N. Tsang
 \examples{
 library(phytools)
 library(tidyverse)
-library(CPR)
+library(EcoCoMix)
 library(ape)
 library(DHARMa)
 
@@ -49,7 +49,7 @@ data(KSR_MLtree)
 data(KSR_EF)
 
 ### Normal distribution
-m_LAI <- CPR_spaMM(LAI~Real.rich+corrMatrix(1|comp_id),
+m_LAI <- EcoCoMix(LAI~Real.rich+corrMatrix(1|comp_id),
                    data=KSR_EF,
                    comm=KSR,
                    VCV_sp=vcv(KSR_MLtree),
@@ -59,7 +59,7 @@ get_R2(m_LAI$best_model) #get R2 for best model
 get_R2(m_LAI$original_VCV_model) #get R2 for model based on the provided phylogenetic covariance matrix between species
 
 ### nbinom2
-m_bugs <- CPR_spaMM(bugs~Real.rich+corrMatrix(1|comp_id),
+m_bugs <- EcoCoMix(bugs~Real.rich+corrMatrix(1|comp_id),
                    data=KSR_EF,
                    comm=KSR,
                    VCV_sp = vcv(KSR_MLtree),
@@ -87,7 +87,7 @@ m_bugs_int <- fitme(bugs~1+corrMatrix(1|comp_id),corrMatrix=as_precision(phy_com
 get_R2(m_bugs$best_model,m_bugs_int)
 
 ### best model without random effect
-m_litter <- CPR_spaMM(litter2012~Real.rich+corrMatrix(1|comp_id),
+m_litter <- EcoCoMix(litter2012~Real.rich+corrMatrix(1|comp_id),
                    data=KSR_EF,
                    comm=KSR,
                    VCV_sp = vcv(KSR_MLtree))

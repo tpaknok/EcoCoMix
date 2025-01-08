@@ -1,14 +1,14 @@
-Package: CPR
+Package: EcoCoMix
 Type: Package
-Title: Community Phylogenetic Regression
+Title: Compositional Mixed model for Ecological data
 Version: 0.1.0
 Author: Toby Pak Nok Tsang
 Maintainer: Toby Pak Nok Tsang <tpaknok@gmail.com>
-Description: Incorporating phylogenetic information at community level analyses
+Description: Addressing compositional autocorrelation for community data
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/tpaknok/CPR, https://tpaknok.github.io/CPR/
+URL: https://github.com/tpaknok/EcoCoMix, https://tpaknok.github.io/EcoCoMix/
 BugReports: https://github.com/tpaknok/CPR/issues
 Depends: Matrix (>= 1.6-5)
 Imports:
@@ -21,14 +21,13 @@ Imports:
     effects,
     VGAM,
     mgcv,
-    DHARMa
+    DHARMa,
+    spaMM
 Suggests: 
     knitr,
     rmarkdown,
     ggplot2,
-    ggeffects,
-    INLA
+    ggeffects
 VignetteBuilder: knitr
 Remotes:
-  hrue/r-inla/rinla@stable
 Config/Needs/website: tidyverse/tidytemplate

@@ -19,7 +19,7 @@ get_comm_pair_r(comm, VCV_sp, comm_kronecker=NULL, force.PD=FALSE)
   A phylogenetic covariance (not correlation!) matrix based on any evolutionary models.
 }
   \item{comm_kronecker}{
-  For internal calculation only in \code{\link[CPR]{CPR_spaMM}}.
+  For internal calculation only in \code{\link[EcoCoMix]{EcoCoMix}}.
 }
   \item{force.PD}{
   Forcing Positive Definite using \code{\link[Matrix]{nearPD}}. Defaulted as FALSE.
@@ -53,7 +53,7 @@ Toby P.N. Tsang
 \examples{
 library(phytools)
 library(tidyverse)
-library(CPR)
+library(EcoCoMix)
 library(ape)
 library(DHARMa)
 

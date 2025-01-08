@@ -92,7 +92,7 @@ BEF_simulate <- function(comm,
 
     spaMM_formula <- as.formula(spaMM_formula)
 
-    models <- CPR_spaMM(spaMM_formula,
+    models <- EcoCoMix(spaMM_formula,
                         data=sim_data$data,
                         VCV_sp = sim_data$sim_phy,
                         true_VCV = sim_data$true_phy,

@@ -19,7 +19,7 @@ BEF_simulate <- function(comm,
                          #seed=1000) {
     library(MASS)
     library(vegan)
-    library(CPR)
+    library(EcoCoMix)
     library(ape)
     library(phytools)
 

@@ -1,12 +1,8 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles:
-  Advanced_uses: Advanced_uses.html
-  Empirical_multiple: Empirical_multiple.html
-  Empirical_single: Empirical_single.html
-  Simulation: Simulation.html
-last_built: 2025-01-08T15:48Z
+articles: {}
+last_built: 2025-01-08T16:30Z
 urls:
   reference: https://tpaknok.github.io/CPR/reference
   article: https://tpaknok.github.io/CPR/articles

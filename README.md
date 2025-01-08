@@ -11,7 +11,7 @@ community analyses.
 
 ## Installation
 
-You can install the development version of CPR from
+You can install the development version of EcoCoMix from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -38,7 +38,7 @@ comparative analyses (e.g., correlating different traits), the shared
 evolutionary history between species has to be controlled using
 Generalized Least Square Regression or Generalized Linear Mixed Model.
 
-The functions in CPR help users to control phylogenetic non-independence
-between communities without intensive coding. Users only need 1) species
-composition in each community and 2) a phylogenetic tree including all
-species in the community data.
+The functions in EcoCoMix help users to control phylogenetic
+non-independence between communities without intensive coding. Users
+only need 1) species composition in each community and 2) a phylogenetic
+tree including all species in the community data.

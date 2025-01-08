@@ -20,7 +20,7 @@ EcoCoMix addresses phylogenetic non-independence between species in community an
 
 ## Installation
 
-You can install the development version of CPR from [GitHub](https://github.com/) with:
+You can install the development version of EcoCoMix from [GitHub](https://github.com/) with:
 
 ```{r, eval=F}
 # install.packages("devtools")
@@ -33,4 +33,4 @@ The main function of this package is EcoCoMix, which address compoisitional auto
 ## Background
 In many ecological analyses, we obtained different metrics at community levels and analyzed them using LM/GLM. Nevertheless, this assumes statistical independence between all communities. Species however is not independent, given their shared evolutionary history. Indeed, in many comparative analyses (e.g., correlating different traits), the shared evolutionary history between species has to be controlled using Generalized Least Square Regression or Generalized Linear Mixed Model. 
 
-The functions in CPR help users to control phylogenetic non-independence between communities without intensive coding. Users only need 1) species composition in each community and 2) a phylogenetic tree including all species in the community data.
+The functions in EcoCoMix help users to control phylogenetic non-independence between communities without intensive coding. Users only need 1) species composition in each community and 2) a phylogenetic tree including all species in the community data.

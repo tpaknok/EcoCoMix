@@ -1,0 +1,113 @@
+---
+title: "Empirical Analyses with EcoCoMix - Single Function"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Empirical Analyses with EcoCoMix}
+  %\VignettePackage{EcoCoMix}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Setup
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = FALSE,
+  out.width="100%"
+)
+```
+
+This is an R Markdown document describing how to use EcoCoMix to conduct BEF regression, or any community-level analyses. You will need to install and load multiple packages and data.
+```{r setup, message=F, warning=F}
+library(phytools)
+library(tidyverse)
+library(EcoCoMix)
+data("KSR")
+data("KSR_MLtree")
+data("KSR_EF")
+```
+
+Let's get the variane covariance matrix at species and community level.
+```{r,message=F, warning=F}
+VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
+VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
+VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
+head(VCV_comm)
+```
+
+The KSR_EF data have multiple ecosystem function.
+
+```{r}
+head(KSR_EF)
+```
+
+## Data Description
+
+
+| Variable         | Description                                                      |
+|-----------------|------------------------------------------------------|
+| Plot             | Plot identity                                                    |
+| Real.rich        | Number of species planted                                        |
+| litter2012       | Amount of litter measured in 2012                                |
+| ave.biomass      | Average biomass across 2012-2014                                 |
+| LAI              | Leaf area index, a simplified dimension of structural complexity |
+| mean.N.change    | delta 15N change averaged across surface and deep soil           |
+| poll_total       | Total number of pollinators                                      |
+| flwr_total       | Total number of flowers                                          |
+| Mass.loss.2month  | Decomposition after 2 months                                     |
+| Damage_effect    | Damage reduction effect                                          |
+| bugs             | Total number of arthropods                                       |
+| bug.rich         | Species richness of arthropods                                   |
+
+## Empirical Analyses - Single Function
+
+We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions.
+
+Let's say we are only interested in LAI. For compositional random effect, please designate the random effect as corrMatrix(1|comp_id) in EcoCoMix (even though you might not have the column comp_id in the data frame.). The function will automatically generate a column comp_id in the internal calculation (i.e., every community will have an unique identifier).
+
+```{r BEF example,message=F, warning=F}
+m_LAI <- EcoCoMix(LAI~Real.rich+corrMatrix(1|comp_id),
+                                     data=KSR_EF,
+                                     comm=KSR,
+                                     VCV_sp = vcv(KSR_MLtree),
+                                     method.spaMM="REML",
+                                     init=list())
+
+summary(m_LAI$best_model)
+m_LAI$best_model_satt #Satterthwaite's method is better for p-values.
+```
+## Residual Checking
+Let's do some model diagnostics to make sure our model makes sense. The package DHARMa supports output from spaMM, so we will use it for model diagnostics.
+
+```{r Diagnostic, dpi=600, fig.cap = "Outputs from DHARMa for the negative binomial model"}
+library(DHARMa)
+
+sres <- simulateResiduals(m_LAI$best_model)
+plot(sres)
+
+```
+
+## Making figures
+Let's say we want to visualize the predicted relationships between LAI and species richness. In spaMM, you can use the predict function to obtain model predictions with/without random effects. In our case, we just need to generate a new dataset that include the species richness gradient, and provide it to the predict function.
+
+
+```{r LAI,dpi = 300,fig.cap = "Predicted effects of species richness on LAI"}
+library(ggplot2)
+
+newdata <- data.frame(Real.rich=unique(KSR_EF$Real.rich)) #create a new data frame for the predictions
+
+predict_df <- predict(m_LAI$best_model,newdata=newdata,re.form=NA,variances=list(fixefVar=TRUE),intervals="fixefVar",binding="Response") #prediction based on fixed effect only
+
+predict_df <- cbind(predict_df,attr(predict_df,"intervals")) #restructuring the data such that the mean predictions and their 2.5 and 97.5% CI are in the same data frame.
+
+p <- ggplot()+
+  geom_point(data=KSR_EF,aes(x=Real.rich,y=LAI))+
+  geom_line(data=predict_df,aes(x=Real.rich,y=Response))+
+  geom_ribbon(data=predict_df,aes(x=Real.rich,y=Response,ymin=fixefVar_0.025,ymax=fixefVar_0.975),alpha=0.3)+
+  labs(x="Species richness",y = "LAI")+
+  theme_classic()
+
+plot(p)
+```

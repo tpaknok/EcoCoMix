@@ -34,7 +34,7 @@ Let's get the variane covariance matrix at species and community level.
 VCV_sp <- vcv(KSR_MLtree) #species level phyologenetic covariance matrix using default (Brownian) model
 VCV_sp <- VCV_sp[order(rownames(VCV_sp)),order(colnames(VCV_sp))]
 VCV_comm <- get_comm_pair_r(KSR,VCV_sp)
-head(VCV_comm)
+VCV_comm[1:5,1:5]
 ```
 
 The KSR_EF data have multiple ecosystem function.
@@ -77,6 +77,7 @@ m_LAI <- EcoCoMix(LAI~Real.rich+corrMatrix(1|comp_id),
 
 summary(m_LAI$best_model)
 m_LAI$best_model_satt #Satterthwaite's method is better for p-values.
+get_R2(m_LAI$best_model) #get R2 too
 ```
 ## Residual Checking
 Let's do some model diagnostics to make sure our model makes sense. The package DHARMa supports output from spaMM, so we will use it for model diagnostics.

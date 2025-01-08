@@ -1,13 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# EcoCoMix <img src="man/figures/logo.png" align="right" height="150" />
+# EcoCoMix
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-EcoCoMix addresses phylogenetic non-independence between species in
-community analyses.
+EcoCoMix addresses compositional autocorrelation in community analyses.
 
 ## Installation
 

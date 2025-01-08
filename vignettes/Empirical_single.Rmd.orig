@@ -63,7 +63,7 @@ head(KSR_EF)
 
 ## Empirical Analyses - Single Function
 
-We repeated the analyses in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions.
+Here we reanalyze the data in [Cadotte et al. (2017)](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2045?casa_token=dROW6fWW92EAAAAA%3AuXcUC3seoCFkzpoV1Zb6_PSzxjkN7_8H1jhBYjjzTiF0-g3tPsfV1lFQVN4k1QiNRTLwqWbl4PW_nQ), involving ten ecosystem functions.
 
 Let's say we are only interested in LAI. For compositional random effect, please designate the random effect as corrMatrix(1|comp_id) in EcoCoMix (even though you might not have the column comp_id in the data frame.). The function will automatically generate a column comp_id in the internal calculation (i.e., every community will have an unique identifier).
 

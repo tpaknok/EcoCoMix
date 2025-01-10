@@ -135,6 +135,8 @@ EcoCoMix <- function(formula,
     true_model_satt <- .drop1_spamm(m_true,C.true)
   }
 
+  m_optim_int <- NULL
+
   if (optim.lambda == T) {
     grid_result <- gridSearch(fun=likelihood.lambda.spaMM,
                               levels=list(lambda=c(0.2,0.4,0.6,0.8)),
@@ -209,7 +211,6 @@ EcoCoMix <- function(formula,
       best_model_satt <- list(result=anova(m_without_comp))
     }
 
-    m_optim_int <- NULL
     if (int_model & optim.lambda) {
       grid_result_int <- gridSearch(fun=likelihood.lambda.spaMM,
                                     levels=list(lambda=c(0.2,0.4,0.6,0.8)),

@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# EcoCoMix <img src="man/figures/Logo_hex.png" align="right" height="150" />
+# EcoCoMix <img src="man/figures/Logo_hex.png" align="right" height="200" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-EcoCoMix addresses compositional autocorrelation in community analyses.
-The logo is created using
-[DeepAI](https://deepai.org/machine-learning-model/text2img).
+EcoCoMix (**Co**mpositional **Mix**ed Model in **Eco**logy) addresses
+compositional autocorrelation in community analyses. The logo is created
+using [DeepAI](https://deepai.org/machine-learning-model/text2img).
 
 ## Installation
 

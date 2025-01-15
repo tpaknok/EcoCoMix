@@ -107,13 +107,18 @@ get_R2 <- function(spaMM_m,spaMM_m_int_only = NULL) {
   }
 
   if (length(ranef(spaMM_m)) == 0) {
-    stop("No random effect in the model. Consider refitting the model using fitme and pseudoR2 (or other functions like glm/lm) to obtain R2.")
-  }
+    obs_R2 <- 1-sum((spaMM_m$y-predict(spaMM_m))^2)/sum((spaMM_m$y-mean(spaMM_m$y))^2)
+    p <- ncol(get_matrix(spaMM_m)[,colnames(get_matrix(spaMM_m)) != "(Intercept)",drop=F])
+    N <- length(spaMM_m$y)
+    adj_R2 <- 1-(1-obs_R2)*(N-1)/(N-p-1)
+    output <- c(`R-squared` = obs_R2, `Adjusted R-squared` = adj_R2)
+
+  } else {
   m_var <- get_variance_spaMM(spaMM_m,spaMM_m_int_only)
 
   R2m <- m_var$var_fixed/(m_var$var_fixed+m_var$var_random+m_var$var_residual)
   R2c <- (m_var$var_fixed+m_var$var_random)/(m_var$var_fixed+m_var$var_random+m_var$var_residual)
-
   output <- c(R2m=R2m,R2c=R2c)
-  return(output)
+  }
+    return(output)
 }

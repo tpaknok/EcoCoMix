@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# EcoCoMix <img src="man/figures/logo.png" align="right" height="210" />
+# EcoCoMix <img src="man/figures/logo.png" align="right" height="212" />
 <!-- badges: start -->
 <!-- badges: end -->
 

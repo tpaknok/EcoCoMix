@@ -102,7 +102,7 @@ get_R2 <- function(spaMM_m,spaMM_m_int_only = NULL) {
     )
   }
 
-  if (spaMM_m$family$family != "gaussian" & spaMM_m$family$family != "negbin2") {
+  if (spaMM_m$family$family != "gaussian") {
     stop("Currently the function only supports gaussian distribution.")
   }
 

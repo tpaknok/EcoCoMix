@@ -19,9 +19,9 @@ get_R2(spaMM_m,spaMM_m_int_only=NULL)
 }
 
 \details{
-The function is based on \code{\link[performance]{R2}} from the performance package, which does not support spaMM. Note that the model currently only supports gassuian and negative binomial (negbin2) distribution. If the model doesn't contain any compositional autocorrelation, it's probably easier to use other packages or functions (e.g. lme4, glmmTMB, lm, glm), which is better supported by other R packages.
+The function is based on \code{\link[performance]{R2}} from the performance package, which does not support spaMM. Note that the model currently only supports gassuian and negative binomial (negbin2) distribution. If the model doesn't contain any compositional autocorrelation, it's probably easier to use other packages or functions (e.g. lme4, glmmTMB, lm, glm), which are better supported by other R packages.
 
-You can also calculate the correlation coefficient between observed and predicted responses (prediction can be based on fixed effects only or full model, depending on the purposes). This is technically not the same as marginal and conditional R-squared, but should be a easy solution if you have models based on distributions not supported here.
+You can also calculate the correlation coefficient between observed and predicted responses (prediction can be based on fixed effects only or full model, depending on the purposes) and then square it. This is technically not the same as marginal and conditional R-squared, but should be a easy solution if you have models based on non-gaussian distribution.
 }
 \value{
   \item{R2m}{Marginal R-squared.

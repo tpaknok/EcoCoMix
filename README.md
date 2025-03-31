@@ -9,7 +9,7 @@
 EcoCoMix (**Co**mpositional **Mix**ed Model in **Eco**logy) addresses
 compositional autocorrelation in community analyses.
 
-The logo is created using
+The logo was created using
 [DeepAI](https://deepai.org/machine-learning-model/text2img).
 
 ## Installation

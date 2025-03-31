@@ -8,7 +8,6 @@ likelihood.lambda.spaMM<-function(lambda,
                                   method.spaMM = "REML",
                                   ...){
 
-  message(lambda)
   formula <- as.formula(formula)
   VCV_sp_lambda <- VCV_sp*lambda
   diag(VCV_sp_lambda) <- diag(VCV_sp)

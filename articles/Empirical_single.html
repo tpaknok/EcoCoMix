@@ -94,20 +94,13 @@ level.</p>
 <p>The KSR_EF data have multiple ecosystem function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect</span></span>
-<span><span class="co">#&gt; 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000</span></span>
-<span><span class="co">#&gt; 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195</span></span>
-<span><span class="co">#&gt; 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279</span></span>
-<span><span class="co">#&gt; 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000</span></span>
-<span><span class="co">#&gt; 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093</span></span>
-<span><span class="co">#&gt; 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000</span></span>
-<span><span class="co">#&gt;   bugs bug.rich</span></span>
-<span><span class="co">#&gt; 1    9        7</span></span>
-<span><span class="co">#&gt; 2    7        6</span></span>
-<span><span class="co">#&gt; 3    4        2</span></span>
-<span><span class="co">#&gt; 4    5        3</span></span>
-<span><span class="co">#&gt; 5    4        4</span></span>
-<span><span class="co">#&gt; 6   11        7</span></span></code></pre></div>
+<span><span class="co">#&gt;   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect bugs bug.rich</span></span>
+<span><span class="co">#&gt; 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000    9        7</span></span>
+<span><span class="co">#&gt; 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195    7        6</span></span>
+<span><span class="co">#&gt; 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279    4        2</span></span>
+<span><span class="co">#&gt; 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000    5        3</span></span>
+<span><span class="co">#&gt; 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093    4        4</span></span>
+<span><span class="co">#&gt; 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000   11        7</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-description">Data Description<a class="anchor" aria-label="anchor" href="#data-description"></a>
@@ -226,6 +219,11 @@ identifier).</p>
 <span><span class="fu"><a href="../reference/get_R2.html">get_R2</a></span><span class="op">(</span><span class="va">m_LAI</span><span class="op">$</span><span class="va">best_model</span><span class="op">)</span> <span class="co">#get R2 too</span></span>
 <span><span class="co">#&gt;        R2m        R2c </span></span>
 <span><span class="co">#&gt; 0.07936676 0.78118520</span></span></code></pre></div>
+<p>Note that EcoCoMix also returns outputs of other models (not just the
+best model). For example, if you are interested in the model based on
+the provided correlation matrix</p>
+<p><code>{r mixed model lambda 1, message=F, warning=F m_LAI$original_VCV_model m_LAI$original_VCV_m_satt get_R2(m_LAI$original_VCV_model) }</code>
+Details about all results provided by EcoCoMix are provided <a href="https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="residual-checking">Residual Checking<a class="anchor" aria-label="anchor" href="#residual-checking"></a>

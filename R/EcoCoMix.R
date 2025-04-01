@@ -18,7 +18,6 @@ EcoCoMix <- function(formula,
   require(spaMM)
   require(admisc)
 
-  time1<-Sys.time()
   data$comp_id <- 1:nrow(data)
 
   formula_text <- Reduce(paste,deparse(formula))
@@ -29,7 +28,7 @@ EcoCoMix <- function(formula,
   formula <- as.formula(formula)
   no_phylo_formula <- as.formula(no_phylo_formula)
 
-
+  #a lm model
   m_without_comp <- fitme(no_phylo_formula,
                           data=data,
                           method=method.spaMM,
@@ -38,6 +37,7 @@ EcoCoMix <- function(formula,
 
   AIC_without_comp <- AIC(m_without_comp,verbose=F)[[2]]
 
+  #a spaMM model with the provided VCV
   lambda_spaMM <- NA
   AIC_optim <- AIC_true <- AIC_optim_int <- AIC_int_only <- NA
   optimized_model_result <- NA
@@ -60,7 +60,7 @@ EcoCoMix <- function(formula,
                           method=method.spaMM,
                           ...)
 
-
+  # An internal function to conduct the "anova" function in spaMM
   .drop1_spamm <- function(model,C) {
     conv <- 0
 
@@ -93,8 +93,9 @@ EcoCoMix <- function(formula,
   }
 
   original_VCV_model_satt <- .drop1_spamm(m_original_VCV,C.lambda.spaMM)
-
   AIC_original_VCV <- AIC(m_original_VCV,verbose=F)[[2]]
+
+  # spaMM model When lambda = 0 (star phylogeny)
   VCV_sp_lambda0 <- VCV_sp*0
   diag(VCV_sp_lambda0) <- diag(VCV_sp)
 
@@ -118,6 +119,7 @@ EcoCoMix <- function(formula,
   response <- as.character(m_lambda0$predictor)[[2]]
   f_null <- as.formula(paste0(response,"~1+",re))
 
+  # if true VCV is provided (usually for simulation purposes)
   C.true <- true_model_satt <- m_true<- NULL
   if (!is.null(true_VCV)) {
     C.true <- get_comm_pair_r(comm,
@@ -135,6 +137,7 @@ EcoCoMix <- function(formula,
     true_model_satt <- .drop1_spamm(m_true,C.true)
   }
 
+  # spaMM model for lambda optimization (for both the intercept-only model and the full model)
   m_optim_int <- NULL
 
   if (optim.lambda == T) {
@@ -152,7 +155,6 @@ EcoCoMix <- function(formula,
                               ...)
 
     ML.opt<-optim(grid_result$minlevels,
-                  #runif(1),
                   likelihood.lambda.spaMM,
                   formula=formula,
                   data=data,
@@ -185,6 +187,7 @@ EcoCoMix <- function(formula,
 
     AIC_optim <- AIC(m_optim,verbose=F)[[2]]
 
+    #compare cAIC
     if (AIC_star < AIC_optim & AIC_star < AIC_original_VCV) {
       m_optim <- m_lambda0
       lambda_spaMM <- 0
@@ -226,7 +229,6 @@ EcoCoMix <- function(formula,
                                     ...)
 
       ML.opt_int<-optim(grid_result_int$minlevels,
-                        #runif(1),
                         likelihood.lambda.spaMM,
                         formula=f_null,
                         data=data,
@@ -271,6 +273,7 @@ EcoCoMix <- function(formula,
                      data=data,
                      ...)
 
+      #compare cAIC
       AIC_int <- c(AIC(m_optim_int,verbose=F)[[2]], AIC(m_optim_int_star,verbose=F)[[2]],AIC(m_optim_int_BM,verbose=F)[[2]])
       AIC_int_pos <- which.min(AIC_int)
       AIC_optim_int <- AIC_int[AIC_int_pos]
@@ -287,8 +290,9 @@ EcoCoMix <- function(formula,
       AIC_int_only <- AIC(m_int,verbose=F)[[2]]
 
     }
-  }
+  } # the end of the optimization
 
+  # Prepare the results
   if (optim.lambda) {
     conv_best_m <- best_model_satt$conv
     conv_optim_m <- optim_model_satt$conv

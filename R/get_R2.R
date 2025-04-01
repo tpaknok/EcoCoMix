@@ -86,7 +86,7 @@ get_R2 <- function(spaMM_m,spaMM_m_int_only = NULL) {
       mu <- 1
     }
 
-    if (family(spaMM_m)$family == "negbin2") { #experimental
+    if (family(spaMM_m)$family == "negbin2") { #experimental. Not using it now
 
       mu <- exp(as.vector(fixef(spaMM_m_int_only)) + 0.5 * .get_variance_random_spaMM(spaMM_m_int_only))
       sig <- get_inits_from_fit(spaMM_m)$init$NB_shape

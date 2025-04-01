@@ -6,7 +6,7 @@ likelihood.lambda.spaMM<-function(lambda,
                                   comm,
                                   init=list(lambda=NA),
                                   method.spaMM = "REML",
-                                  ...){
+                                  ...){ # a function to optimize lambda
 
   formula <- as.formula(formula)
   VCV_sp_lambda <- VCV_sp*lambda

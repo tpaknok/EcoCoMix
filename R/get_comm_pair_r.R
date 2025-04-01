@@ -21,36 +21,9 @@ get_comm_pair_r <- function (comm,
   row_op <- cbind(expand.grid(1:nrow(comm),1:nrow(comm)))
   row_op$cov <- as.matrix(product) %*% c(VCV_sp) #covariance
   covM <- matrix(row_op$cov,nrow(comm),nrow(comm))
-  corM <- cov2cor(covM)
-  time2 <- Sys.time()
-  time2-time1
-  #comm_var <- product[row_op$Var1==row_op$Var2,]
-  #comm_var <- as.matrix(comm_var) %*% c(VCV_sp)
-  #rownames(comm_var) <- 1:nrow(comm_var)
-  #row_op$numerator1 <- comm_var[match(row_op$Var1,rownames(comm_var))]
-  #row_op$numerator2 <- comm_var[match(row_op$Var2,rownames(comm_var))]
+  corM <- cov2cor(covM) #correlation matrix
 
-  #row_op$cor <- row_op$cov/sqrt(row_op$numerator1*row_op$numerator2)
-  #corM <- matrix(row_op$cor,nrow(comm),nrow(comm))
-
-  ### Calculate species turnover component
-  # VCV_sp0 <- VCV_sp*0
-  # diag(VCV_sp0) <- diag(VCV_sp)
-  #
-  # row_op0 <- cbind(expand.grid(1:nrow(comm),1:nrow(comm)))
-  # row_op0$cov <- as.matrix(product) %*% c(VCV_sp0) #covariance
-  # comm_var <- product[row_op$Var1==row_op$Var2,]
-  # comm_var <- as.matrix(comm_var) %*% c(VCV_sp0)
-  # rownames(comm_var) <- 1:nrow(comm_var)
-  # #row_op$numerator1 <- comm_var[match(row_op$Var1,rownames(comm_var))]
-  # #row_op$numerator2 <- comm_var[match(row_op$Var2,rownames(comm_var))]
-  #
-  # #row_op$cor <- row_op$cov/sqrt(row_op$numerator1*row_op$numerator2)
-  # #corM <- matrix(row_op$cor,nrow(comm),nrow(comm))
-  # covM0 <- matrix(row_op0$cov,nrow(comm),nrow(comm))
-  # covMphylo <- covM-covM0
-
-  if (force.PD == T & is.positive.definite(round(corM,5)) == F) { #loss of signifiance. need to round the matrix
+  if (force.PD == T & is.positive.definite(round(corM,5)) == F) { #could be due to loss of significance. need to round the matrix
     corM <-as.matrix(nearPD(corM,corr=T,keepDiag=T,maxit=100000)$mat)
   }
 

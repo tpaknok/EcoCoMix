@@ -115,11 +115,41 @@ get_R2(m_LAI$best_model) #get R2 too
 
 Note that EcoCoMix also returns outputs of other models (not just the best model). For example, if you are interested in the model based on the provided correlation matrix
 
-```{r mixed model lambda 1, message=F, warning=F
+
+``` r
 m_LAI$original_VCV_model
+#> formula: LAI ~ Real.rich + corrMatrix(1 | comp_id)
+#> Estimation of fixed effects by ML.
+#> Estimation of lambda and phi by 'outer' REML, maximizing restricted logL.
+#> family: gaussian( link = identity ) 
+#>  ------------ Fixed effects (beta) ------------
+#>             Estimate Cond. SE t-value
+#> (Intercept)   3.5942   1.2294   2.924
+#> Real.rich     0.9348   0.2287   4.087
+#>  --------------- Random effects ---------------
+#> Family: gaussian( link = identity ) 
+#>            --- Variance parameters ('lambda'):
+#> lambda = var(u) for u ~ Gaussian; 
+#>    comp_id  :  67.24  
+#> # of obs: 88; # of groups: comp_id, 88 
+#>  -------------- Residual variance  ------------
+#> phi estimate was 1.73291 
+#>  ------------- Likelihood values  -------------
+#>                         logLik
+#> logL       (p_v(h)): -175.7253
+#> Re.logL  (p_b,v(h)): -175.4702
 m_LAI$original_VCV_m_satt
+#> Single term deletions using Satterthwaite's method:
+#> 
+#> Model:
+#> LAI ~ Real.rich + corrMatrix(1 | comp_id)
+#>           Sum Sq Mean Sq NumDF  DenDF F value    Pr(>F)    
+#> Real.rich  28.95   28.95     1 68.943  16.706 0.0001162 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 get_R2(m_LAI$original_VCV_model)
-}
+#>        R2m        R2c 
+#> 0.01538212 0.97526177
 ```
 Details about all results provided by EcoCoMix are provided [here](https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html).
 

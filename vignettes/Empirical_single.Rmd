@@ -36,20 +36,13 @@ The KSR_EF data have multiple ecosystem function.
 
 ``` r
 head(KSR_EF)
-#>   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect
-#> 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000
-#> 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195
-#> 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279
-#> 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000
-#> 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093
-#> 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000
-#>   bugs bug.rich
-#> 1    9        7
-#> 2    7        6
-#> 3    4        2
-#> 4    5        3
-#> 5    4        4
-#> 6   11        7
+#>   Plot Real.rich litter2012 ave.biomass  LAI mean.N.change poll_total flwr_total Mass.loss.2month Damage_effect bugs bug.rich
+#> 1   X2         1      79.05    32.97333 1.67       -0.0015         20 43113.5000            3.362     0.0000000    9        7
+#> 2   X3         4      74.23    82.41000 5.53       -0.0275         53  2126.1429            3.718     0.3001195    7        6
+#> 3   X4         2      34.50    62.92667 3.04        0.0060        150   324.4286            3.521     0.4195279    4        2
+#> 4   X7         1      36.32    34.38333 3.42       -0.0575          0     0.0000            3.328     0.0000000    5        3
+#> 5   X8         3      21.46   147.05667 7.14       -0.0070          0     0.0000            3.608     2.7460093    4        4
+#> 6   X9         1      37.26    33.80333 1.01        0.0415          0     0.0000            3.627     0.0000000   11        7
 ```
 
 ## Data Description
@@ -119,6 +112,17 @@ get_R2(m_LAI$best_model) #get R2 too
 #>        R2m        R2c 
 #> 0.07936676 0.78118520
 ```
+
+Note that EcoCoMix also returns outputs of other models (not just the best model). For example, if you are interested in the model based on the provided correlation matrix
+
+```{r mixed model lambda 1, message=F, warning=F
+m_LAI$original_VCV_model
+m_LAI$original_VCV_m_satt
+get_R2(m_LAI$original_VCV_model)
+}
+```
+Details about all results provided by EcoCoMix are provided [here](https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html).
+
 ## Residual Checking
 Let's do some model diagnostics to make sure our model makes sense. The package DHARMa supports output from spaMM, so we will use it for model diagnostics.
 

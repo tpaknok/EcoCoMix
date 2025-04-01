@@ -78,6 +78,17 @@ summary(m_LAI$best_model)
 m_LAI$best_model_satt #Satterthwaite's method is better for p-values.
 get_R2(m_LAI$best_model) #get R2 too
 ```
+
+Note that EcoCoMix also returns outputs of other models (not just the best model). For example, if you are interested in the model based on the provided correlation matrix
+
+```{r mixed model lambda 1, message=F, warning=F
+m_LAI$original_VCV_model
+m_LAI$original_VCV_m_satt
+get_R2(m_LAI$original_VCV_model)
+}
+```
+Details about all results provided by EcoCoMix are provided [here](https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html).
+
 ## Residual Checking
 Let's do some model diagnostics to make sure our model makes sense. The package DHARMa supports output from spaMM, so we will use it for model diagnostics.
 

@@ -222,8 +222,41 @@ identifier).</p>
 <p>Note that EcoCoMix also returns outputs of other models (not just the
 best model). For example, if you are interested in the model based on
 the provided correlation matrix</p>
-<p><code>{r mixed model lambda 1, message=F, warning=F m_LAI$original_VCV_model m_LAI$original_VCV_m_satt get_R2(m_LAI$original_VCV_model) }</code>
-Details about all results provided by EcoCoMix are provided <a href="https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html" class="external-link">here</a>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m_LAI</span><span class="op">$</span><span class="va">original_VCV_model</span></span>
+<span><span class="co">#&gt; formula: LAI ~ Real.rich + corrMatrix(1 | comp_id)</span></span>
+<span><span class="co">#&gt; Estimation of fixed effects by ML.</span></span>
+<span><span class="co">#&gt; Estimation of lambda and phi by 'outer' REML, maximizing restricted logL.</span></span>
+<span><span class="co">#&gt; family: gaussian( link = identity ) </span></span>
+<span><span class="co">#&gt;  ------------ Fixed effects (beta) ------------</span></span>
+<span><span class="co">#&gt;             Estimate Cond. SE t-value</span></span>
+<span><span class="co">#&gt; (Intercept)   3.5942   1.2294   2.924</span></span>
+<span><span class="co">#&gt; Real.rich     0.9348   0.2287   4.087</span></span>
+<span><span class="co">#&gt;  --------------- Random effects ---------------</span></span>
+<span><span class="co">#&gt; Family: gaussian( link = identity ) </span></span>
+<span><span class="co">#&gt;            --- Variance parameters ('lambda'):</span></span>
+<span><span class="co">#&gt; lambda = var(u) for u ~ Gaussian; </span></span>
+<span><span class="co">#&gt;    comp_id  :  67.24  </span></span>
+<span><span class="co">#&gt; # of obs: 88; # of groups: comp_id, 88 </span></span>
+<span><span class="co">#&gt;  -------------- Residual variance  ------------</span></span>
+<span><span class="co">#&gt; phi estimate was 1.73291 </span></span>
+<span><span class="co">#&gt;  ------------- Likelihood values  -------------</span></span>
+<span><span class="co">#&gt;                         logLik</span></span>
+<span><span class="co">#&gt; logL       (p_v(h)): -175.7253</span></span>
+<span><span class="co">#&gt; Re.logL  (p_b,v(h)): -175.4702</span></span>
+<span><span class="va">m_LAI</span><span class="op">$</span><span class="va">original_VCV_m_satt</span></span>
+<span><span class="co">#&gt; Single term deletions using Satterthwaite's method:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model:</span></span>
+<span><span class="co">#&gt; LAI ~ Real.rich + corrMatrix(1 | comp_id)</span></span>
+<span><span class="co">#&gt;           Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    </span></span>
+<span><span class="co">#&gt; Real.rich  28.95   28.95     1 68.943  16.706 0.0001162 ***</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="fu"><a href="../reference/get_R2.html">get_R2</a></span><span class="op">(</span><span class="va">m_LAI</span><span class="op">$</span><span class="va">original_VCV_model</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        R2m        R2c </span></span>
+<span><span class="co">#&gt; 0.01538212 0.97526177</span></span></code></pre></div>
+<p>Details about all results provided by EcoCoMix are provided <a href="https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="residual-checking">Residual Checking<a class="anchor" aria-label="anchor" href="#residual-checking"></a>
@@ -231,7 +264,7 @@ Details about all results provided by EcoCoMix are provided <a href="https://tpa
 <p>Let’s do some model diagnostics to make sure our model makes sense.
 The package DHARMa supports output from spaMM, so we will use it for
 model diagnostics.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/" class="external-link">DHARMa</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: package 'DHARMa' was built under R version 4.3.3</span></span>
 <span><span class="co">#&gt; This is DHARMa 0.4.7. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</span></span>
@@ -252,7 +285,7 @@ LAI and species richness. In spaMM, you can use the predict function to
 obtain model predictions with/without random effects. In our case, we
 just need to generate a new dataset that include the species richness
 gradient, and provide it to the predict function.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Real.rich<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">KSR_EF</span><span class="op">$</span><span class="va">Real.rich</span><span class="op">)</span><span class="op">)</span> <span class="co">#create a new data frame for the predictions</span></span>

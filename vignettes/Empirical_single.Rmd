@@ -151,6 +151,7 @@ get_R2(m_LAI$original_VCV_model)
 #>        R2m        R2c 
 #> 0.01538212 0.97526177
 ```
+
 Details about all results provided by EcoCoMix are provided [here](https://tpaknok.github.io/EcoCoMix/reference/EcoCoMix.html).
 
 ## Residual Checking

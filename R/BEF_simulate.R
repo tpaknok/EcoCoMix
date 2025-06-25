@@ -104,18 +104,12 @@ BEF_simulate <- function(comm,
 
     conv <- models$conv
 
+    if(sum(grepl("0",conv)) > 0) message("model(s) failed to converge...re-running...")
     count=count+1
 
     if (conv_fail_drop == F) conv <- c(1,1,1,1)
 
     }
-
-
-    # result <- list(models=models,
-                   # true_lambda = lambda_true,
-                   # count = count)
-
-    #extract significance
 
     m_optim_sig <- NA
 

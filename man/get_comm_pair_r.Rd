@@ -63,6 +63,15 @@ data(KSR_EF)
 
 phy_comm_M <- get_comm_pair_r(KSR,vcv(KSR_MLtree))$corM
 
+## if you prefer other evolutionary models
+library(geiger)
+
+KSR_tree_ou <- rescale(KSR_MLtree, model = "OU", alpha = 0.1) #alpha can be other values! see the documentations in geiger for details and other models
+plot(KSR_tree_ou)
+plot(KSR_MLtree) #compare two trees
+
+phy_comm_M_ou <- get_comm_pair_r(KSR,vcv(KSR_tree_ou))$corM
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

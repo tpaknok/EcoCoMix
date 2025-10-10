@@ -22,7 +22,9 @@ Imports:
     VGAM,
     mgcv,
     DHARMa,
-    spaMM
+    spaMM,
+    admisc,
+    NMOF
 Suggests: 
     knitr,
     rmarkdown,

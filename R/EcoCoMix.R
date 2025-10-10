@@ -17,6 +17,8 @@ EcoCoMix <- function(formula,
   require(NMOF)
   require(spaMM)
   require(admisc)
+  require(ape)
+  require(phytools)
 
   data$comp_id <- 1:nrow(data)
 

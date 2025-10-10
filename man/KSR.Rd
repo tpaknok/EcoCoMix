@@ -16,6 +16,9 @@ data(KSR_EF)
 \format{
   These are linked datasets. \code{KSR} provides species composition data in 88 plots of 14 plant species, while \code{KS_MLtree} describes the phylogenetic relationship between the species. \code{KSR_EF} are the ten ecosystem functions measured in each plot.
 
+  The species in \code{KSR} are \emph{Andropogon gerardii} (ANGE), \emph{Asclepias tuberosa} (ASTU), \emph{Elymus canadensis} (ELCA), \emph{Elymus trachycaulus} (ELTR),
+\emph{Desmodium canadense} (DECA), \emph{Lespedeza capitata} (LECA), \emph{Monarda fistulosa} (MOFI), \emph{Penstemon hirsutus} (PEHI), \emph{Pycnanthemum tenuifolium} (PYTE), \emph{Pycnanthemum virginianum} (PYVI), \emph{Rudbeckia hirta} (RUHI), \emph{Schizachyrium scoparium} (SCSC), \emph{Solidago altissima} (SOAL), \emph{Solidago nemoralis} (SONE)
+
   The meaning of each column in \code{KSR_EF} is explained below:
 
   \describe{

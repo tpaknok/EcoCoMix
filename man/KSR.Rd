@@ -47,11 +47,13 @@ data(KSR_EF)
     }
 
 \details{
-  Note that the compositional data is binary and describe whether the species is planted in each plot initally. The phylogenetic tree is constructed using Maximum Likelihood. See Cadotte et al. (2013) for details
+  Note that the compositional data is binary and describe whether the species is planted in each plot initally. The phylogenetic tree is constructed using Maximum Likelihood. See Cadotte et al. (2013) for details.
+}
 
+\references{
   Cadotte, M. W. (2013). Experimental evidence that evolutionarily diverse assemblages result in higher productivity. Proceedings of the National Academy of Sciences, 110(22), 8996-9000.
 }
 
 \author{
-Toby P.N. Tsang
+Toby P. N. Tsang
 }

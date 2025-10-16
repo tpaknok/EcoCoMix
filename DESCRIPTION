@@ -24,7 +24,9 @@ Imports:
     DHARMa,
     spaMM,
     admisc,
-    NMOF
+    NMOF,
+    lmerTest,
+    RSpectra
 Suggests: 
     knitr,
     rmarkdown,

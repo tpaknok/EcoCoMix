@@ -50,7 +50,7 @@ EcoCoMix(formula,
   cAIC threshold to include compositional random effect. Defaulted as -4 (i.e., including compositional random effect needs to reduce cAIC by 4 to be considered as improving the model).
 }
   \item{method.spaMM}{
-  "ML" (Default), "REML", or PGL/L. Will be passed to the method argument of \code{\link[spaMM]{fitme}}.
+  "ML" (Default), "REML", or PGL/L. Will be passed to the method argument of \code{\link[spaMM]{fitme}}. See details for model comparisons when using REML.
 }
   \item{true_VCV}{
   True phylogenetic relationship between species. Useful in simulations but not empirical analyses.
@@ -69,22 +69,28 @@ EcoCoMix(formula,
 }
 }
 \details{
-Can provide extra specifications to the fitme function to speed up calculations / obtain more reliable results. These technical details, however, are non-trivial. Please see the documentation of \code{\link[spaMM]{fitme}}, \code{\link[spaMM]{inits}}, and \link[stats]{optim}. If ignored, the model will be run using the defaults of these functions.
+  Users can provide extra specifications to the fitme function to speed up calculations/obtain more reliable results.
+  These technical details, however, are non-trivial. Please see the documentation of \code{\link[spaMM]{fitme}}, \code{\link[spaMM]{inits}}, and \link[stats]{optim}.
+  If ignored, the model will be run using the defaults of these functions.
+
+  Note that when models are fitted using REML, AICs are only comparable when the fixed effects are the same.
+  Use ML if you want to compare models with different fixed effects!
 }
+
 \value{
 a list of 19 objects.
-\item{best_model}{Results of the best model (i.e., the model with optimized lambda if its dAIC is lower than the intercept-only model by 4 (or other self-defined threshold.)}
-\item{best_model_satt}{Results of the best model based on the Satterthwaite approximation, which provides better estimations of p-values.}
-\item{optimized_lambda_model,optimized_lambda_model_satt}{Same as best_model and best_model_satt, but this is for the model with optimized phylogenetic structure.}
-\item{original_VCV_model,original_VCV_m_satt}{Same as above, but for models based on the provided phylogenetic structure.}
-\item{true_model,true_model_satt}{Same as above, but for models based on the true phylogenetic structure (only useful for simulations).}
-\item{without_comp_model}{Model results without considering compositional autocorrelation.}
-\item{without_comp_anova}{Model results without considering compositional autocorrelation in ANOVA format. Easier to compare with results from mixed models based on Satterthwaite approximation.}
-\item{intercept_only_model}{Intercept-only model results (with compositional correlation).}
-\item{star_model}{Model results without considering phylogenetic dependence between species (i.e., all species are phylogenetically independent).}
-\item{AIC}{cAIC of all models above.}
-\item{optimized_lambda,optimized_lambda_int}{The optimized lambda based on the full model (former) and intercept-only model(latter).}
-\item{conv}{whether the following models have reached convergence: the best model, the full model based on optimized phylogenetic structure, and the model based on the provided phylogenetic relationship. Yes=1, No=0.}
+  \item{best_model}{Results of the best model (i.e., the model with optimized lambda if its dAIC is lower than the intercept-only model by 4 (or other self-defined threshold.)}
+  \item{best_model_satt}{Results of the best model based on the Satterthwaite approximation, which provides better estimations of p-values.}
+  \item{optimized_lambda_model,optimized_lambda_model_satt}{Same as best_model and best_model_satt, but this is for the model with optimized phylogenetic structure.}
+  \item{original_VCV_model,original_VCV_m_satt}{Same as above, but for models based on the provided phylogenetic structure.}
+  \item{true_model,true_model_satt}{Same as above, but for models based on the true phylogenetic structure (only useful for simulations).}
+  \item{without_comp_model}{Model results without considering compositional autocorrelation.}
+  \item{without_comp_anova}{Model results without considering compositional autocorrelation in ANOVA format. Easier to compare with results from mixed models based on Satterthwaite approximation.}
+  \item{intercept_only_model}{Intercept-only model results (with compositional correlation).}
+  \item{star_model}{Model results without considering phylogenetic dependence between species (i.e., all species are phylogenetically independent).}
+  \item{AIC}{cAIC of all models above.}
+  \item{optimized_lambda,optimized_lambda_int}{The optimized lambda based on the full model (former) and intercept-only model(latter).}
+  \item{conv}{whether the following models have reached convergence: the best model, the full model based on optimized phylogenetic structure, and the model based on the provided phylogenetic relationship. Yes=1, No=0.}
 }
 \author{
 Toby P.N. Tsang

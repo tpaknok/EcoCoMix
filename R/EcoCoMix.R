@@ -19,6 +19,8 @@ EcoCoMix <- function(formula,
   require(admisc)
   require(ape)
   require(phytools)
+  require(lmerTest)
+  require(RSpectra)
 
   data$comp_id <- 1:nrow(data)
 

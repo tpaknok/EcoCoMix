@@ -85,7 +85,7 @@
 <dd><p>cAIC threshold to include compositional random effect. Defaulted as -4 (i.e., including compositional random effect needs to reduce cAIC by 4 to be considered as improving the model).</p></dd>
 
   <dt id="arg-method-spamm">method.spaMM<a class="anchor" aria-label="anchor" href="#arg-method-spamm"></a></dt>
-<dd><p>"ML" (Default), "REML", or PGL/L. Will be passed to the method argument of <code><a href="https://rdrr.io/pkg/spaMM/man/fitme.html" class="external-link">fitme</a></code>.</p></dd>
+<dd><p>"ML" (Default), "REML", or PGL/L. Will be passed to the method argument of <code><a href="https://rdrr.io/pkg/spaMM/man/fitme.html" class="external-link">fitme</a></code>. See details for model comparisons when using REML.</p></dd>
 
   <dt id="arg-true-vcv">true_VCV<a class="anchor" aria-label="anchor" href="#arg-true-vcv"></a></dt>
 <dd><p>True phylogenetic relationship between species. Useful in simulations but not empirical analyses.</p></dd>
@@ -105,7 +105,11 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Can provide extra specifications to the fitme function to speed up calculations / obtain more reliable results. These technical details, however, are non-trivial. Please see the documentation of <code><a href="https://rdrr.io/pkg/spaMM/man/fitme.html" class="external-link">fitme</a></code>, <code><a href="https://rdrr.io/pkg/spaMM/man/inits.html" class="external-link">inits</a></code>, and <a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a>. If ignored, the model will be run using the defaults of these functions.</p>
+    <p>Users can provide extra specifications to the fitme function to speed up calculations/obtain more reliable results.
+  These technical details, however, are non-trivial. Please see the documentation of <code><a href="https://rdrr.io/pkg/spaMM/man/fitme.html" class="external-link">fitme</a></code>, <code><a href="https://rdrr.io/pkg/spaMM/man/inits.html" class="external-link">inits</a></code>, and <a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a>.
+  If ignored, the model will be run using the defaults of these functions.</p>
+<p>Note that when models are fitted using REML, AICs are only comparable when the fixed effects are the same.
+  Use ML if you want to compare models with different fixed effects!</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -113,37 +117,37 @@
 <dl><dt>best_model</dt>
 <dd><p>Results of the best model (i.e., the model with optimized lambda if its dAIC is lower than the intercept-only model by 4 (or other self-defined threshold.)</p></dd>
 
-<dt>best_model_satt</dt>
+  <dt>best_model_satt</dt>
 <dd><p>Results of the best model based on the Satterthwaite approximation, which provides better estimations of p-values.</p></dd>
 
-<dt>optimized_lambda_model,optimized_lambda_model_satt</dt>
+  <dt>optimized_lambda_model,optimized_lambda_model_satt</dt>
 <dd><p>Same as best_model and best_model_satt, but this is for the model with optimized phylogenetic structure.</p></dd>
 
-<dt>original_VCV_model,original_VCV_m_satt</dt>
+  <dt>original_VCV_model,original_VCV_m_satt</dt>
 <dd><p>Same as above, but for models based on the provided phylogenetic structure.</p></dd>
 
-<dt>true_model,true_model_satt</dt>
+  <dt>true_model,true_model_satt</dt>
 <dd><p>Same as above, but for models based on the true phylogenetic structure (only useful for simulations).</p></dd>
 
-<dt>without_comp_model</dt>
+  <dt>without_comp_model</dt>
 <dd><p>Model results without considering compositional autocorrelation.</p></dd>
 
-<dt>without_comp_anova</dt>
+  <dt>without_comp_anova</dt>
 <dd><p>Model results without considering compositional autocorrelation in ANOVA format. Easier to compare with results from mixed models based on Satterthwaite approximation.</p></dd>
 
-<dt>intercept_only_model</dt>
+  <dt>intercept_only_model</dt>
 <dd><p>Intercept-only model results (with compositional correlation).</p></dd>
 
-<dt>star_model</dt>
+  <dt>star_model</dt>
 <dd><p>Model results without considering phylogenetic dependence between species (i.e., all species are phylogenetically independent).</p></dd>
 
-<dt>AIC</dt>
+  <dt>AIC</dt>
 <dd><p>cAIC of all models above.</p></dd>
 
-<dt>optimized_lambda,optimized_lambda_int</dt>
+  <dt>optimized_lambda,optimized_lambda_int</dt>
 <dd><p>The optimized lambda based on the full model (former) and intercept-only model(latter).</p></dd>
 
-<dt>conv</dt>
+  <dt>conv</dt>
 <dd><p>whether the following models have reached convergence: the best model, the full model based on optimized phylogenetic structure, and the model based on the provided phylogenetic relationship. Yes=1, No=0.</p></dd>
 
 </dl></div>

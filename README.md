@@ -4,6 +4,7 @@
 # EcoCoMix <img src="man/figures/logo.png" align="right" height="212" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 EcoCoMix (**Co**mpositional **Mix**ed Model in **Eco**logy) addresses
@@ -45,3 +46,13 @@ The functions in EcoCoMix help users to control phylogenetic
 non-independence between communities without intensive coding. Users
 only need 1) species composition in each community and 2) a phylogenetic
 tree including all species in the community data.
+
+## Reference
+
+Tsang, T. P. N. & Cadotte, M. W. (2025). Species overlap and
+phylogenetic relatedness result in community statistical
+non-independence (and what to do about it). Ecology Letters.
+
+## Contact
+
+Toby Tsang (<tpaknok@gmail.com>)

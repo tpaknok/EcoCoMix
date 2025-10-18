@@ -26,7 +26,8 @@ Imports:
     admisc,
     NMOF,
     lmerTest,
-    RSpectra
+    RSpectra,
+    vegan
 Suggests: 
     knitr,
     rmarkdown,
